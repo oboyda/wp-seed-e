@@ -1,0 +1,16 @@
+{
+    "name": "oboyda/wp-seed-e",
+    "description": "Base components for a faster Wordpress development",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "WPSEEDE\\": "src/classes"
+        }
+    },
+    "repositories" : [
+        { "type": "vcs", "url": "https://github.com/oboyda/wp-seed" }
+    ],
+    "require": {
+        "oboyda/wp-seed": "dev-main"
+    }
+}
