@@ -104,6 +104,8 @@ class Setup
     {
         foreach(wpseed_get_dir_files($this->base_dir . '/mods', true, false) as $dir)
         {
+            if(!is_dir($dir)) continue;
+            
             $mod_index_file = $dir . '/index.php';
             if(file_exists($mod_index_file))
             {
