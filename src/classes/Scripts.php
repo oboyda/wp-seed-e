@@ -266,12 +266,12 @@ class Scripts
                 break;
 
                 default:
-
-                    if(strpos($script_reg, 'http') === 0)
+                
+                    if(strpos($style_reg, 'http') === 0)
                     {
                         wp_register_style(
                             $name_handle,
-                            $script_reg,
+                            $style_reg,
                             $deps,
                             $this->args['version']
                         );
