@@ -2,19 +2,17 @@
 
 namespace WPSEEDE\Utils;
 
-use WPSEEDE\Type\User as Type_User;
-
 class User
 {
-    static function getCurrentUser()
+    static function getCurrentUser($type_class)
     {
         $user_id = get_current_user_id();
-        return $user_id ? new Type_User($user_id) : null;
+        return ($user_id && class_exists($type_class)) ? new $type_class($user_id) : null;
     }
 
-    static function getCurrentUserRole()
+    static function getCurrentUserRole($type_class)
     {
-        $type_user = self::getCurrentUser();
+        $type_user = self::getCurrentUser($type_class);
         return isset($type_user) ? $type_user->getRole() : 'public';
     }
 }
