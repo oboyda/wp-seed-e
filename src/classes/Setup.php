@@ -13,6 +13,7 @@ class Setup
     protected $base_dir_url;
     protected $version;
 
+    var $settings_admin;
     var $settings;
 
     var $script;
@@ -157,7 +158,7 @@ class Setup
     }
     public function _initSettings()
     {
-        $this->settings = new \WPSEED\Settings([
+        $this->settings_admin = new \WPSEED\Settings([
 
             'prefix' => $this->prefix,
             'menu_page' => 'options-general.php',
@@ -166,6 +167,10 @@ class Setup
             'btn_title' => __('Update', 'wpseede')
 
         ],  $this->args['settings_config']);
+
+        $this->settings = new Settings([
+            'context_name' => $this->context_name
+        ]);
     }
 
     public function initScripts($args=[])

@@ -2,6 +2,8 @@
 
 namespace WPSEEDE;
 
+use WPSEEDE\Utils\Base;
+
 class Settings 
 {
     protected $args;
