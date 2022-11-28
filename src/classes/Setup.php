@@ -7,7 +7,7 @@ class Setup
     protected $args;
 
     protected $plugin_name;
-    protected $name;
+    protected $contextname;
     protected $textdom;
     protected $base_dir;
     protected $base_dir_url;
@@ -100,7 +100,7 @@ class Setup
 
             if($this->args['settings_config'])
             {
-                $this->initSettings();
+                $this->_initSettings();
             }
 
             if($this->args['init_scripts'])
@@ -153,7 +153,7 @@ class Setup
     public function initSettings($args=[])
     {
         $this->parseArgs($args);
-        add_action('init', [$this, '_initSettings']);
+        add_action('plugins_loaded', [$this, '_initSettings']);
     }
     public function _initSettings()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace WPSEEDE\Utils;
+namespace WPSEEDE;
 
 class Settings 
 {

@@ -120,6 +120,23 @@ class Scripts
     {
         return (strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
     }
+    protected function getNameHandles($names, $reg_names)
+    {
+        if(!is_array($names))
+        {
+            $names = [$names];
+        }
+
+        foreach($names as $i => $name)
+        {
+            if(isset($reg_names[$name]))
+            {
+                $names[$i] = $this->getNameHandle($name);
+            }
+        }
+
+        return $names;
+    }
 
     protected function isFrontHandle($name)
     {
@@ -154,7 +171,7 @@ class Scripts
 
         foreach($this->script_regs as $name => $script_reg)
         {
-            $deps = isset($this->script_deps[$name]) ? $this->script_deps[$name] : [];
+            $deps = isset($this->script_deps[$name]) ? $this->getNameHandles($this->script_deps[$name], $this->script_regs) : [];
             $name_handle = $this->getNameHandle($name);
 
             switch($name)
@@ -228,7 +245,7 @@ class Scripts
 
         foreach($this->style_regs as $name => $style_reg)
         {
-            $deps = isset($this->style_deps[$name]) ? $this->style_deps[$name] : [];
+            $deps = isset($this->style_deps[$name]) ? $this->getNameHandles($this->style_deps[$name], $this->style_regs) : [];
             $name_handle = $this->getNameHandle($name);
 
             switch($name)
@@ -266,7 +283,7 @@ class Scripts
                 break;
 
                 default:
-                
+
                     if(strpos($style_reg, 'http') === 0)
                     {
                         wp_register_style(
