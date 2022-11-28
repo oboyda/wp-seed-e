@@ -116,9 +116,9 @@ class Scripts
         $this->style_deps = array_merge($this->style_deps, $regs);
     }
 
-    protected function getNameHandle($name)
+    protected function getNameHandle($name, $reg_names)
     {
-        return (strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
+        return (!isset($reg_names[$name]) || strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
     }
     protected function getNameHandles($names, $reg_names)
     {
@@ -129,10 +129,7 @@ class Scripts
 
         foreach($names as $i => $name)
         {
-            if(isset($reg_names[$name]))
-            {
-                $names[$i] = $this->getNameHandle($name);
-            }
+            $names[$i] = $this->getNameHandle($name, $reg_names);
         }
 
         return $names;
@@ -170,10 +167,11 @@ class Scripts
             ], $this->script_deps);
         }
 
+        $script_regs_names = array_keys($this->script_regs);
         foreach($this->script_regs as $name => $script_reg)
         {
-            $deps = isset($this->script_deps[$name]) ? $this->getNameHandles($this->script_deps[$name], $this->script_regs) : [];
-            $name_handle = $this->getNameHandle($name);
+            $deps = isset($this->script_deps[$name]) ? $this->getNameHandles($this->script_deps[$name], $script_regs_names) : [];
+            $name_handle = $this->getNameHandle($name, $script_regs_names);
 
             switch($name)
             {
@@ -245,10 +243,11 @@ class Scripts
             // ], $this->style_deps);
         }
 
+        $style_regs_names = array_keys($this->style_regs);
         foreach($this->style_regs as $name => $style_reg)
         {
-            $deps = isset($this->style_deps[$name]) ? $this->getNameHandles($this->style_deps[$name], $this->style_regs) : [];
-            $name_handle = $this->getNameHandle($name);
+            $deps = isset($this->style_deps[$name]) ? $this->getNameHandles($this->style_deps[$name], $style_regs_names) : [];
+            $name_handle = $this->getNameHandle($name, $style_regs_names);
 
             switch($name)
             {
@@ -301,11 +300,12 @@ class Scripts
 
     public function enqueueScriptsFront()
     {
-        foreach(array_keys($this->script_regs) as $name)
+        $script_regs_names = array_keys($this->script_regs);
+        foreach($script_regs_names as $name)
         {
             if($this->isFrontHandle($name) || $this->isCommonHandle($name))
             {
-                $name_handle = $this->getNameHandle($name);
+                $name_handle = $this->getNameHandle($name, $script_regs_names);
                 wp_enqueue_script($name_handle);
             }
         }
@@ -320,11 +320,12 @@ class Scripts
 
     public function enqueueScriptsAdmin()
     {
+        $script_regs_names = array_keys($this->script_regs);
         foreach(array_keys($this->script_regs) as $name)
         {
             if($this->isAdminHandle($name) || $this->isCommonHandle($name))
             {
-                $name_handle = $this->getNameHandle($name);
+                $name_handle = $this->getNameHandle($name, $script_regs_names);
                 wp_enqueue_script($name_handle);
             }
         }
@@ -339,11 +340,12 @@ class Scripts
 
     public function enqueueStylesFront()
     {
-        foreach(array_keys($this->style_regs) as $name)
+        $style_regs_names = array_keys($this->style_regs);
+        foreach($style_regs_names as $name)
         {
             if($this->isFrontHandle($name) || $this->isCommonHandle($name))
             {
-                $name_handle = $this->getNameHandle($name);
+                $name_handle = $this->getNameHandle($name, $style_regs_names);
                 wp_enqueue_style($name_handle);
             }
         }
@@ -351,11 +353,12 @@ class Scripts
 
     public function enqueueStylesAdmin()
     {
-        foreach(array_keys($this->style_regs) as $name)
+        $style_regs_names = array_keys($this->style_regs);
+        foreach($style_regs_names as $name)
         {
             if($this->isAdminHandle($name) || $this->isCommonHandle($name))
             {
-                $name_handle = $this->getNameHandle($name);
+                $name_handle = $this->getNameHandle($name, $style_regs_names);
                 wp_enqueue_style($name_handle);
             }
         }
