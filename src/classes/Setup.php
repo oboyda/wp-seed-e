@@ -7,7 +7,7 @@ class Setup
     protected $args;
 
     protected $plugin_name;
-    protected $contextname;
+    protected $context_name;
     protected $textdom;
     protected $base_dir;
     protected $base_dir_url;
@@ -160,7 +160,7 @@ class Setup
     {
         $this->settings_admin = new \WPSEED\Settings([
 
-            'prefix' => $this->prefix,
+            'prefix' => $this->context_name . '_',
             'menu_page' => 'options-general.php',
             'menu_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
             'page_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),

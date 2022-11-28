@@ -8,6 +8,9 @@ class Settings
 {
     protected $args;
 
+    protected $context_name;
+    protected $prefix;
+
     public function __construct($args)
     {
         $this->args = wp_parse_args($args, [
@@ -15,7 +18,7 @@ class Settings
         ]);
 
         $this->context_name = $this->args['context_name'];
-        $this->prefix = $this->args['context_name'] . '_';
+        $this->prefix = $this->context_name . '_';
     }
 
     public function getOption($name, $default=null)
