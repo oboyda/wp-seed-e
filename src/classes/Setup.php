@@ -15,55 +15,79 @@ class Setup
 
     var $settings;
 
+    var $script;
+
     public function __construct($args)
     {
-        $this->args = wp_parse_args($args, [
-            'plugin_name' => 'WPSEEDE Plugin',
-            'name' => 'wpseed',
-            'textdom' => 'wpseed',
-            'base_dir' => __DIR__,
-            'base_dir_url' => plugins_url('', __FILE__),
-            'version' => '1.0.0',
-
-            'deps' => [
-                // 'woocommerce/woocommerce.php'
-            ],
-
-            'include_files' => [
-                // 'src/php/utils.php',
-                // 'src/php/scripts.php',
-                // 'src/php/acf-blocks.php',
-                // 'src/php/acf-fields.php'
-            ],
-
-            'setup_theme' => true,
-            'theme_menus' => [
-                'top' => __('Top menu', 'wpseede'),
-                'primary' => __('Primary menu', 'wpseede')
-            ],
-            'theme_image_sizes' => [
-                'medium' => ['width' => 800, 'height' => 500, 'crop' => true],
-                'large' => ['width' => 1200, 'height' => 750, 'crop' => true]
-            ],
-            'theme_thumbnail_width' => 600,
-            'theme_thumbnail_height' => 375,
-            'theme_logo_width' => 300,
-            'theme_logo_height' => 100
-        ]);
-
-        $this->plugin_name = $this->args['name'];
-        $this->name = $this->args['name'];
-        $this->textdom = $this->args['textdom'];
-        $this->base_dir = $this->args['base_dir'];
-        $this->base_url = $this->args['base_url'];
-        $this->version = $this->args['version'];
+        $this->parseArgs($args);
 
         add_action('plugins_loaded', [$this, 'initLoad'], 100);
     }
 
+    protected function parseArgs($args=[])
+    {
+        if(empty($args) && isset($this->args))
+        {
+            return;
+        }
+
+        if(!isset($this->args))
+        {
+            $this->args = wp_parse_args($args, [
+
+                'plugin_name' => 'WPSEEDE Plugin',
+                'context_name' => 'wpseede',
+                'textdom' => 'wpseede',
+                'base_dir' => __DIR__,
+                'base_dir_url' => plugins_url('', __FILE__),
+                'version' => '1.0.0',
+
+                'plugin_deps' => [
+                    // 'woocommerce/woocommerce.php'
+                ],
+
+                'include_files' => [
+                    // 'src/php/utils.php',
+                    // 'src/php/scripts.php',
+                    // 'src/php/acf-blocks.php',
+                    // 'src/php/acf-fields.php'
+                ],
+                
+                'settings_config' => [],
+
+                'init_scripts' => false,
+
+                'init_theme' => false,
+                'theme_menus' => [
+                    'top' => __('Top menu', 'wpseede'),
+                    'primary' => __('Primary menu', 'wpseede')
+                ],
+                'theme_image_sizes' => [
+                    'medium' => ['width' => 800, 'height' => 500, 'crop' => true],
+                    'large' => ['width' => 1200, 'height' => 750, 'crop' => true]
+                ],
+                'theme_thumbnail_width' => 600,
+                'theme_thumbnail_height' => 375,
+                'theme_logo_width' => 300,
+                'theme_logo_height' => 100
+            ]);
+        }
+        elseif($args)
+        {
+            $this->args = wp_parse_args($args, $this->args);
+        }
+
+        $this->plugin_name = $this->args['plugin_name'];
+        $this->context_name = $this->args['context_name'];
+        $this->textdom = $this->args['textdom'];
+        $this->base_dir = $this->args['base_dir'];
+        $this->base_url = $this->args['base_url'];
+        $this->version = $this->args['version'];
+    }
+
     public function initLoad()
     {
-        $deps = new \WPSEED\Deps($this->args['deps'], [
+        $deps = new \WPSEED\Deps($this->args['plugin_deps'], [
             'plugin_name' => $this->plugin_name
         ]);
 
@@ -73,13 +97,20 @@ class Setup
             $this->loadModules();
 
             add_action('init', [$this, 'setTextDomain']);
-            add_action('init', [$this, 'initSettings']);
-    
-            if($this->args['setup_theme'])
+
+            if($this->args['settings_config'])
             {
-                add_action('after_setup_theme', [$this, 'addThemeMenus']);
-                add_action('after_setup_theme', [$this, 'addThemeSupport']);
-                add_action('after_setup_theme', [$this, 'addThemeImageSizes']);
+                $this->initSettings();
+            }
+
+            if($this->args['init_scripts'])
+            {
+                $this->initScripts();
+            }
+    
+            if($this->args['init_theme'])
+            {
+                $this->initTheme();
             }
         }
     }
@@ -119,22 +150,52 @@ class Setup
         load_plugin_textdomain($this->textdom, false, plugin_basename($this->base_dir) . '/languages');
     }
 
-    public function initSettings()
+    public function initSettings($args=[])
     {
-        $this->settings = new \WPSEEDE\Settings([
-            'opts_prefix' => $this->args['name'] . '_'
-        ]);
+        $this->parseArgs($args);
+        add_action('init', [$this, '_initSettings']);
+    }
+    public function _initSettings()
+    {
+        $this->settings = new \WPSEED\Settings([
+
+            'prefix' => $this->prefix,
+            'menu_page' => 'options-general.php',
+            'menu_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
+            'page_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
+            'btn_title' => __('Update', 'wpseede')
+
+        ],  $this->args['settings_config']);
     }
 
-    public function addThemeMenus()
+    public function initScripts($args=[])
     {
+        $this->scripts = new Scripts(wp_parse_args($args, [
+            'context_name' => $this->context_name,
+            'build_dir' => $this->base_dir . '/build',
+            'build_dir_url' => $this->base_dir_url . '/build',
+            'enqueue_build_index_front' => true,
+            'enqueue_build_index_admin' => true,
+        ]));
+    }
+
+    public function initTheme($args=[])
+    {
+        $this->parseArgs($args);
+        add_action('after_setup_theme', [$this, '_initTheme']);
+    }
+    public function _initTheme()
+    {
+        $this->_addThemeSupport();
+        $this->_addThemeImageSizes();
+
         if($this->args['theme_menus'])
         {
             register_nav_menus($this->args['theme_menus']);
         }
     }
 
-    public function addThemeSupport()
+    public function _addThemeSupport()
     {
         add_theme_support('title-tag');
         
@@ -155,7 +216,7 @@ class Setup
         add_theme_support('customize-selective-refresh-widgets');
     }
 
-    public function addThemeImageSizes()
+    public function _addThemeImageSizes()
     {
         if($this->args['theme_image_sizes'])
         {
