@@ -286,7 +286,7 @@ class Scripts
         foreach(array_keys($this->script_regs) as $name)
         {
             $name_handle = $this->getNameHandle($name);
-            admin_enqueue_script($name_handle);
+            wp_enqueue_script($name_handle);
         }
 
         if(isset($this->script_regs['build_index_admin']))
