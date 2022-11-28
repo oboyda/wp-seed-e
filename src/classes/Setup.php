@@ -186,13 +186,9 @@ class Setup
     }
     public function _initTheme()
     {
-        $this->_addThemeSupport();
-        $this->_addThemeImageSizes();
-
-        if($this->args['theme_menus'])
-        {
-            register_nav_menus($this->args['theme_menus']);
-        }
+        add_action('after_setup_theme', '_addThemeSupport');
+        add_action('after_setup_theme', '_addThemeImageSizes');
+        add_action('after_setup_theme', '_addThemeNavMenus');
     }
 
     public function _addThemeSupport()
@@ -229,6 +225,14 @@ class Setup
                 ]);
                 add_image_size($name, $image_size['width'], $image_size['height'], $image_size['crop']);
             }
+        }
+    }
+
+    public function _addThemeNavMenus()
+    {
+        if($this->args['theme_menus'])
+        {
+            register_nav_menus($this->args['theme_menus']);
         }
     }
 }
