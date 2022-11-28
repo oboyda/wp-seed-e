@@ -159,14 +159,15 @@ class Scripts
             $this->args['enqueue_build_index_front'] || 
             $this->args['enqueue_build_index_admin']
         ){
-            $this->script_regs = array_merge($this->script_regs, [
+            $this->script_regs = array_merge([
                 'build_index_front' => '',
                 'build_index_admin' => '',
-            ]); 
-            $this->script_deps = array_merge($this->script_deps, [
+            ], $this->script_regs); 
+
+            $this->script_deps = array_merge_recursive([
                 'build_index_front' => ['jquery'],
                 'build_index_admin' => ['jquery']
-            ]);
+            ], $this->script_deps);
         }
 
         foreach($this->script_regs as $name => $script_reg)
@@ -232,15 +233,16 @@ class Scripts
             $this->args['enqueue_build_index_front'] || 
             $this->args['enqueue_build_index_admin']
         ){
-            $this->style_regs = array_merge($this->style_regs, [
+            $this->style_regs = array_merge([
                 'build_index_front' => '',
                 'build_index_admin' => '',
                 // 'fonts' => $this->args['assets_dir_url'] . '/fonts/fonts.css',
-            ]); 
-            // $this->style_deps = array_merge($this->script_deps, [
+            ], $this->style_regs); 
+
+            // $this->style_deps = array_merge_recursive([
             //     'build_index_front' => [],
             //     'build_index_admin' => []
-            // ]);
+            // ], $this->style_deps);
         }
 
         foreach($this->style_regs as $name => $style_reg)
