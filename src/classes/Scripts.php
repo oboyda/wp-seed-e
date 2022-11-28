@@ -121,6 +121,21 @@ class Scripts
         return (strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
     }
 
+    protected function isFrontHandle($name)
+    {
+        $sk = '_front';
+        return (substr($name, (0-strlen($sk))) === $sk);
+    }
+    protected function isAdminHandle($name)
+    {
+        $sk = '_admin';
+        return (substr($name, (0-strlen($sk))) === $sk);
+    }
+    protected function isCommonHandle($name)
+    {
+        return (!$this->isFrontHandle($name) && !$this->isAdminHandle($name));
+    }
+
     public function registerScripts()
     {
         if(
@@ -216,7 +231,7 @@ class Scripts
             $deps = isset($this->style_deps[$name]) ? $this->style_deps[$name] : [];
             $name_handle = $this->getNameHandle($name);
 
-            switch($style_reg)
+            switch($name)
             {
                 case 'build_index_front':
 
@@ -269,8 +284,11 @@ class Scripts
     {
         foreach(array_keys($this->script_regs) as $name)
         {
-            $name_handle = $this->getNameHandle($name);
-            wp_enqueue_script($name_handle);
+            if($this->isFrontHandle($name) || $this->isCommonHandle($name))
+            {
+                $name_handle = $this->getNameHandle($name);
+                wp_enqueue_script($name_handle);
+            }
         }
 
         if(isset($this->script_regs['build_index_front']))
@@ -285,8 +303,11 @@ class Scripts
     {
         foreach(array_keys($this->script_regs) as $name)
         {
-            $name_handle = $this->getNameHandle($name);
-            wp_enqueue_script($name_handle);
+            if($this->isAdminHandle($name) || $this->isCommonHandle($name))
+            {
+                $name_handle = $this->getNameHandle($name);
+                wp_enqueue_script($name_handle);
+            }
         }
 
         if(isset($this->script_regs['build_index_admin']))
@@ -299,23 +320,25 @@ class Scripts
 
     public function enqueueStylesFront()
     {
-        // wp_enqueue_style('pboot-fonts');
-
         foreach(array_keys($this->style_regs) as $name)
         {
-            $name_handle = $this->getNameHandle($name);
-            wp_enqueue_style($name_handle);
+            if($this->isFrontHandle($name) || $this->isCommonHandle($name))
+            {
+                $name_handle = $this->getNameHandle($name);
+                wp_enqueue_style($name_handle);
+            }
         }
     }
 
     public function enqueueStylesAdmin()
     {
-        // wp_enqueue_style('pboot-fonts');
-
         foreach(array_keys($this->style_regs) as $name)
         {
-            $name_handle = $this->getNameHandle($name);
-            wp_enqueue_style($name_handle);
+            if($this->isAdminHandle($name) || $this->isCommonHandle($name))
+            {
+                $name_handle = $this->getNameHandle($name);
+                wp_enqueue_style($name_handle);
+            }
         }
     }
 }
