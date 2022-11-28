@@ -4,13 +4,6 @@ namespace WPSEEDE\Utils;
 
 class Base
 {
-    static function getOption($name, $default=null)
-    {
-        return wpseede_get_option($name, $default);
-    }
-
-    /* ------------------------------ */
-
     static function getLanguages()
     {
         $langs = [];
