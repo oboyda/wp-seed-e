@@ -291,7 +291,7 @@ class Base
         }
     }
 
-    static function getTermBySysValue($sys_value, $taxonomy, $fields='all')
+    static function getTermBySysName($sys_name, $taxonomy, $fields='all')
     {
         $q_args = [
             'taxonomy' => $taxonomy,
@@ -299,8 +299,8 @@ class Base
             'number' => 1,
             'meta_query' => [
                 [
-                    'key' => 'sys_value',
-                    'value' => $sys_value,
+                    'key' => 'sys_name',
+                    'value' => $sys_name,
                     'compare' => '='
                 ]
             ],
@@ -397,21 +397,24 @@ class Base
         return $pref . substr(str_shuffle($chars), 0, 10) . $sfx;
     }
 
-    static function genHash($length=20)
+    static function genHash($type='default')
     {
         $hash = '';
         $nums = '0123456789';
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        $hash = $nums . $chars;
-
-        if($length > strlen($hash))
+        if($type == 'default')
         {
-            $length = 20;
+            $hash = $nums . $chars;
+            $hash = str_shuffle($hash);
+            $hash = substr($hash, 0, 20);
         }
+        elseif($type == 'vcode'){
 
-        $hash = str_shuffle($hash);
-        $hash = substr($hash, 0, $length);
+            $hash = $nums;
+            $hash = str_shuffle($hash);
+            $hash = substr($hash, 0, 6);
+        }
 
         return $hash;
     }
