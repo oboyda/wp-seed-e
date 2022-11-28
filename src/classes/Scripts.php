@@ -50,7 +50,7 @@ class Scripts
         $this->prefix = $this->context_name . '_';
 
         $this->script_regs = $this->args['script_regs'];
-        $this->script_regs = $this->args['script_regs'];
+        $this->script_deps = $this->args['script_deps'];
 
         $this->style_regs = $this->args['style_regs'];
         $this->style_deps = $this->args['style_deps'];
