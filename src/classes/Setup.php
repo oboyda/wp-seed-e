@@ -191,9 +191,9 @@ class Setup
     }
     public function _initTheme()
     {
-        add_action('after_setup_theme', '_addThemeSupport');
-        add_action('after_setup_theme', '_addThemeImageSizes');
-        add_action('after_setup_theme', '_addThemeNavMenus');
+        $this->_addThemeSupport();
+        $this->_addThemeImageSizes();
+        $this->_addThemeNavMenus();
     }
 
     public function _addThemeSupport()
