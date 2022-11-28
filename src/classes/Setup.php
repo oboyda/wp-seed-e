@@ -158,19 +158,22 @@ class Setup
     }
     public function _initSettings()
     {
-        $this->settings_admin = new \WPSEED\Settings([
+        if($this->args['settings_config'])
+        {
+            $this->settings_admin = new \WPSEED\Settings([
 
-            'prefix' => $this->context_name . '_',
-            'menu_page' => 'options-general.php',
-            'menu_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
-            'page_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
-            'btn_title' => __('Update', 'wpseede')
+                'prefix' => $this->context_name . '_',
+                'menu_page' => 'options-general.php',
+                'menu_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
+                'page_title' => sprintf(__('%s Options', 'wpseede'), $this->plugin_name),
+                'btn_title' => __('Update', 'wpseede')
 
-        ],  $this->args['settings_config']);
+            ],  $this->args['settings_config']);
 
-        $this->settings = new Settings([
-            'context_name' => $this->context_name
-        ]);
+            $this->settings = new Settings([
+                'context_name' => $this->context_name
+            ]);
+        }
     }
 
     public function initScripts($args=[])

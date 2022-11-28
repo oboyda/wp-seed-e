@@ -25,7 +25,7 @@ class Settings
     {
         $settings = new \WPSEED\Settings([
             'prefix' => $this->prefix,
-            'render_fields' => false            
+            'render_fields' => false
         ]);
 
         $opt = $settings->get_option($name);
