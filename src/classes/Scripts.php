@@ -22,7 +22,7 @@ class Scripts
             'context_name' => 'pboot',
 
             'build_dir' => __DIR__ . '/build',
-            'build_dir_url' => __DIR__ . '/build',
+            'build_dir_url' => '/build',
             'enqueue_build_index_front' => true,
             'enqueue_build_index_admin' => true,
 
@@ -170,7 +170,7 @@ class Scripts
             
                         wp_register_script(
                             $name_handle,
-                            $this->args['build_dir_url'] . '/front.js',
+                            $this->args['build_dir_url'] . '/admin.js',
                             array_merge($asset['dependencies'], $deps),
                             $asset['version'],
                             in_array($name, $this->args['footer_scripts'])

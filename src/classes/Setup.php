@@ -10,7 +10,7 @@ class Setup
     protected $name;
     protected $textdom;
     protected $base_dir;
-    protected $base_url;
+    protected $base_dir_url;
     protected $version;
 
     var $settings;
@@ -81,7 +81,7 @@ class Setup
         $this->context_name = $this->args['context_name'];
         $this->textdom = $this->args['textdom'];
         $this->base_dir = $this->args['base_dir'];
-        $this->base_url = $this->args['base_url'];
+        $this->base_dir_url = $this->args['base_dir_url'];
         $this->version = $this->args['version'];
     }
 
