@@ -116,9 +116,9 @@ class Scripts
         $this->style_deps = array_merge($this->style_deps, $regs);
     }
 
-    protected function getNameHandle($name, $reg_names)
+    protected function getNameHandle($name, $reg_names=[])
     {
-        return (!isset($reg_names[$name]) || strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
+        return (!in_array($reg_names[$name]) || strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
     }
     protected function getNameHandles($names, $reg_names)
     {
