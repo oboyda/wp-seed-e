@@ -15,6 +15,7 @@ jQuery.fn.extend({
             }
         });
     },
+
     viewReplace: function(html, triggerLoadedEvent=true, triggerChildren=false)
     {
         this.html(html);
@@ -25,9 +26,36 @@ jQuery.fn.extend({
             _view.viewTriggerLoaded(triggerChildren);
         }
     },
+
     viewExists: function()
     {
         return jQuery.contains(document.body, this.get(0));
+    },
+
+    viewAjaxLoad: function(loadAction="wpseede_load_view", viewName, viewArgs={}, viewArgsCast={}, cbk)
+    {
+        const parentView = this;
+
+        let qArgs = {
+            action: loadAction,
+            view_name: viewName,
+            view_args: viewArgs,
+            view_args_cast: viewArgsCast
+        };
+
+        jQuery.post(wpseedeVars.ajaxurl, qArgs, function(resp){
+
+            if(resp.status && typeof resp.values.view_html !== 'undefined')
+            {
+                parentView.html(resp.values.view_html);
+                parentView.viewTriggerLoaded(true);
+
+                if(typeof cbk === 'function')
+                {
+                    cbk(resp);
+                }
+            }
+        });
     }
 });
 
