@@ -53,6 +53,8 @@ class Setup
                     // 'src/php/acf-blocks.php',
                     // 'src/php/acf-fields.php'
                 ],
+
+                'load_modules' => [],
                 
                 'settings_config' => [],
 
@@ -134,14 +136,27 @@ class Setup
 
     public function loadModules()
     {
-        foreach(wpseed_get_dir_files($this->base_dir . '/mods', true, false) as $dir)
+        $dir_files = wpseed_get_dir_files($this->base_dir . '/mods', true, false);
+        
+        if(!empty($dir_files) && !empty($this->args['load_modules']))
         {
-            if(!is_dir($dir)) continue;
-
-            $mod_index_file = $dir . '/index.php';
-            if(file_exists($mod_index_file))
+            foreach($dir_files as $file)
             {
-                require_once $mod_index_file;
+                if(!(
+                    is_dir($file) && 
+                    (
+                        (is_array($this->args['load_modules']) && in_array(basename($file), $this->args['load_modules'])) || 
+                        $this->args['load_modules'] == 'all'
+                    )
+                )){
+                    continue;
+                }
+
+                $mod_index_file = $file . '/index.php';
+                if(file_exists($mod_index_file))
+                {
+                    require_once $mod_index_file;
+                }
             }
         }
     }
