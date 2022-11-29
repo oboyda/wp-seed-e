@@ -9,6 +9,7 @@ class View extends \WPSEED\View
         $default_args = wp_parse_args($default_args, [
 
             'id' => $this->getField('id', ''),
+            'context_name' => 'wpseede',
             'acf_field_prefix' => 'wpseede__',
             'html_class' => $this->getField('html_class', ''),
             'hide' => $this->getField('hide', false),
@@ -45,6 +46,8 @@ class View extends \WPSEED\View
 
     protected function setHtmlClass()
     {
+        $this->addHtmlClass($this->args['context_name']);
+
         if($this->args['html_class'])
         {
             $this->addHtmlClass($this->args['html_class']);

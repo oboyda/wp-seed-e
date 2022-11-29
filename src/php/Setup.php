@@ -115,6 +115,8 @@ class Setup
             {
                 $this->initTheme();
             }
+
+            $this->initViewLoader();
         }
     }
 
@@ -257,5 +259,12 @@ class Setup
         {
             register_nav_menus($this->args['theme_menus']);
         }
+    }
+
+    public function initViewLoader()
+    {
+        $view_loader = new View_Loader([
+            'context_name' => $this->context_name
+        ]);
     }
 }
