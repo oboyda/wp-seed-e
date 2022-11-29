@@ -54,7 +54,7 @@ class Setup
                     // 'src/php/acf-fields.php'
                 ],
 
-                'load_modules' => [],
+                'load_modules' => [], #array, string 'all'
                 
                 'settings_config' => [],
 
