@@ -40,14 +40,14 @@ class View_Loader extends \WPSEED\Action
                 $view_func = $this->context_name . '_get_mod_view';
                 if(function_exists($view_func))
                 {
-                    $view_html = $view_func($view_mod_name[0], $view_mod_name[1], $view_args_cast);
+                    $view_html = $view_func($view_mod_name[0], $view_mod_name[1], Utils_Base::castVals($view_args, $view_args_cast));
                 }
             }
             else{
                 $view_func = $this->context_name . '_get_view';
                 if(function_exists($view_func))
                 {
-                    $view_html = $view_func($view_name, $view_args_cast);
+                    $view_html = $view_func($view_name, Utils_Base::castVals($view_args, $view_args_cast));
                 }
             }
 

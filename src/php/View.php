@@ -4,48 +4,29 @@ namespace WPSEEDE;
 
 class View extends \WPSEED\View 
 {
+    const CONTEXT_NAME = 'wpseede';
+
     public function __construct($args, $default_args=[])
     {
-        $default_args = wp_parse_args($default_args, [
+        parent::__construct($args, wp_parse_args($default_args, [
 
             'id' => $this->getField('id', ''),
-            'context_name' => 'wpseede',
             'html_class' => $this->getField('html_class', ''),
-            'hide' => $this->getField('hide', false),
+            'hide' => (bool)$this->getField('hide', false),
             'hide_mobile' => (bool)$this->getField('hide_mobile', false),
             'hide_desktop' => (bool)$this->getField('hide_desktop', false),
-            'top_level' => $this->getField('top_level', false),
+            'top_level' => (bool)$this->getField('top_level', false),
             'padding_bottom' => $this->getField('padding_bottom', ''),
             'margin_bottom' => $this->getField('margin_bottom', ''),
             'container_class' => $this->getField('container_class', 'container-lg')
-        ]);
-
-        parent::__construct($args, $default_args);
+        ]));
 
         $this->setHtmlClass();
-    }
-    
-    protected function getField($name, $default=null)
-    {
-        $_name = $this->args['context_name'] . '__' . $this->getName(true) . '__' . $name;
-        
-        $field = function_exists('get_field') ? get_field($_name) : null;
-        
-        return !empty($field) ? $field : $default;
-    }
-
-    protected function getGroupField($group, $name, $default=null)
-    {
-        $_group = $this->args['context_name'] . '__' . $this->getName(true) . '__' . $group;
-        
-        $field = function_exists('get_field') ? get_field($_group) : null;
-
-        return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
     }
 
     protected function setHtmlClass()
     {
-        $this->addHtmlClass($this->args['context_name']);
+        $this->addHtmlClass(static::CONTEXT_NAME);
 
         if($this->args['html_class'])
         {
@@ -79,6 +60,24 @@ class View extends \WPSEED\View
         }
     }
     
+    protected function getField($name, $default=null)
+    {
+        $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
+        
+        $field = function_exists('get_field') ? get_field($_name) : null;
+        
+        return !empty($field) ? $field : $default;
+    }
+
+    protected function getGroupField($group, $name, $default=null)
+    {
+        $_group = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $group;
+        
+        $field = function_exists('get_field') ? get_field($_group) : null;
+
+        return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
+    }
+
     protected function getAdminPostId()
     {
         return (is_admin() && isset($_GET['post'])) ? (int)$_GET['post'] : ((is_admin() && isset($_POST['post_id'])) ? (int)$_POST['post_id'] : 0);
