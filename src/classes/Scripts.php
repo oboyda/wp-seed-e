@@ -118,7 +118,7 @@ class Scripts
 
     protected function getNameHandle($name, $reg_names=[])
     {
-        return (!in_array($reg_names[$name]) || strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
+        return (!in_array($name, $reg_names) || strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
     }
     protected function getNameHandles($names, $reg_names)
     {
