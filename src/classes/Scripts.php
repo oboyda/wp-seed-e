@@ -105,7 +105,7 @@ class Scripts
         $this->script_deps = array_merge($this->script_deps, $regs);
     }
 
-    public function addStyletReg($reg)
+    public function addStyleReg($reg)
     {
         $regs = is_array($reg) ? $regs : [$regs];
         $this->style_regs = array_merge($this->style_regs, $regs);
