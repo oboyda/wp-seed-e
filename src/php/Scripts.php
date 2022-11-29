@@ -21,8 +21,12 @@ class Scripts
 
             'context_name' => 'pboot',
 
+            'base_dir' => __DIR__,
+            'base_dir_url' => plugins_url('', __FILE__),
+
             'build_dir' => __DIR__ . '/build',
             'build_dir_url' => '/build',
+
             'enqueue_build_index_front' => true,
             'enqueue_build_index_admin' => true,
 
@@ -157,13 +161,14 @@ class Scripts
             $this->args['enqueue_build_index_admin']
         ){
             $this->script_regs = array_merge([
+                'wpseede_index' => $this->args['base_url'] . '/../index.js',
                 'build_index_front' => '',
-                'build_index_admin' => '',
+                'build_index_admin' => ''
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
-                'build_index_front' => ['jquery'],
-                'build_index_admin' => ['jquery']
+                'build_index_front' => ['wpseede_index', 'jquery'],
+                'build_index_admin' => ['wpseede_index', 'jquery']
             ], $this->script_deps);
         }
 
