@@ -10,7 +10,6 @@ class View extends \WPSEED\View
 
             'id' => $this->getField('id', ''),
             'context_name' => 'wpseede',
-            'acf_field_prefix' => 'wpseede__',
             'html_class' => $this->getField('html_class', ''),
             'hide' => $this->getField('hide', false),
             'hide_mobile' => (bool)$this->getField('hide_mobile', false),
@@ -28,7 +27,7 @@ class View extends \WPSEED\View
     
     protected function getField($name, $default=null)
     {
-        $_name = $this->args['acf_field_prefix'] . $this->getName(true) . '__' . $name;
+        $_name = $this->args['context_name'] . '__' . $this->getName(true) . '__' . $name;
         
         $field = function_exists('get_field') ? get_field($_name) : null;
         
@@ -37,7 +36,7 @@ class View extends \WPSEED\View
 
     protected function getGroupField($group, $name, $default=null)
     {
-        $_group = $this->args['acf_field_prefix'] . $this->getName(true) . '__' . $group;
+        $_group = $this->args['context_name'] . '__' . $this->getName(true) . '__' . $group;
         
         $field = function_exists('get_field') ? get_field($_group) : null;
 
