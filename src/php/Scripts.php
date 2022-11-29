@@ -163,13 +163,13 @@ class Scripts
             $this->script_regs = array_merge([
                 'build_index_front' => '',
                 'build_index_admin' => '',
-                'wpseede_utils' => $this->args['base_dir_url'] . '/../js/utils.js',
+                'wpseede' => $this->args['base_dir_url'] . '/../js/wpseede.js',
                 'wpseede_views_loader' => $this->args['base_dir_url'] . '/../js/views-loader.js'
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
-                'build_index_front' => ['wpseede_utils', 'jquery'],
-                'build_index_admin' => ['wpseede_utils', 'jquery']
+                'build_index_front' => ['wpseede', 'jquery'],
+                'build_index_admin' => ['wpseede', 'jquery']
             ], $this->script_deps);
         }
 
