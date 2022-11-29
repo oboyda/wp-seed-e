@@ -68,7 +68,7 @@ const Wpseede = {
         
         ajaxForms.each(function(){
 
-            const form = $(this);
+            const form = jQuery(this);
     
             form.on("submit", function(e){
                 e.preventDefault();
@@ -148,7 +148,7 @@ const Wpseede = {
     
             form.find(".view.form-files-drop").each(function(){
     
-                const filesDropView = $(this);
+                const filesDropView = jQuery(this);
     
                 const dropArea = filesDropView.find(".drop-area");
                 const dropSummary = filesDropView.find(".drop-summary");
@@ -198,7 +198,7 @@ const Wpseede = {
     
             form.find(".view.form-input-dates").each(function(){
     
-                const datesRangeView = $(this);
+                const datesRangeView = jQuery(this);
     
                 const dateFromFieldDisplay = datesRangeView.find(".date-from input.date-from-display");
                 const dateFromFieldAlt = datesRangeView.find(".date-from input.date-from");
