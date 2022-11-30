@@ -8,6 +8,7 @@ class Setup
 
     protected $plugin_name;
     protected $context_name;
+    protected $namespace;
     protected $textdom;
     protected $base_dir;
     protected $base_dir_url;
@@ -15,6 +16,8 @@ class Setup
 
     var $settings_admin;
     var $settings;
+
+    var $view_loader;
 
     var $script;
 
@@ -38,6 +41,7 @@ class Setup
 
                 'plugin_name' => 'WPSEEDE Plugin',
                 'context_name' => 'wpseede',
+                'namespace' => 'WPSEEDE',
                 'textdom' => 'wpseede',
                 'base_dir' => __DIR__,
                 'base_dir_url' => plugins_url('', __FILE__),
@@ -82,6 +86,7 @@ class Setup
 
         $this->plugin_name = $this->args['plugin_name'];
         $this->context_name = $this->args['context_name'];
+        $this->namespace = $this->args['namespace'];
         $this->textdom = $this->args['textdom'];
         $this->base_dir = $this->args['base_dir'];
         $this->base_dir_url = $this->args['base_dir_url'];
@@ -263,8 +268,10 @@ class Setup
 
     public function initViewLoader()
     {
-        $view_loader = new View_Loader([
-            'context_name' => $this->context_name
+        $this->view_loader = new View_Loader([
+            'context_name' => $this->context_name,
+            'namespace' => $this->namespace,
+            'base_dir' => $this->base_dir
         ]);
     }
 }
