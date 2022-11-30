@@ -1,4 +1,8 @@
 jQuery.fn.extend({
+
+    isWindowMobile: function(){
+        return (this.width() < 992);
+    },
     
     viewTriggerLoaded: function(triggerChildren=false)
     {
