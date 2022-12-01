@@ -43,20 +43,38 @@ class View_Loader extends \WPSEED\Action
         $this->respond();
     }
 
-    public function getView($view_name, $view_args=[], $echo=false)
+    protected function parseViewName($view_name)
     {
-        $view_dir = $this->base_dir . '/src/php/View/html';
-        $view_namespace = '\\' . $this->namespace . '\View';
-    
+        $_view_name = [
+            'view_name' => $view_name,
+            'view_dir' => $this->base_dir . '/src/php/View/html',
+            'view_namespace' => '\\' . $this->namespace . '\View'
+        ];
+
         if(strpos($view_name, '/') !== false)
         {
             $view_mod_name = explode('/', $view_name);
-            $view_dir = $this->base_dir . '/mods/' . $view_mod_name[0] . '/View/html';
-            $view_namespace = '\\' . $this->namespace . '\\Mod\\' . $view_mod_name[0] . '\View';
-            $view_name = $view_mod_name[1];
+
+            $_view_name['view_dir'] = $this->base_dir . '/mods/' . $view_mod_name[0] . '/View/html';
+            $_view_name['view_namespace'] = '\\' . $this->namespace . '\\Mod\\' . $view_mod_name[0] . '\View';
+            $_view_name['view_name'] = $view_mod_name[1];
         }
-    
-        return wpseed_get_view($view_name, $view_args, $echo, $view_dir, $view_namespace);
+
+        return $_view_name;
+    }
+
+    public function getViewObject($view_name, $view_args=[])
+    {
+        $_view_name = $this->parseViewName($view_name);
+
+        return wpseed_get_view_object($_view_name['view_name'], $view_args, $_view_name['view_dir'], $_view_name['view_namespace']);
+    }
+
+    public function getView($view_name, $view_args=[], $echo=false)
+    {
+        $_view_name = $this->parseViewName($view_name);
+
+        return wpseed_get_view($_view_name['view_name'], $view_args, $echo, $_view_name['view_dir'], $_view_name['view_namespace']);
     }
 
     public function printView($view_name, $view_args=[])

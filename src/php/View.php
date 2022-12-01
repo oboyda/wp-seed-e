@@ -6,8 +6,14 @@ class View extends \WPSEED\View
 {
     const CONTEXT_NAME = 'wpseede';
 
+    protected $orig_args;
+    protected $child_parts;
+
     public function __construct($args, $default_args=[])
     {
+        $this->orig_args = $args;
+        $this->child_parts = [];
+
         parent::__construct($args, wp_parse_args($default_args, [
 
             'id' => $this->getField('id', ''),
@@ -22,6 +28,15 @@ class View extends \WPSEED\View
         ]));
 
         $this->setHtmlClass();
+    }
+
+    public function setChildPart($name, $html)
+    {
+        $this->child_parts[$name] = $html;
+    }
+    public function getChildPart($name)
+    {
+        return isset($this->child_parts[$name]) ? $this->child_parts[$name] : '';
     }
 
     protected function setHtmlClass()
@@ -63,8 +78,9 @@ class View extends \WPSEED\View
     protected function getField($name, $default=null)
     {
         $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
+        $post_id = isset($_POST['post_id']) ? (int)$_POST['post_id'] : null;
         
-        $field = function_exists('get_field') ? get_field($_name) : null;
+        $field = function_exists('get_field') ? get_field($_name, $post_id) : null;
         
         return !empty($field) ? $field : $default;
     }
@@ -196,5 +212,26 @@ class View extends \WPSEED\View
                 echo '<span class="edit-handle">' . $this->getName() . '</span>';
             echo '</div>';
         }
+    }
+
+    public function renderItemsCols($items, $cols_num=2, $col_size='lg')
+    {
+        $html = '';
+        if(is_array($items) && !empty($items))
+        {
+            $col_class = 'col-' . $col_size . '-' . (12/$cols_num);
+            foreach(array_chunk($items, $cols_num) as $items_row)
+            {
+                $html .= '<div class="row">';
+                foreach($items_row as $item)
+                {
+                    $html .= '<div class="' . $col_class . '">';
+                        $html .= $item;
+                    $html .= '</div><!-- .col -->';
+                }
+                $html .= '</div><!-- .row -->';
+            }
+        }
+        return $html;
     }
 }

@@ -33,11 +33,11 @@ class Type
         return class_exists($type_class) ? $type_class::_get_props_config() : [];
     }
 
-    static function getTypeRequestArgs($post_type, $include=[])
+    static function getTypeRequestArgs($type_class, $include=[])
     {
         $req = new Request();
 
-        $props_config = self::getTypePropsConfig($post_type);
+        $props_config = self::getTypePropsConfig($type_class);
 
         $req_args = [];
 
