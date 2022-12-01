@@ -35,7 +35,11 @@ class View_Loader extends \WPSEED\Action
         $view_name = $this->getReq('view_name');
         $view_args = $this->getReq('view_args', 'text', []);
         $view_args_cast = $this->getReq('view_args_cast', 'text', []);
-        $view_html = $this->getView($view_name, Utils_Base::castVals($view_args, $view_args_cast));
+        $view_args_s = $this->getReq('view_args_s', 'text', '');
+
+        $_view_args = !empty($view_args) ? Utils_Base::castVals($view_args, $view_args_cast) : maybe_unserialize(stripslashes($view_args_s));
+
+        $view_html = $this->getView($view_name, $_view_args);
 
         $this->setValue('view_name', $view_name);
         $this->setValue('view_html', $view_html);

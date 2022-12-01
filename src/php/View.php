@@ -24,7 +24,10 @@ class View extends \WPSEED\View
             'top_level' => (bool)$this->getField('top_level', false),
             'padding_bottom' => $this->getField('padding_bottom', ''),
             'margin_bottom' => $this->getField('margin_bottom', ''),
-            'container_class' => $this->getField('container_class', 'container-lg')
+            'container_class' => $this->getField('container_class', 'container-lg'),
+
+            'acf_block_id' => '',
+            'acf_block_data' => []
         ]));
 
         $this->setHtmlClass();
@@ -75,22 +78,35 @@ class View extends \WPSEED\View
         }
     }
     
-    protected function getField($name, $default=null)
+    public function getField($name, $default=null, $orig_args=null)
     {
+        $_orig_args = isset($orig_args) ? $orig_args : $this->orig_args;
+
         $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
         $post_id = isset($_POST['post_id']) ? (int)$_POST['post_id'] : null;
         
-        $field = function_exists('get_field') ? get_field($_name, $post_id) : null;
+        $field = null;
+        // $field = function_exists('get_field') ? get_field($_name, $post_id) : null;
+
+        if(!empty($_orig_args['acf_block_id']))
+        {
+            if(isset($_orig_args['acf_block_data'][$_name]))
+            {
+                $field = $_orig_args['acf_block_data'][$_name];
+            }
+        }
+        elseif(function_exists('get_field'))
+        {
+            $field = get_field($_name, $post_id);
+        }
         
         return !empty($field) ? $field : $default;
     }
 
-    protected function getGroupField($group, $name, $default=null)
+    public function getGroupField($group, $name, $default=null, $orig_args=null)
     {
-        $_group = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $group;
+        $field = getField($name, null, $orig_args);
         
-        $field = function_exists('get_field') ? get_field($_group) : null;
-
         return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
     }
 

@@ -520,4 +520,48 @@ class Base
 
         return $slugs ? array_keys($weekdays) : $weekdays;
     }
+
+    /* ------------------------------ */
+
+    static function getGlobalPostId()
+    {
+        global $post;
+        return isset($_POST['post_id']) ? (int)$_POST['post_id'] : (isset($post) ? $post->ID : 0);
+    }
+
+    static function getBlockId($block)
+    {
+        $block_attributes = [];
+
+        $parsed_block = (is_a($block, 'WP_Block') && isset($block->parsed_block)) ? $block->parsed_block : $block;
+
+        $block_attrs = isset($parsed_block['attrs']) ? $parsed_block['attrs'] : [];
+
+        return (function_exists('acf_get_block_id') && $block_attrs) ? acf_get_block_id($block_attrs) : '';
+    }
+
+    static function getPostBlockData($block_id, $post_id=null)
+    {
+        global $post;
+
+        $_post = $post_id ? get_post($post_id) : $post;
+        $post_content = is_a($_post, 'WP_Post') ? $_post->post_content : '';
+        $post_blocks = $post_content ? parse_blocks($post_content) : [];
+
+        $data = null;
+
+        foreach($post_blocks as $post_block)
+        {
+            $_block_id = self::getBlockId($post_block);
+            if(
+                $_block_id === $block_id && 
+                isset($post_block['attrs']) && 
+                isset($post_block['attrs']['data'])
+            ){
+                $data = $post_block['attrs']['data'];
+            }
+        }
+
+        return $data;
+    }
 }

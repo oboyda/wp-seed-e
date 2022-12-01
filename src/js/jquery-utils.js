@@ -3,6 +3,16 @@ jQuery.fn.extend({
     isWindowMobile: function(){
         return (this.width() < 992);
     },
+
+    viewAddLoadedListener: function(eventName, cbk)
+    {
+        this.on(eventName, function(e, view){
+            if(typeof cbk === 'function' && view.viewExists())
+            {
+                cbk(e, view);
+            }
+        });
+    },
     
     viewTriggerLoaded: function(triggerChildren=false)
     {
@@ -28,6 +38,19 @@ jQuery.fn.extend({
         if(triggerLoadedEvent)
         {
             _view.viewTriggerLoaded(triggerChildren);
+        }
+    },
+
+    viewUpdateParts: function(partsContent, triggerLoaded=false)
+    {
+        const parentView = this;
+        Object.keys(partsContent).forEach((k) => {
+
+            parentView.find(".part-" + k).html(partsContent[k]);
+        });
+        if(triggerLoaded)
+        {
+            parentView.viewTriggerLoaded();
         }
     },
 
