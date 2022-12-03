@@ -1,6 +1,6 @@
 <?php 
 
-namespace WPSEEDE\Type;
+namespace WPSEEDE;
 
 class User extends \WPSEED\User
 {

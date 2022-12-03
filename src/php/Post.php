@@ -1,6 +1,6 @@
 <?php 
 
-namespace WPSEEDE\Type;
+namespace WPSEEDE;
 
 use WPSEEDE\Utils\Base as Utils_Base;
 
