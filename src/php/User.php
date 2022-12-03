@@ -4,9 +4,9 @@ namespace WPSEEDE;
 
 class User extends \WPSEED\User
 {
-    public function __construct($user=null)
+    public function __construct($user=null, $props_config=[])
     {
-        parent::__construct($user, self::_get_props_config());
+        parent::__construct($user, array_merge($props_config, self::_get_props_config()));
     }
 
     static function _get_props_config()

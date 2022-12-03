@@ -2,19 +2,11 @@
 
 namespace WPSEEDE;
 
-use WPSEEDE\Utils\Base as Utils_Base;
-
 class Post extends \WPSEED\Post
 {
-    public function __construct($post=null)
+    public function __construct($post=null, $props_config=[])
     {
-        parent::__construct($post, self::_get_props_config());
-    }
-
-    static function _get_props_config()
-    {
-        return [
-        ];
+        parent::__construct($post, $props_config);
     }
 
     public function getPropConfigData($key, $data_key=null, $default=null)
