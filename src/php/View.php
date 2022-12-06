@@ -2,6 +2,8 @@
 
 namespace WPSEEDE;
 
+use WPSEEDE\Utils\Base as Utils_Base;
+
 class View extends \WPSEED\View 
 {
     const CONTEXT_NAME = 'wpseede';
@@ -26,8 +28,8 @@ class View extends \WPSEED\View
             'margin_bottom' => $this->getField('margin_bottom', ''),
             'container_class' => $this->getField('container_class', 'container-lg'),
 
-            'acf_block_id' => '',
-            'acf_block_data' => []
+            'block_id' => '',
+            'block_data' => []
         ]));
 
         $this->setHtmlClass();
@@ -82,34 +84,41 @@ class View extends \WPSEED\View
         }
     }
     
-    public function getField($name, $default=null, $orig_args=null)
+    public function getField($name, $default=null, $args=[])
     {
-        $_orig_args = isset($orig_args) ? $orig_args : $this->orig_args;
-
         $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
-        $post_id = isset($_POST['post_id']) ? (int)$_POST['post_id'] : null;
+
+        if(isset($args['block_id']))
+        {
+            $this->args['block_id'] = $args['block_id'];
+
+            if(empty($args['block_data']))
+            {
+                $post_id = Utils_Base::getGlobalPostId();
+                $this->args['block_data'] = Utils_Base::getPostBlockData($this->args['block_id'], $post_id);
+            }
+            else{
+                $this->args['block_data'] = $args['block_data'];
+            }
+        }
         
         $field = null;
-        // $field = function_exists('get_field') ? get_field($_name, $post_id) : null;
 
-        if(!empty($_orig_args['acf_block_id']))
+        if(isset($this->args['block_data'][$_name]))
         {
-            if(isset($_orig_args['acf_block_data'][$_name]))
-            {
-                $field = $_orig_args['acf_block_data'][$_name];
-            }
+            $field = $this->args['block_data'][$_name];
         }
         elseif(function_exists('get_field'))
         {
             $field = get_field($_name, $post_id);
         }
         
-        return !empty($field) ? $field : $default;
+        return (empty($field) && isset($default)) ? $default : $field;
     }
 
-    public function getGroupField($group, $name, $default=null, $orig_args=null)
+    public function getGroupField($group, $name, $default=null, $args=null)
     {
-        $field = getField($name, null, $orig_args);
+        $field = $this->getField($name, null, $args);
         
         return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
     }

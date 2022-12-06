@@ -50,7 +50,7 @@ jQuery.fn.extend({
         });
         if(triggerLoaded)
         {
-            parentView.viewTriggerLoaded();
+            parentView.viewTriggerLoaded(true);
         }
     },
 
