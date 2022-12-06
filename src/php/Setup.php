@@ -21,6 +21,8 @@ class Setup
 
     var $script;
 
+    var $mods_updater;
+
     public function __construct($args)
     {
         $this->parseArgs($args);
@@ -122,6 +124,8 @@ class Setup
             }
 
             $this->initViewLoader();
+
+            $this->initModsUpdater();
         }
     }
 
@@ -131,7 +135,7 @@ class Setup
         {
             foreach($this->args['include_files'] as $file)
             {
-                $_file = (strpos($inc_file, '/') === 0) ? $file : $this->base_dir . '/' . $file;
+                $_file = (strpos($file, '/') === 0) ? $file : $this->base_dir . '/' . $file;
 
                 if(file_exists($_file))
                 {
@@ -273,5 +277,18 @@ class Setup
             'namespace' => $this->namespace,
             'base_dir' => $this->base_dir
         ]);
+    }
+
+    public function initModsUpdater()
+    {
+        // if(current_user_can('manage_options'))
+        // {
+            $this->mods_updater = new Mods_Updater([
+                // 'context_name' => $this->context_name,
+                // 'namespace' => $this->namespace,
+                'base_dir' => $this->base_dir,
+                'load_modules' => $this->args['load_modules']
+            ]);
+        // }
     }
 }
