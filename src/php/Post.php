@@ -6,7 +6,12 @@ class Post extends \WPSEED\Post
 {
     public function __construct($post=null, $props_config=[])
     {
-        parent::__construct($post, $props_config);
+        parent::__construct($post, array_merge($props_config, self::_get_props_config()));
+    }
+
+    static function _get_props_config()
+    {
+        return [];
     }
 
     public function getPropConfigData($key, $data_key=null, $default=null)
