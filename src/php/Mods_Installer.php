@@ -14,6 +14,7 @@ class Mods_Installer
     protected $mods_dir;
     protected $mods_dir_a;
     protected $mods_path_a;
+    protected $mods_path_index_js;
 
     protected $filesys;
 
@@ -32,10 +33,12 @@ class Mods_Installer
         $this->mods_dir_a = $this->mods_dir . '/__mods-archive';
         $this->mods_dir_e = $this->mods_dir . '/' . self::MODS_ARCHIVE_EXTR_DIR;
         $this->mods_path_a = $this->mods_dir . '/__mods-archive.zip';
+        $this->mods_path_index_js = $this->mods_dir . '/index.js';
 
         $this->log = [
             'installed' => [],
-            'updated' => []
+            'updated' => [],
+            'deleted' => []
         ];
 
         add_action('init', [$this, 'doConsole']);
@@ -77,6 +80,7 @@ class Mods_Installer
         $this->downloadModsArchive();
         $this->extractModsArchive();
         $this->installMods($is_update);
+        $this->writeIndexJs();
         $this->printLogs();
     }
 
@@ -148,8 +152,8 @@ class Mods_Installer
 
     protected function installMods($is_update=false)
     {
-        $mods_list = wpseed_get_dir_files($this->mods_dir, false, false);
-        $mods_list_a = wpseed_get_dir_files($this->mods_dir_a, false, false);
+        $mods_list = $this->getDirMods($this->mods_dir, false);
+        $mods_list_a = $this->getDirMods($this->mods_dir_a, false);
 
         if(empty($mods_list_a))
         {
@@ -161,41 +165,50 @@ class Mods_Installer
             $mod_path_a = $this->mods_dir_a . '/' . $mod_name_a;
             $mod_path = $this->mods_dir . '/' . $mod_name_a;
 
-            if(!(
-                (is_array($this->load_modules) && in_array($mod_name_a, $this->load_modules))
-                || $this->load_modules === 'all'
-            )){
-                continue;
-            }
-
             $mod_config_path_a = $mod_path_a . '/mod.json';
             $mod_config_path = $mod_path . '/mod.json';
 
-            $mod_config_a = $this->filesys->exists($mod_config_path_a) ? json_decode($this->filesys->get_contents($mod_config_path_a), true) : [];
-            $mod_config = $this->filesys->exists($mod_config_path) ? json_decode($this->filesys->get_contents($mod_config_path), true) : [];
+            $mod_config_a = $this->filesys->exists($mod_config_path_a) ? (array)json_decode($this->filesys->get_contents($mod_config_path_a), true) : [];
+            $mod_config = $this->filesys->exists($mod_config_path) ? (array)json_decode($this->filesys->get_contents($mod_config_path), true) : [];
 
-            if(empty($mod_config_a))
+            $mod_config_a = wp_parse_args($mod_config_a, [
+                'version' => false,
+                'update' => false
+            ]);
+            $mod_config = wp_parse_args($mod_config, [
+                'version' => false,
+                'update' => false
+            ]);
+
+            if(empty($mod_config_a['version']))
             {
+                continue;
+            }
+
+            if(!(
+                is_array($this->load_modules) && 
+                in_array($mod_name_a, $this->load_modules))
+            ){
+                // Maybe delete module
+                if(in_array($mod_name_a, $mods_list) && $mod_config['update'])
+                {
+                    $this->rmDir($mod_path);
+                    $this->addLog('deleted', $mod_name_a, $mod_config['version']);
+                }
+
                 continue;
             }
 
             // Maybe update module
             if($is_update && in_array($mod_name_a, $mods_list))
             {
-                if(empty($mod_config))
+                if(!($mod_config['update'] && !empty($mod_config['version'])))
                 {
                     continue;
                 }
 
-                if(!(isset($mod_config['update']) && $mod_config['update']))
+                if(!version_compare($mod_config_a['version'], $mod_config['version'], '>'))
                 {
-                    continue;
-                }
-
-                if(!(
-                    (isset($mod_config_a['version']) && isset($mod_config['version'])) && 
-                    version_compare($mod_config_a['version'], $mod_config['version'], '>')
-                )){
                     continue;
                 }
 
@@ -203,22 +216,17 @@ class Mods_Installer
 
                 if($copied)
                 {
-                    $this->logAddUpdated($mod_name_a, $mod_config['version'], $mod_config_a['version']);
+                    $this->addLog('updated', $mod_name_a, $mod_config['version'], $mod_config_a['version']);
                 }
             }
             // Install module
             elseif(!in_array($mod_name_a, $mods_list))
             {
-                if(empty($mod_config_a))
-                {
-                    continue;
-                }
-
                 $copied = $this->copyMod($mod_path_a, $mod_path);
 
                 if($copied)
                 {
-                    $this->logAddInstalled($mod_name_a, $mod_config_a['version']);
+                    $this->addLog('installed', $mod_name_a, $mod_config_a['version']);
                 }
             }
         }
@@ -227,44 +235,51 @@ class Mods_Installer
         $this->rmDir($this->mods_dir_a);
     }
 
-    protected function copyMod($mod_path_a, $mod_path)
+    protected function writeIndexJs()
     {
-        $this->rmDir($mod_path);
-
-        // $copied = copy_dir($mod_path_a, $mod_path);
-        $copied = $this->filesys->move($mod_path_a, $mod_path);
-
-        return is_wp_error($copied) ? false : $copied;
-    }
-
-    protected function rmDir($dir)
-    {
-        if($this->filesys->exists($dir))
+        if($this->filesys->exists($this->mods_dir))
         {
-            return $this->filesys->rmdir($dir, true);
-        }
-        return false;
-    }
+            if(empty($this->log['installed']) && empty($this->log['updated']))
+            {
+                return;
+            }
 
-    protected function logAddInstalled($mod_name, $version)
-    {
-        // $log = 'Installed ' . $mod_name . ' ' . $version;
-        $log = $mod_name . ' ' . $version;
+            $index_lines = [];
 
-        if(!in_array($log, $this->log['installed']))
-        {
-            $this->log['installed'][] = $log;
-        }
-    }
+            $mods_list = $this->getDirMods($this->mods_dir);
 
-    protected function logAddUpdated($mod_name, $version_old, $version_new)
-    {
-        // $log = 'Updated ' . $mod_name . ' ' . $version_old . ' > ' . $version_new;
-        $log = $mod_name . ' ' . $version_old . ' > ' . $version_new;
+            foreach($mods_list as $mod_name)
+            {
+                $index_lines[$mod_name] = [
+                    'js' => '',
+                    'scss' => ''
+                ];
 
-        if(!in_array($log, $this->log['updated']))
-        {
-            $this->log['updated'][] = $log;
+                $mod_path = $this->mods_dir . '/' . $mod_name;
+
+                $mod_path_index_js = $mod_path . '/index.js'; 
+                $mod_path_index_scss = $mod_path . '/index.scss'; 
+
+                if($this->filesys->exists($mod_path_index_js))
+                {
+                    $index_lines[$mod_name]['js'] = "import './{$mod_name}/index.js';";
+                }
+                if($this->filesys->exists($mod_path_index_scss))
+                {
+                    $index_lines[$mod_name]['scss'] = "import './{$mod_name}/index.scss';";
+                }
+            }
+
+            $index_lines_str = '';
+
+            foreach($index_lines as $mod => $mod_lines)
+            {
+                $index_lines_str .= implode("\r\n", $mod_lines);
+                $index_lines_str .= "\r\n";
+                $index_lines_str .= "\r\n";
+            }
+
+            $this->filesys->put_contents($this->mods_path_index_js, $index_lines_str);
         }
     }
 
@@ -306,10 +321,90 @@ class Mods_Installer
             $log_lines[] = '> No modules updated.';
         }
 
+        $log_lines[] = "\r\n";
+
+        //Print deleted logs
+        $log_lines[] = '> Deleted modules: (' . count($this->log['deleted']) . ')';
+        $log_lines[] = '> -------------------------';
+
+        if(!empty($this->log['deleted']))
+        {
+            foreach($this->log['deleted'] as $log)
+            {
+                $log_lines[] = '> ' . $log;
+            }
+        }
+        else
+        {
+            $log_lines[] = '> No modules deleted.';
+        }
+
         echo "\r\n";
         echo "\r\n";
         echo implode("\r\n", $log_lines);
         echo "\r\n";
         echo "\r\n";
+    }
+
+    /*
+    Helpers
+    -------------------------
+    */
+
+    protected function copyMod($mod_path_a, $mod_path)
+    {
+        $this->rmDir($mod_path);
+
+        // $copied = copy_dir($mod_path_a, $mod_path);
+        $copied = $this->filesys->move($mod_path_a, $mod_path);
+
+        return is_wp_error($copied) ? false : $copied;
+    }
+
+    protected function rmDir($dir)
+    {
+        if($this->filesys->exists($dir))
+        {
+            return $this->filesys->rmdir($dir, true);
+        }
+        return false;
+    }
+
+    protected function addLog($type='installed', $mod_name, $version, $version_new=null)
+    {
+        $log_line = $mod_name . ' ' . $version;
+
+        if(isset($version_new))
+        {
+            $log_line .= ' > ' . $version_new;
+        }
+
+        if(!in_array($log_line, $this->log[$type]))
+        {
+            $this->log[$type][] = $log_line;
+        }
+
+        // $this->log[$type][$mod_name] = $log_line;
+    }
+
+    protected function getDirMods($dir_path, $full_path=false)
+    {
+        $dir_mods = [];
+
+        $dir_files = wpseed_get_dir_files($dir_path, false, false);
+
+        if(!empty($dir_files))
+        {
+            foreach($dir_files as $file)
+            {
+                $file_path = $dir_path . '/' . $file;
+                if(is_dir($file_path))
+                {
+                    $dir_mods[] = $full_path ? $file_path : $file;
+                }
+            }
+        }
+
+        return $dir_mods;
     }
 }
