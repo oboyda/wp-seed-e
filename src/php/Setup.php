@@ -284,7 +284,9 @@ class Setup
         // if(current_user_can('manage_options'))
         // {
             $this->mods_installer = new Mods_Installer([
-                'base_dir' => $this->base_dir,
+                'context_name' => $this->context_name,
+                'namespace' => $this->namespace,
+                    'base_dir' => $this->base_dir,
                 'load_modules' => $this->args['load_modules']
             ]);
         // }
