@@ -4,7 +4,7 @@ namespace WPSEEDE\Utils;
 
 class Cookie
 {
-    private $args;
+    protected $args;
 
     public function __construct($args=[])
     {
