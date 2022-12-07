@@ -99,7 +99,7 @@ class Post extends \WPSEED\Post
 
     public function getTerms($taxonomy, $fields='ids', $single=true)
     {
-        $term_ids = $this->get_prop($taxonomy);
+        $term_ids = $this->get_prop($taxonomy, [], false);
 
         if($fields === 'ids')
         {
