@@ -8,6 +8,8 @@ class Mods_Installer
     const MODS_ARCHIVE_EXTR_DIR = 'wpseed-mods-master';
 
     protected $args;
+    protected $context_name;
+    protected $namespace;
     protected $base_dir;
     protected $load_modules;
 
@@ -23,9 +25,13 @@ class Mods_Installer
     public function __construct($args)
     {
         $this->args = wp_parse_args($args, [
+            'context_name' => 'wpseede',
+            'namespace' => 'WPSEEDE',
             'base_dir' => __DIR__,
             'load_modules' => []
         ]);
+        $this->context_name = $this->args['context_name'];
+        $this->namespace = $this->args['namespace'];
         $this->base_dir = $this->args['base_dir'];
         $this->load_modules = $this->args['load_modules'];
 
@@ -186,9 +192,9 @@ class Mods_Installer
             }
 
             if(!(
-                is_array($this->load_modules) && 
-                in_array($mod_name_a, $this->load_modules))
-            ){
+                (is_array($this->load_modules) && in_array($mod_name_a, $this->load_modules))
+                || $this->load_modules === 'all'
+            )){
                 // Maybe delete module
                 if(in_array($mod_name_a, $mods_list) && $mod_config['update'])
                 {
@@ -351,6 +357,42 @@ class Mods_Installer
     -------------------------
     */
 
+    protected function updateContext($mod_path)
+    {
+        $context_name_a = 'pboot';
+        $namespace_a = 'PBOOT';
+
+        if(
+            $this->context_name == $context_name_a && 
+            $this->namespace == $namespace_a
+        ){
+            return;
+        }
+
+        $mod_files_tree = $this->getDirTree($mod_path);
+        
+        if(!empty($mod_files_tree))
+        {
+            foreach($mod_files_tree as $file)
+            {
+                $file_content = trim($this->filesys->get_contents($file));
+
+                if(empty($file_content))
+                {
+                    continue;
+                }
+
+                $file_content = str_replace($context_name_a, $this->context_name, $file_content, $count1);
+                $file_content = str_replace($namespace_a, $this->namespace, $file_content, $count2);
+
+                if($count1 || $count2)
+                {
+                    $this->filesys->put_contents($file, $file_content);
+                }
+            }
+        }
+    }
+
     protected function copyMod($mod_path_a, $mod_path)
     {
         $this->rmDir($mod_path);
@@ -358,7 +400,14 @@ class Mods_Installer
         // $copied = copy_dir($mod_path_a, $mod_path);
         $copied = $this->filesys->move($mod_path_a, $mod_path);
 
-        return is_wp_error($copied) ? false : $copied;
+        $copied = is_wp_error($copied) ? false : $copied;
+
+        if($copied)
+        {
+            $this->updateContext($mod_path);
+        }
+
+        return $copied;
     }
 
     protected function rmDir($dir)
@@ -406,5 +455,24 @@ class Mods_Installer
         }
 
         return $dir_mods;
+    }
+
+    protected function getDirTree($dir_path, $tree_files=[])
+    {
+        $dir_files = wpseed_get_dir_files($dir_path, true, false);
+
+        foreach($dir_files as $file)
+        {
+            if(is_dir($file))
+            {
+                $tree_files = $this->getDirTree($file, $tree_files);
+            }
+            else
+            {
+                $tree_files[] = $file;
+            }
+        }
+
+        return $tree_files;
     }
 }

@@ -87,6 +87,7 @@ class View extends \WPSEED\View
     public function getField($name, $default=null, $args=[])
     {
         $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
+        $post_id = Utils_Base::getGlobalPostId();
 
         if(isset($args['block_id']))
         {
@@ -94,7 +95,6 @@ class View extends \WPSEED\View
 
             if(empty($args['block_data']))
             {
-                $post_id = Utils_Base::getGlobalPostId();
                 $this->args['block_data'] = Utils_Base::getPostBlockData($this->args['block_id'], $post_id);
             }
             else{
