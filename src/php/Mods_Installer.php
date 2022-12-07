@@ -359,8 +359,8 @@ class Mods_Installer
 
     protected function updateContext($mod_path)
     {
-        $context_name_a = 'pboot';
-        $namespace_a = 'PBOOT';
+        $context_name_a = 'wpseedm';
+        $namespace_a = 'WPSEEDM';
 
         if(
             $this->context_name == $context_name_a && 
