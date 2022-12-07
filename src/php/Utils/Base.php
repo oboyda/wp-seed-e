@@ -459,10 +459,10 @@ class Base
             'order' => 'ASC',
             'hide_empty' => false
         ]);
-        if($_args['meta_parent_term_id'])
+        if($args['meta_parent_term_id'])
         {
-            $_args['meta_key'] = 'parent_term_id';
-            $_args['meta_value'] = $_args['meta_parent_term_id'];
+            $args['meta_key'] = 'parent_term_id';
+            $args['meta_value'] = $args['meta_parent_term_id'];
         }
         $q_args = [
             'taxonomy' => $taxonomy,
