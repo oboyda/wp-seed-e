@@ -12,6 +12,7 @@ class View extends \WPSEED\View
     protected $child_parts;
 
     protected $data;
+    protected $field_defaults;
 
     public function __construct($args, $default_args=[])
     {
@@ -20,23 +21,20 @@ class View extends \WPSEED\View
 
         parent::__construct($args, wp_parse_args($default_args, [
 
-            'id' => $this->getField('id', '', $args),
+            'id' => $this->getField('id', ''),
             'block_id' => '',
-            'html_class' => $this->getField('html_class', '', $args),
-            'hide' => (bool)$this->getField('hide', false, $args),
-            'hide_mobile' => (bool)$this->getField('hide_mobile', false, $args),
-            'hide_desktop' => (bool)$this->getField('hide_desktop', false, $args),
-            'top_level' => (bool)$this->getField('top_level', false, $args),
-            'padding_bottom' => $this->getField('padding_bottom', '', $args),
-            'margin_bottom' => $this->getField('margin_bottom', '', $args),
-            'container_class' => $this->getField('container_class', 'container-lg', $args),
+            'html_class' => $this->getField('html_class', ''),
+            'hide' => (bool)$this->getField('hide', false),
+            'hide_mobile' => (bool)$this->getField('hide_mobile', false),
+            'hide_desktop' => (bool)$this->getField('hide_desktop', false),
+            'top_level' => (bool)$this->getField('top_level', false),
+            'padding_bottom' => $this->getField('padding_bottom', ''),
+            'margin_bottom' => $this->getField('margin_bottom', ''),
+            'container_class' => $this->getField('container_class', 'container-lg'),
             'data' => []
         ]));
 
-        if(!isset($this->data))
-        {
-            $this->data = $this->args['data'];
-        }
+        $this->setDataFields();
 
         $this->setHtmlClass();
     }
@@ -52,6 +50,68 @@ class View extends \WPSEED\View
     public function getChildParts()
     {
         return $this->child_parts;
+    }
+
+    protected function setDataFields()
+    {
+        $this->data = (!empty($this->args['block_id']) && $this->args['data']) ? Utils_Base::getPostBlockData($this->args['block_id'], Utils_Base::getGlobalPostId()) : $this->args['data'];
+        
+        unset($this->args['data']);
+
+        if(!empty($this->field_defaults))
+        {
+            foreach($this->field_defaults as $name => $default)
+            {
+                $this->args[$name] = $this->_getField($name, $default);
+            }
+        }
+    }
+
+    protected function getField($name, $default=null)
+    {
+        // The constructor is already called, get the field
+        if(isset($this->args))
+        {
+            return $this->_getField($name, $default);
+        }
+
+        // Save field for later use in setDataFields
+        if(!isset($this->field_defaults))
+        {
+            $this->field_defaults = [];
+        }
+
+        $this->field_defaults[$name] = $default;
+    }
+    
+    protected function _getField($name, $default=null)
+    {
+        $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
+
+        $post_id = $this->getPostId();
+
+        $field = null;
+
+        if(isset($this->data[$_name]))
+        {
+            $field = $this->data[$_name];
+        }
+        elseif(function_exists('get_field'))
+        {
+            $field = get_field($_name, $post_id);
+        }
+        else{
+            $field = get_post_meta($_name, $post_id, true);
+        }
+        
+        return (empty($field) && isset($default)) ? $default : $field;
+    }
+
+    public function getGroupField($group, $name, $default=null, $args=null)
+    {
+        $field = $this->getField($name, null, $args);
+        
+        return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
     }
 
     protected function setHtmlClass()
@@ -90,46 +150,9 @@ class View extends \WPSEED\View
         }
     }
 
-    public function setArgsData($args)
+    protected function getPostId()
     {
-        $this->data = (is_array($args) && isset($args['data'])) ? $args['data'] : [];
-    }
-    
-    public function getField($name, $default=null, $args=[])
-    {
-        $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
-        $post_id = Utils_Base::getGlobalPostId();
-
-        if(!empty($args['block_id']))
-        {
-            if(empty($args['data']))
-            {
-                $this->data = Utils_Base::getPostBlockData($args['block_id'], $post_id);
-            }
-            else{
-                $this->data = $args['data'];
-            }
-        }
-        
-        $field = null;
-
-        if(isset($this->data[$_name]))
-        {
-            $field = $this->data[$_name];
-        }
-        elseif(function_exists('get_field'))
-        {
-            $field = get_field($_name, $post_id);
-        }
-        
-        return (empty($field) && isset($default)) ? $default : $field;
-    }
-
-    public function getGroupField($group, $name, $default=null, $args=null)
-    {
-        $field = $this->getField($name, null, $args);
-        
-        return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
+        return Utils_Base::getGlobalPostId();
     }
 
     protected function getAdminPostId()
