@@ -62,7 +62,10 @@ class View extends \WPSEED\View
         {
             foreach($this->field_defaults as $name => $default)
             {
-                $this->args[$name] = $this->_getField($name, $default);
+                if(empty($this->args[$name]))
+                {
+                    $this->args[$name] = $this->_getField($name, $default);
+                }
             }
         }
     }
