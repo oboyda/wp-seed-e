@@ -86,6 +86,22 @@ class View_Loader extends \WPSEED\Action
         $this->getView($view_name, $view_args, true);
     }
 
+    public function renderViewAcf($block, $content, $is_preview, $post_id, $wp_block, $context)
+    {
+        $acf_prefix = 'acf/';
+
+        $view = (strpos($block['name'], $acf_prefix) === 0) ? substr($block['name'], strlen($acf_prefix)) : $block['name'];
+        $view_args = isset($block['view_args']) ? $block['view_args'] : [];
+    
+        // $view_args['block_id'] = isset($block['id']) ? $block['id'] : '';
+        $view_args['block_id'] = Utils_Base::getBlockId($wp_block);
+        $view_args['data'] = isset($block['data']) ? $block['data'] : '';
+    
+        $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
+    
+        $this->printView($view, $view_args);
+    }
+
     public function printAjaxUrl()
     {
         $js_vars = apply_filters('wpseede_js_vars', [
