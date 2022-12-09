@@ -564,4 +564,34 @@ class Base
 
         return $data;
     }
+
+    /* ------------------------------ */
+
+    static function getUploadBaseDir()
+    {
+        $upload_dir = wp_upload_dir();
+        return isset($upload_dir['basedir']) ? $upload_dir['basedir'] : false;
+    }
+
+    static function getUploadBaseUrl()
+    {
+        $upload_dir = wp_upload_dir();
+        return isset($upload_dir['baseurl']) ? $upload_dir['baseurl'] : false;
+    }
+
+    /* ------------------------------ */
+
+    static function setWpFileSystem()
+    {
+        global $wp_filesystem;
+
+        if(!isset($wp_filesystem))
+        {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            if(function_exists('WP_Filesystem'))
+            {
+                WP_Filesystem();
+            }
+        }
+    }
 }

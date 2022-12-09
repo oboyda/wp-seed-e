@@ -2,6 +2,8 @@
 
 namespace WPSEEDE;
 
+use WPSEEDE\Utils\Base as Utils_Base;
+
 class Mods_Installer 
 {
     const MODS_ARCHIVE_URL = 'https://github.com/oboyda/wpseed-mods/archive/refs/heads/master.zip';
@@ -94,14 +96,11 @@ class Mods_Installer
     {
         global $wp_filesystem;
 
-        if(!isset($wp_filesystem))
+        Utils_Base::setWpFileSystem();
+
+        if(isset($wp_filesystem))
         {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-            if(function_exists('WP_Filesystem'))
-            {
-                WP_Filesystem();
-                $this->filesys = $wp_filesystem;
-            }
+            $this->filesys = $wp_filesystem;
         }
     }
 
