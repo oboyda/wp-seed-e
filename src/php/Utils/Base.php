@@ -118,6 +118,36 @@ class Base
         return $_arr;
     }
 
+    static function filterArrayInclude($arr, $incl_keys)
+    {
+        if(!empty($arr))
+        {
+            foreach(array_keys($arr) as $key)
+            {
+                if(!in_array($key, $incl_keys))
+                {
+                    unset($arr[$key]);
+                }
+            }
+        }
+        return $arr;
+    }
+
+    static function filterArrayExclude($arr, $excl_keys)
+    {
+        if(!empty($arr))
+        {
+            foreach(array_keys($arr) as $key)
+            {
+                if(in_array($key, $excl_keys))
+                {
+                    unset($arr[$key]);
+                }
+            }
+        }
+        return $arr;
+    }
+
     static function castVal($val, $cast)
     {
         switch($cast)
@@ -563,35 +593,5 @@ class Base
         }
 
         return $data;
-    }
-
-    /* ------------------------------ */
-
-    static function getUploadBaseDir()
-    {
-        $upload_dir = wp_upload_dir();
-        return isset($upload_dir['basedir']) ? $upload_dir['basedir'] : false;
-    }
-
-    static function getUploadBaseUrl()
-    {
-        $upload_dir = wp_upload_dir();
-        return isset($upload_dir['baseurl']) ? $upload_dir['baseurl'] : false;
-    }
-
-    /* ------------------------------ */
-
-    static function setWpFileSystem()
-    {
-        global $wp_filesystem;
-
-        if(!isset($wp_filesystem))
-        {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-            if(function_exists('WP_Filesystem'))
-            {
-                WP_Filesystem();
-            }
-        }
     }
 }
