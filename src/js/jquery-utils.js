@@ -17,12 +17,17 @@ jQuery.fn.extend({
     viewTriggerLoaded: function(triggerChildren=false)
     {
         this.each(function(){
+
             const _view = jQuery(this);
             const viewName = _view.data("view");
+
             if(typeof viewName !== 'undefined' && viewName)
             {
                 jQuery(document.body).triggerHandler("view_loaded_" + viewName, [_view]);
             }
+
+            jQuery(document.body).triggerHandler("view_loaded", [_view, viewName]);
+
             if(triggerChildren)
             {
                 _view.find(".view").viewTriggerLoaded();

@@ -2,7 +2,7 @@
 
 namespace WPSEEDE\Utils;
 
-use WPSEED\Request;
+use WPSEED\Req;
 
 class Type
 {
@@ -35,7 +35,7 @@ class Type
 
     static function getTypeRequestArgs($type_class, $include=[])
     {
-        $req = new Request();
+        $req = new Req();
 
         $props_config = self::getTypePropsConfig($type_class);
 
