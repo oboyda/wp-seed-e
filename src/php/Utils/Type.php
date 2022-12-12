@@ -43,7 +43,7 @@ class Type
 
         foreach($props_config as $key => $prop_config)
         {
-            if(!(!empty($include) && in_array($key, $include)))
+            if(!empty($include) && !in_array($key, $include))
             {
                 continue;
             }
