@@ -60,7 +60,7 @@ class Type
         return $req_args;
     }
 
-    static function editType($id, $type_class, $inputs, $persist=true)
+    static function editType($id, $type_class, $inputs, $persist=true, $check_cap=true)
     {
         $type_object = self::getType($id, $type_class);
 
@@ -80,9 +80,9 @@ class Type
                 continue;
             }
 
-            $edit_cap = isset($prop_config['edit_cap']) ? $prop_config['edit_cap'] : false;
+            $edit_cap = $check_cap ? (isset($prop_config['edit_cap']) ? $prop_config['edit_cap'] : false) : 'all';
 
-            if(empty($edit_cap) || !current_user_can($edit_cap))
+            if(!($check_cap == 'all' || current_user_can($edit_cap)))
             {
                 continue;
             }
@@ -98,8 +98,8 @@ class Type
         return $type_object;
     }
 
-    static function createType($type_class, $inputs, $persist=true)
+    static function createType($type_class, $inputs, $persist=true, $check_cap=true)
     {
-        return self::editType(0, $type_class, $inputs, $persist);
+        return self::editType(0, $type_class, $inputs, $persist, $check_cap);
     }
 }
