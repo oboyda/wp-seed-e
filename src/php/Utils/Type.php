@@ -60,7 +60,7 @@ class Type
         return $req_args;
     }
 
-    static function editType($id, $type_class, $inputs, $persist=true, $check_cap=true)
+    static function editType($id, $type_class, $fields, $persist=true, $check_cap=true)
     {
         $type_object = self::getType($id, $type_class);
 
@@ -71,7 +71,7 @@ class Type
 
         $props_config = self::getTypePropsConfig($type_class);
 
-        foreach($inputs as $key => $input)
+        foreach($fields as $key => $field)
         {
             $prop_config = isset($props_config[$key]) ? $props_config[$key] : [];
 
@@ -87,7 +87,7 @@ class Type
                 continue;
             }
 
-            $type_object->set_prop($key, $input);
+            $type_object->set_prop($key, $field);
         }
 
         if($persist)
@@ -98,8 +98,8 @@ class Type
         return $type_object;
     }
 
-    static function createType($type_class, $inputs, $persist=true, $check_cap=true)
+    static function createType($type_class, $fields, $persist=true, $check_cap=true)
     {
-        return self::editType(0, $type_class, $inputs, $persist, $check_cap);
+        return self::editType(0, $type_class, $fields, $persist, $check_cap);
     }
 }
