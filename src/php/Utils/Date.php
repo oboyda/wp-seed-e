@@ -56,12 +56,12 @@ class Date
 
     static function getSysDateTime($timestamp=null)
     {
-        return gmdate(self::DATETIME_FORMAT_SYS, $timestamp);
+        return isset($timestamp) ? gmdate(self::DATETIME_FORMAT_SYS, $timestamp) : gmdate(self::DATETIME_FORMAT_SYS);
     }
 
     static function getSysDate($timestamp=null)
     {
-        return gmdate(self::DATE_FORMAT_SYS, $timestamp);
+        return isset($timestamp) ? gmdate(self::DATE_FORMAT_SYS, $timestamp) : gmdate(self::DATE_FORMAT_SYS);
     }
 
     static function parseAcfDateMeta($meta)
