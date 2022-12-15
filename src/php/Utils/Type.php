@@ -36,7 +36,12 @@ class Type
     static function getTypePostType($type_class)
     {
         $type_object = self::getType(0, $type_class);
-        return isset($type_object->post_type) ? $type_object->post_type : 'post';
+        return method_exists($type_object, 'get_type') ? $type_object->get_type() : 'post';
+    }
+
+    static function getTypeName($type_class)
+    {
+        return self::getTypePostType($type_class);
     }
 
     static function getTypeRequestArgs($type_class, $include=[])
