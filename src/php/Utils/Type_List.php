@@ -43,9 +43,12 @@ class Type_List
 
     static function parseQueryArgs($q_args, $type_class=null)
     {
-        $q_args_legal = self::getLegalQueryArgs();
+        if(!isset($q_args['post_type']))
+        {
+            $q_args['post_type'] = Type::getTypePostType($type_class);
+        }
 
-        $post_type = isset($q_args['post_type']) ? $q_args['post_type'] : $q_args_legal['post_type'];
+        $q_args_legal = self::getLegalQueryArgs();
 
         $props_config = Type::getTypePropsConfig($type_class);
 

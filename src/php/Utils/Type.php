@@ -33,6 +33,12 @@ class Type
         return (class_exists($type_class) && method_exists($type_class, '_get_props_config')) ? $type_class::_get_props_config() : [];
     }
 
+    static function getTypePostType($type_class)
+    {
+        $type_object = self::getType(0, $type_class);
+        return isset($type_object->post_type) ? $type_object->post_type : 'post';
+    }
+
     static function getTypeRequestArgs($type_class, $include=[])
     {
         $req = new Req();
