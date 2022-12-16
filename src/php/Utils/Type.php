@@ -61,7 +61,7 @@ class Type
 
             $query_cap = $check_cap ? (isset($prop_config['query_cap']) ? $prop_config['query_cap'] : false) : 'all';
 
-            if(!(in_array($query_cap, ['all', 'public']) || ($check_cap && current_user_can($query_cap))))
+            if(!(in_array($query_cap, ['all', 'public']) || ($query_cap && current_user_can($query_cap))))
             {
                 continue;
             }
@@ -100,7 +100,7 @@ class Type
 
             $edit_cap = $check_cap ? (isset($prop_config['edit_cap']) ? $prop_config['edit_cap'] : false) : 'all';
 
-            if(!(in_array($edit_cap, ['all', 'public']) || ($check_cap && current_user_can($edit_cap))))
+            if(!(in_array($edit_cap, ['all', 'public']) || ($edit_cap && current_user_can($edit_cap))))
             {
                 continue;
             }
