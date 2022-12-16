@@ -44,7 +44,7 @@ class Type
         return self::getTypePostType($type_class);
     }
 
-    static function getTypeRequestArgs($type_class, $include=[])
+    static function getTypeRequestArgs($type_class, $include=[], $check_cap=false)
     {
         $req = new Req();
 
@@ -55,6 +55,13 @@ class Type
         foreach($props_config as $key => $prop_config)
         {
             if(!empty($include) && !in_array($key, $include))
+            {
+                continue;
+            }
+
+            $query_cap = $check_cap ? (isset($prop_config['query_cap']) ? $prop_config['query_cap'] : false) : 'all';
+
+            if(!(in_array($query_cap, ['all', 'public']) || ($check_cap && current_user_can($query_cap))))
             {
                 continue;
             }
@@ -71,7 +78,7 @@ class Type
         return $req_args;
     }
 
-    static function editType($id, $type_class, $fields, $persist=true, $check_cap=true)
+    static function editType($id, $type_class, $fields, $persist=true, $check_cap=false)
     {
         $type_object = self::getType($id, $type_class);
 
@@ -93,7 +100,7 @@ class Type
 
             $edit_cap = $check_cap ? (isset($prop_config['edit_cap']) ? $prop_config['edit_cap'] : false) : 'all';
 
-            if(!($check_cap == 'all' || ($check_cap && current_user_can($edit_cap))))
+            if(!(in_array($edit_cap, ['all', 'public']) || ($check_cap && current_user_can($edit_cap))))
             {
                 continue;
             }
