@@ -624,4 +624,20 @@ class Base
             }
         }
     }
+
+    /* ------------------------------ */
+
+    static function debugToFile($debug, $file_name='__debug.txt', $append=false)
+    {
+        $debug_path = ABSPATH . $file_name;
+        $debug_html = is_array($debug) ? print_r($debug, true) : $debug;
+    
+        if($append)
+        {
+            file_put_contents($debug_path, $debug_html, FILE_APPEND);
+        }
+        else{
+            file_put_contents($debug_path, $debug_html);
+        }
+    }    
 }
