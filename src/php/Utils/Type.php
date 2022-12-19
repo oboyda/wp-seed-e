@@ -89,11 +89,11 @@ class Type
 
         $props_config = self::getTypePropsConfig($type_class);
 
-        foreach($fields as $key => $field)
+        foreach($props_config as $key => $prop_config)
         {
-            $prop_config = isset($props_config[$key]) ? $props_config[$key] : [];
+            $field = isset($fields[$key]) ? $fields[$key] : null;
 
-            if(empty($prop_config))
+            if(!isset($field))
             {
                 continue;
             }

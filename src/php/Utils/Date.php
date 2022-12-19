@@ -26,12 +26,19 @@ class Date
         return trim($format);
     }
 
-    static function formatDateTime($timestamp, $format=null)
+    static function formatDateTime($datetime, $format=null)
     {
-        if(!isset($format)) $format = self::getDateTimeFormat();
+        if(is_int($datetime))
+        {
+            $datetime = gmdate(self::DATETIME_FORMAT_SYS, $datetime);
+        }
 
-        $date_str = is_int($timestamp) ? gmdate(self::DATETIME_FORMAT_SYS, $timestamp) : $timestamp;
-        $date = new \DateTime($date_str);
+        if(!isset($format))
+        {
+            $format = self::getDateTimeFormat();
+        }
+
+        $date = new \DateTime($datetime);
         $date->setTimezone(self::getTimezone());
         return $date->format($format);
     }
@@ -56,11 +63,19 @@ class Date
 
     static function getSysDateTime($timestamp=null)
     {
+        if(isset($timestamp) && is_string($timestamp))
+        {
+            $timestamp = strtotime($timestamp);
+        }
         return isset($timestamp) ? gmdate(self::DATETIME_FORMAT_SYS, $timestamp) : gmdate(self::DATETIME_FORMAT_SYS);
     }
 
     static function getSysDate($timestamp=null)
     {
+        if(isset($timestamp) && is_string($timestamp))
+        {
+            $timestamp = strtotime($timestamp);
+        }
         return isset($timestamp) ? gmdate(self::DATE_FORMAT_SYS, $timestamp) : gmdate(self::DATE_FORMAT_SYS);
     }
 
