@@ -38,7 +38,7 @@ class Date
             $timestamp = gmdate(DATETIME_FORMAT_SYS, $timestamp);
         }
 
-        $date = new \DateTime($timestamp);
+        $date = is_string($timestamp) ? new \DateTime($timestamp) : $timestamp;
         if($set_timezone)
         {
             $date->setTimezone(self::getTimezone());
