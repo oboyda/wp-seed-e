@@ -4,10 +4,14 @@ namespace WPSEEDE\Utils;
 
 class User
 {
+    static function getUser($user, $type_class)
+    {
+        return is_int($user) ? (class_exists($type_class) ? new $type_class($user_id) : null) : $user;
+    }
+
     static function getCurrentUser($type_class)
     {
-        $user_id = get_current_user_id();
-        return ($user_id && class_exists($type_class)) ? new $type_class($user_id) : null;
+        return self::getUser(get_current_user_id(), $type_class);
     }
 
     static function getCurrentUserRole($type_class)
