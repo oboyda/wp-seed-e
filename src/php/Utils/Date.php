@@ -26,57 +26,78 @@ class Date
         return trim($format);
     }
 
-    static function formatDateTime($datetime, $format=null)
-    {
-        if(is_int($datetime))
-        {
-            $datetime = gmdate(self::DATETIME_FORMAT_SYS, $datetime);
-        }
-
-        if(!isset($format))
-        {
-            $format = self::getDateTimeFormat();
-        }
-
-        $date = new \DateTime($datetime);
-        $date->setTimezone(self::getTimezone());
-        return $date->format($format);
-    }
-
-    static function formatDate($timestamp, $format=null)
-    {
-        if(!isset($format)) $format = self::getDateFormat();
-        return self::formatDateTime($timestamp, $format);
-    }
-    
     static function getTimezone()
     {
         return new \DateTimeZone(wp_timezone_string());
     }
 
-    static function getNowDate($format=null)
+    static function getDate($timestamp='now', $format=null, $set_timezone=false)
     {
-        $date = new \DateTime("now");
-        $date->setTimezone(self::getTimezone());
-        return isset($format) ? $date->format($format) : $date;
+        if(is_int($timestamp))
+        {
+            $timestamp = gmdate(DATETIME_FORMAT_SYS, $timestamp);
+        }
+
+        $date = new \DateTime($timestamp);
+        if($set_timezone)
+        {
+            $date->setTimezone(self::getTimezone());
+        }
+
+        return isset($format) ? $date->format($fromat) : $date;
     }
 
-    static function getSysDateTime($timestamp=null)
+    static function formatDate($timestamp='now', $format=null, $set_timezone=false)
     {
-        if(isset($timestamp) && is_string($timestamp))
+        if(!isset($format))
         {
-            $timestamp = strtotime($timestamp);
+            $format = self::getDateFormat();
         }
-        return isset($timestamp) ? gmdate(self::DATETIME_FORMAT_SYS, $timestamp) : gmdate(self::DATETIME_FORMAT_SYS);
+        return self::getDate($timestamp, $format, $set_timezone);
     }
 
-    static function getSysDate($timestamp=null)
+    static function formatDateTime($timestamp='now', $format=null, $set_timezone=false)
     {
-        if(isset($timestamp) && is_string($timestamp))
+        if(!isset($format))
         {
-            $timestamp = strtotime($timestamp);
+            $format = self::getDateTimeFormat();
         }
-        return isset($timestamp) ? gmdate(self::DATE_FORMAT_SYS, $timestamp) : gmdate(self::DATE_FORMAT_SYS);
+        return self::getDate($timestamp, $format, $set_timezone);
+    }
+
+    static function getDateFormatted($timestamp='now', $set_timezone=false)
+    {
+        return self::formatDate($timestamp, null, $set_timezone);
+    }
+
+    static function getDateTimeFormatted($timestamp='now', $set_timezone=false)
+    {
+        return self::formatDateTime($timestamp, null, $set_timezone);
+    }
+
+    static function getNowDate($format=null, $set_timezone=false)
+    {
+        return self::getDate('now', $format, $set_timezone);
+    }
+
+    static function getNowDateFormatted($set_timezone=false)
+    {
+        return self::getDateFormatted('now', $set_timezone);
+    }
+
+    static function getNowDateTimeFormatted($set_timezone=false)
+    {
+        return self::getDateTimeFormatted('now', $set_timezone);
+    }
+
+    static function getSysDateTime($timestamp='now')
+    {
+        return self::getDate($timestamp, self::DATETIME_FORMAT_SYS, false);
+    }
+
+    static function getSysDate($timestamp='now')
+    {
+        return self::getDate($timestamp, self::DATE_FORMAT_SYS, false);
     }
 
     static function parseAcfDateMeta($meta)
