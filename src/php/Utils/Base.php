@@ -148,6 +148,19 @@ class Base
         return $arr;
     }
 
+    static function parseArrayItems($arr, $item_default_args=[])
+    {
+        if(!empty($arr) && !empty($item_default_args))
+        {
+            foreach($arr as $i => $a)
+            {
+                $arr[$i] = wp_parse_args($a, $item_default_args);
+            }
+        }
+
+        return $arr;
+    }
+
     static function castVal($val, $cast)
     {
         switch($cast)
