@@ -44,10 +44,10 @@ class Date
             $date->setTimezone(self::getTimezone());
         }
 
-        return isset($format) ? $date->format($fromat) : $date;
+        return isset($format) ? $date->format($format) : $date;
     }
 
-    static function formatDate($timestamp='now', $format=null, $set_timezone=false)
+    static function formatDate($timestamp='now', $format=null, $set_timezone=true)
     {
         if(!isset($format))
         {
@@ -56,7 +56,7 @@ class Date
         return self::getDate($timestamp, $format, $set_timezone);
     }
 
-    static function formatDateTime($timestamp='now', $format=null, $set_timezone=false)
+    static function formatDateTime($timestamp='now', $format=null, $set_timezone=true)
     {
         if(!isset($format))
         {
@@ -65,12 +65,12 @@ class Date
         return self::getDate($timestamp, $format, $set_timezone);
     }
 
-    static function getDateFormatted($timestamp='now', $set_timezone=false)
+    static function getDateFormatted($timestamp='now', $set_timezone=true)
     {
         return self::formatDate($timestamp, null, $set_timezone);
     }
 
-    static function getDateTimeFormatted($timestamp='now', $set_timezone=false)
+    static function getDateTimeFormatted($timestamp='now', $set_timezone=true)
     {
         return self::formatDateTime($timestamp, null, $set_timezone);
     }
@@ -80,12 +80,12 @@ class Date
         return self::getDate('now', $format, $set_timezone);
     }
 
-    static function getNowDateFormatted($set_timezone=false)
+    static function getNowDateFormatted($set_timezone=true)
     {
         return self::getDateFormatted('now', $set_timezone);
     }
 
-    static function getNowDateTimeFormatted($set_timezone=false)
+    static function getNowDateTimeFormatted($set_timezone=true)
     {
         return self::getDateTimeFormatted('now', $set_timezone);
     }
