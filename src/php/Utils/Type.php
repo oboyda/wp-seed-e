@@ -87,7 +87,7 @@ class Type
             return false;
         }
 
-        $props_config = self::getTypePropsConfig($type_class);
+        $props_config = $type_object->get_props_config();
 
         foreach($props_config as $key => $prop_config)
         {
