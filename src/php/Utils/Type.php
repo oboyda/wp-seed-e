@@ -78,7 +78,7 @@ class Type
         return $req_args;
     }
 
-    static function editType($id, $type_class, $fields, $persist=true, $check_cap=false)
+    static function updateType($id, $type_class, $fields, $persist=true, $check_cap=false)
     {
         $type_object = self::getType($id, $type_class);
 
@@ -118,6 +118,6 @@ class Type
 
     static function createType($type_class, $fields, $persist=true, $check_cap=true)
     {
-        return self::editType(0, $type_class, $fields, $persist, $check_cap);
+        return self::updateType(0, $type_class, $fields, $persist, $check_cap);
     }
 }
