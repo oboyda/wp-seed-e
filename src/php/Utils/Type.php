@@ -30,13 +30,14 @@ class Type
 
     static function getTypePropsConfig($type_class)
     {
-        return (class_exists($type_class) && method_exists($type_class, '_get_props_config')) ? $type_class::_get_props_config() : [];
+        $type_object = self::getType(null, $type_class);
+        return is_a($type_object, '\WPSEED\Entity') ? $type_object->get_props_config() : [];
     }
 
     static function getTypePostType($type_class)
     {
         $type_object = self::getType(0, $type_class);
-        return method_exists($type_object, 'get_type') ? $type_object->get_type() : 'post';
+        return is_a($type_object, '\WPSEED\Post') ? $type_object->get_post_type() : 'post';
     }
 
     static function getTypeName($type_class)
