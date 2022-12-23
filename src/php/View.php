@@ -278,7 +278,7 @@ class View extends \WPSEED\View
         }
     }
 
-    public function renderItemsCols($items_html, $cols_num=2, $col_size='lg')
+    public function renderItemsCols($items_html, $cols_num=2, $col_class='lg')
     {
         return $this->distributeCols($items_html, $cols_num, $col_class);
     }
