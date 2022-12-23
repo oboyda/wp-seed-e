@@ -278,24 +278,8 @@ class View extends \WPSEED\View
         }
     }
 
-    public function renderItemsCols($items, $cols_num=2, $col_size='lg')
+    public function renderItemsCols($items_html, $cols_num=2, $col_size='lg')
     {
-        $html = '';
-        if(is_array($items) && !empty($items))
-        {
-            $col_class = 'col-' . $col_size . '-' . (12/$cols_num);
-            foreach(array_chunk($items, $cols_num) as $items_row)
-            {
-                $html .= '<div class="row">';
-                foreach($items_row as $item)
-                {
-                    $html .= '<div class="' . $col_class . '">';
-                        $html .= $item;
-                    $html .= '</div><!-- .col -->';
-                }
-                $html .= '</div><!-- .row -->';
-            }
-        }
-        return $html;
+        return $this->distributeCols($items_html, $cols_num, $col_class);
     }
 }
