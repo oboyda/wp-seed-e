@@ -79,7 +79,7 @@ class Type
         return $req_args;
     }
 
-    static function updateType($id, $type_class, $fields, $persist=true, $check_cap=false)
+    static function updateType($id, $type_class, $fields, $persist=true, $check_cap=true)
     {
         $type_object = self::getType($id, $type_class);
 
