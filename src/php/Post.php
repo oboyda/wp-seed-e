@@ -16,14 +16,7 @@ class Post extends \WPSEED\Post
 
     public function getPropConfigData($key, $data_key=null, $default=null)
     {
-        $prop_config = $this->get_props_config($key);
-
-        if(isset($data_key))
-        {
-            return isset($prop_config[$data_key]) ? $prop_config[$data_key] : $default;
-        }
-
-        return isset($prop_config) ? $prop_config : $default;
+        return $this->get_props_config($key, $data_key, $default);
     }
 
     public function getPropOptionLabel($key, $option_value)
