@@ -101,7 +101,7 @@ class Type
 
             $edit_cap = $check_cap ? (isset($prop_config['edit_cap']) ? $prop_config['edit_cap'] : false) : 'all';
 
-            if(!($edit_cap && (in_array(['all', 'public']) || current_user_can($edit_cap))))
+            if(!($edit_cap && (in_array($edit_cap, ['all', 'public']) || current_user_can($edit_cap))))
             {
                 continue;
             }
