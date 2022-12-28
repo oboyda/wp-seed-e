@@ -28,10 +28,10 @@ class Type
         return $types;
     }
 
-    static function getTypePropsConfig($type_class)
+    static function getTypePropsConfig($type_class, $key=null, $data_key=null, $default=null)
     {
         $type_object = self::getType(null, $type_class);
-        return is_a($type_object, '\WPSEED\Entity') ? $type_object->get_props_config() : [];
+        return is_a($type_object, '\WPSEED\Entity') ? $type_object->get_props_config($key, $data_key, $default) : [];
     }
 
     static function getTypePostType($type_class)
