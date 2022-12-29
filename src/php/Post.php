@@ -77,7 +77,7 @@ class Post extends \WPSEED\Post
 
     public function getAuthor()
     {
-        return $this->get_data('post_author');
+        return (int)$this->get_data('post_author', 0);
     }
 
     public function hasProp($key)
