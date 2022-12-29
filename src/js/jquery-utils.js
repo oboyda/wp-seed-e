@@ -51,12 +51,17 @@ jQuery.fn.extend({
         const parentView = this;
         Object.keys(partsContent).forEach((k) => {
 
+            const part = parentView.find(".part-" + k);
+            if(part.length)
+            {
+                part.html(partsContent[k]);
+                if(triggerLoaded)
+                {
+                    part.viewTriggerLoaded(true);
+                }
+            }
             parentView.find(".part-" + k).html(partsContent[k]);
         });
-        if(triggerLoaded)
-        {
-            parentView.viewTriggerLoaded(true);
-        }
     },
 
     viewExists: function()
