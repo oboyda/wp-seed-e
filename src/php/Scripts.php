@@ -100,24 +100,32 @@ class Scripts
 
     public function addScriptReg($reg)
     {
-        $regs = is_array($reg) ? $regs : [$regs];
-        $this->script_regs = array_merge($this->script_regs, $regs);
+        if(is_array($reg))
+        {
+            $this->script_regs = array_merge($this->script_regs, $reg);
+        }
     }
     public function addScriptDep($dep)
     {
-        $deps = is_array($deps) ? $deps : [$deps];
-        $this->script_deps = array_merge($this->script_deps, $regs);
+        if(is_array($dep))
+        {
+            $this->script_deps = array_merge($this->script_deps, $dep);
+        }
     }
 
     public function addStyleReg($reg)
     {
-        $regs = is_array($reg) ? $regs : [$regs];
-        $this->style_regs = array_merge($this->style_regs, $regs);
+        if(is_array($reg))
+        {
+            $this->style_regs = array_merge($this->style_regs, $reg);
+        }
     }
     public function addStyleDep($dep)
     {
-        $deps = is_array($deps) ? $deps : [$deps];
-        $this->style_deps = array_merge($this->style_deps, $regs);
+        if(is_array($dep))
+        {
+            $this->style_deps = array_merge($this->style_deps, $dep);
+        }
     }
 
     protected function getNameHandle($name, $reg_names=[])

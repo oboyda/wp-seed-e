@@ -19,7 +19,7 @@ class Setup
 
     var $view_loader;
 
-    var $script;
+    var $scripts;
 
     var $mods_installer;
 
