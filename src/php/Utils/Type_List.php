@@ -16,6 +16,7 @@ class Type_List
 
         // Return results
         return [
+            'q_args' => $_q_args,
             'items' => ($_q_args['fields'] == 'ids') ? $wp_query->posts : Type::getTypes($wp_query->posts, $type_class),
             'items_total' => $wp_query->found_posts
         ];
