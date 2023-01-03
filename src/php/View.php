@@ -47,6 +47,10 @@ class View extends \WPSEED\View
     {
         return isset($this->child_parts[$name]) ? $this->child_parts[$name] : '';
     }
+    public function hasChildPart($name)
+    {
+        return !empty($this->child_parts[$name]);
+    }
     public function getChildParts()
     {
         return $this->child_parts;
