@@ -36,6 +36,7 @@ class Type_List
             'author' => 0,
             'meta_key' => '',
             'meta_type' => '',
+            's' => '',
             'orderby' => 'menu_order',
             'order' => 'ASC',
             'fields' => 'all'
