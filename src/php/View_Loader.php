@@ -32,8 +32,10 @@ class View_Loader extends \WPSEED\Action
 
         add_action('wp_head', [$this, 'printAjaxUrl']);
 
-        add_action('init', [$this, 'cleanUpViewsArgs']);
-        add_action('shutdown', [$this, 'updateViewsArgs']);
+        add_action('init', [$this, 'initViewsArgs']);
+        add_action('admin_head', [$this, 'cleanUpViewsArgs']);
+        add_action('wp_head', [$this, 'cleanUpViewsArgs']);
+        add_action('wp_footer', [$this, 'updateViewsArgs'], 1000);
     }
 
     public function loadView()
@@ -120,6 +122,14 @@ class View_Loader extends \WPSEED\Action
         <?php
     }
 
+    public function initViewsArgs()
+    {
+        if(wp_doing_ajax())
+        {
+            $this->view_args = get_option($this->context_name . '_views_args', []);
+        }
+    }
+
     public function cleanUpViewsArgs()
     {
         update_option($this->context_name . '_views_args', []);
@@ -133,5 +143,10 @@ class View_Loader extends \WPSEED\Action
     public function saveViewArgs($view_id, $args)
     {
         $this->views_args[$view_id] = $args;
+    }
+
+    public function getViewArgs($view_id)
+    {
+        return isset($this->views_args[$view_id]) ? $this->views_args[$view_id] : [];
     }
 }

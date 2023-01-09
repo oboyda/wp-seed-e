@@ -8,18 +8,18 @@ class View extends \WPSEED\View
 {
     const CONTEXT_NAME = 'wpseede';
 
-    protected $orig_args;
+    protected $args_ext;
     protected $child_parts;
 
     protected $data;
     protected $field_defaults;
 
-    public function __construct($args, $default_args=[])
+    public function __construct($args, $args_default=[])
     {
-        $this->orig_args = $args;
+        $this->args_ext = $this->getSavedViewArgsAjax($args);
         $this->child_parts = [];
 
-        parent::__construct($args, wp_parse_args($default_args, [
+        parent::__construct($args, wp_parse_args($args_default, [
 
             'id' => $this->getField('id', ''),
             'block_id' => '',
@@ -31,7 +31,8 @@ class View extends \WPSEED\View
             'padding_bottom' => $this->getField('padding_bottom', ''),
             'margin_bottom' => $this->getField('margin_bottom', ''),
             'container_class' => $this->getField('container_class', 'container-lg'),
-            'data' => []
+            'data' => [],
+            'view_loader' => null,
         ]));
 
         $this->setDataFields();
@@ -39,9 +40,9 @@ class View extends \WPSEED\View
         $this->setHtmlClass();
     }
 
-    public function getOrigArgs()
+    public function getArgsExt()
     {
-        return $this->orig_args;
+        return $this->args_ext;
     }
 
     public function setChildPart($name, $html)
@@ -292,7 +293,25 @@ class View extends \WPSEED\View
         return $this->distributeCols($items_html, $cols_num, $col_class);
     }
 
-    protected function saveViewArgs($view_loader)
+    protected function getSavedViewArgsAjax($args)
+    {
+        if(!wp_doing_ajax())
+        {
+            return $args;
+        }
+
+        $view_id = isset($args['id']) ? $args['id'] : null;
+        $view_loader = isset($args['view_loader']) ? $args['view_loader'] : null;
+
+        if(isset($view_id) && isset($view_loader))
+        {
+            $args = $view_loader->getViewArgs($view_id);
+        }
+
+        return $args;
+    }
+
+    protected function saveViewArgs()
     {
         $view_loader->saveViewArgs($this->getId(), $this->getOrigArgs());
     }
