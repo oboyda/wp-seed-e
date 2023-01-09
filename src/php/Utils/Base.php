@@ -427,30 +427,27 @@ class Base
 
     /* ------------------------------ */
 
-    static function genId($pref='', $sfx='')
+    static function genId($length=10)
     {
-        $chars = str_shuffle('abcdefghijklmnopqrstuvwxyz1234567890');
-        return $pref . substr(str_shuffle($chars), 0, 10) . $sfx;
+        $chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+
+        if($length > strlen($chars))
+        {
+            $length = strlen($chars);
+        }
+
+        return 'id_' . substr(str_shuffle($chars), 0, $length);
     }
 
-    static function genHash($type='default')
+    static function genHash()
     {
         $hash = '';
         $nums = '0123456789';
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        if($type == 'default')
-        {
-            $hash = $nums . $chars;
-            $hash = str_shuffle($hash);
-            $hash = substr($hash, 0, 20);
-        }
-        elseif($type == 'vcode'){
-
-            $hash = $nums;
-            $hash = str_shuffle($hash);
-            $hash = substr($hash, 0, 6);
-        }
+        $hash = $nums . $chars;
+        $hash = str_shuffle($hash);
+        $hash = substr($hash, 0, 20);
 
         return $hash;
     }
