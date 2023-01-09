@@ -53,6 +53,16 @@ class View extends \WPSEED\View
         if(isset($this->view_loader))
         {
             $_args = isset($args) ? $args : $this->getArgsExt();
+
+            $unset_args = ['block_data'];
+            foreach($unset_args as $unset_arg)
+            {
+                if(isset($_args[$unset_arg]))
+                {
+                    unset($_args[$unset_arg]);
+                }
+            }
+
             $this->view_loader->saveViewArgs($this->getId(), $_args);
         }
     }
