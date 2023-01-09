@@ -6,16 +6,18 @@ use WPSEEDE\Utils\Base as Utils_Base;
 
 class View extends \WPSEED\View 
 {
-    const CONTEXT_NAME = 'wpseede';
+    // const CONTEXT_NAME = 'wpseede';
 
     protected $args_ext;
     protected $child_parts;
+    protected $context_name;
 
     protected $data;
     protected $field_defaults;
 
     public function __construct($args, $args_default=[])
     {
+        $this->setContextName($args);
         $this->args_ext = $this->getSavedViewArgsAjax($args);
         $this->child_parts = [];
 
@@ -38,6 +40,22 @@ class View extends \WPSEED\View
         $this->setDataFields();
 
         $this->setHtmlClass();
+    }
+
+    protected function setContextName($args)
+    {
+        if(isset($args['context_name']))
+        {
+            $this->context_name = $args['context_name'];
+        }
+        elseif(defined('CONTEXT_NAME'))
+        {
+            $this->context_name = static::CONTEXT_NAME;
+        }
+        else
+        {
+            $this->context_name = 'wpseede';
+        }
     }
 
     public function getArgsExt()
@@ -99,7 +117,7 @@ class View extends \WPSEED\View
     
     protected function _getField($name, $default=null)
     {
-        $_name = static::CONTEXT_NAME . '__' . $this->getName(true) . '__' . $name;
+        $_name = $this->context_name . '__' . $this->getName(true) . '__' . $name;
 
         $post_id = $this->getPostId();
 
@@ -129,7 +147,7 @@ class View extends \WPSEED\View
 
     protected function setHtmlClass()
     {
-        $this->addHtmlClass(static::CONTEXT_NAME);
+        $this->addHtmlClass($this->context_name);
 
         if($this->args['html_class'])
         {
