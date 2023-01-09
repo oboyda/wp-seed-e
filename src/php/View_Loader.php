@@ -7,10 +7,10 @@ use WPSEEDE\Utils\Base as Utils_Base;
 class View_Loader extends \WPSEED\Action 
 {
     protected $args;
-    protected $context_name;
-    protected $namespace;
-    protected $base_dir;
-    protected $views_args;
+    var $context_name;
+    var $namespace;
+    var $base_dir;
+    var $views_args;
 
     public function __construct($args)
     {

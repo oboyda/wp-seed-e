@@ -6,14 +6,14 @@ class Scripts
 {
     protected $args;
 
-    protected $name;
-    protected $prefix;
+    var $name;
+    var $prefix;
 
-    protected $script_regs;
-    protected $script_deps;
+    var $script_regs;
+    var $script_deps;
 
-    protected $style_regs;
-    protected $style_deps;
+    var $style_regs;
+    var $style_deps;
 
     public function __construct($args)
     {

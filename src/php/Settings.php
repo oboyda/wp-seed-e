@@ -8,8 +8,8 @@ class Settings
 {
     protected $args;
 
-    protected $context_name;
-    protected $prefix;
+    var $context_name;
+    var $prefix;
 
     public function __construct($args)
     {

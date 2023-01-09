@@ -6,13 +6,13 @@ class Setup
 {
     protected $args;
 
-    protected $plugin_name;
-    protected $context_name;
-    protected $namespace;
-    protected $textdom;
-    protected $base_dir;
-    protected $base_dir_url;
-    protected $version;
+    var $plugin_name;
+    var $context_name;
+    var $namespace;
+    var $textdom;
+    var $base_dir;
+    var $base_dir_url;
+    var $version;
 
     var $settings_admin;
     var $settings;
