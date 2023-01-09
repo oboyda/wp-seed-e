@@ -40,8 +40,7 @@ class View extends \WPSEED\View
             'padding_bottom' => $this->getField('padding_bottom', ''),
             'margin_bottom' => $this->getField('margin_bottom', ''),
             'container_class' => $this->getField('container_class', 'container-lg'),
-            'data' => [],
-            'view_loader' => null,
+            'data' => []
         ]));
 
         $this->setDataFields();
