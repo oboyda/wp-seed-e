@@ -127,7 +127,7 @@ class View_Loader extends \WPSEED\Action
 
     public function printViewsArgs()
     {
-        echo '<script type="text/javascript">' . $this->context_name . 'ViewsArgs=' . json_encode($this->views_args) . ';</script>';
+        echo '<script type="text/javascript">const ' . $this->context_name . 'ViewsArgs = ' . json_encode($this->views_args) . ';</script>';
     }
 
     public function getViewArgs($view_id)
