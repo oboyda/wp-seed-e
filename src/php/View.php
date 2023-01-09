@@ -54,14 +54,7 @@ class View extends \WPSEED\View
         {
             $_args = isset($args) ? $args : $this->getArgsExt();
 
-            $unset_args = ['block_data'];
-            foreach($unset_args as $unset_arg)
-            {
-                if(isset($_args[$unset_arg]))
-                {
-                    unset($_args[$unset_arg]);
-                }
-            }
+            $_args = $this->filterArgsPublic($_args);
 
             $this->view_loader->saveViewArgs($this->getId(), $_args);
         }
@@ -87,6 +80,16 @@ class View extends \WPSEED\View
     public function getArgsExt()
     {
         return $this->args_ext;
+    }
+
+    public function getArgsExtPublic()
+    {
+        return $this->filterArgsPublic($this->args_ext);
+    }
+
+    protected function filterArgsPublic($args)
+    {
+        return Utils_Base::filterArrayExclude($args, ['block_data']);
     }
 
     public function setChildPart($name, $html)
