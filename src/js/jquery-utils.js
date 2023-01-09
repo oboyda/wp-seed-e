@@ -69,15 +69,16 @@ jQuery.fn.extend({
         return jQuery.contains(document.body, this.get(0));
     },
 
-    viewAjaxLoad: function(loadAction="wpseede_load_view", viewName, viewArgs={}, viewArgsCast={}, cbk)
+    viewAjaxLoad: function(loadAction="wpseede_load_view", viewName, args={}, cbk)
     {
         const parentView = this;
 
         let qArgs = {
             action: loadAction,
             view_name: viewName,
-            view_args: viewArgs,
-            view_args_cast: viewArgsCast
+            view_args: (typeof args.viewArgs !== 'undefined') ? args.viewArgs : {},
+            view_args_cast: (typeof args.viewArgsCast !== 'undefined') ? args.viewArgsCast : {},
+            view_args_s: (typeof args.viewArgsS !== 'undefined') ? args.viewArgsS : ''
         };
 
         jQuery.post(wpseedeVars.ajaxurl, qArgs, function(resp){
