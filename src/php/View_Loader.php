@@ -126,7 +126,7 @@ class View_Loader extends \WPSEED\Action
     {
         if(wp_doing_ajax())
         {
-            $this->view_args = get_option($this->context_name . '_views_args', []);
+            $this->view_args = maybe_unserialize(get_option($this->context_name . '_views_args', []));
         }
     }
 
@@ -137,7 +137,7 @@ class View_Loader extends \WPSEED\Action
 
     public function updateViewsArgs()
     {
-        update_option($this->context_name . '_views_args', $this->views_args);
+        update_option($this->context_name . '_views_args', serialize($this->views_args));
     }
 
     public function saveViewArgs($view_id, $args)

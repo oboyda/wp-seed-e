@@ -17,7 +17,7 @@ class View extends \WPSEED\View
     protected $data;
     protected $field_defaults;
 
-    public function __construct($args, $args_default=[])
+    public function __construct($args=[], $args_default=[])
     {
         // $this->setContextName($args);
         // $this->setViewLoader($args);
