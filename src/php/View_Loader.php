@@ -10,6 +10,7 @@ class View_Loader extends \WPSEED\Action
     protected $context_name;
     protected $namespace;
     protected $base_dir;
+    protected $views_args;
 
     public function __construct($args)
     {
@@ -24,10 +25,15 @@ class View_Loader extends \WPSEED\Action
         $this->namespace = $this->args['namespace'];
         $this->base_dir = $this->args['base_dir'];
 
+        $this->views_args = [];
+
         add_action('wp_ajax_' . $this->context_name . '_load_view', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view', [$this, 'loadView']);
 
         add_action('wp_head', [$this, 'printAjaxUrl']);
+
+        add_action('init', [$this, 'cleanUpViewsArgs']);
+        add_action('shutdown', [$this, 'updateViewsArgs']);
     }
 
     public function loadView()
@@ -112,5 +118,20 @@ class View_Loader extends \WPSEED\Action
             const wpseedeVars = <?php echo json_encode($js_vars); ?>
         </script>
         <?php
+    }
+
+    public function cleanUpViewsArgs()
+    {
+        update_option($this->context_name . '_views_args', []);
+    }
+
+    public function updateViewsArgs()
+    {
+        update_option($this->context_name . '_views_args', $this->views_args);
+    }
+
+    public function saveViewArgs($view_id, $args)
+    {
+        $this->views_args[$view_id] = $args;
     }
 }

@@ -291,4 +291,9 @@ class View extends \WPSEED\View
     {
         return $this->distributeCols($items_html, $cols_num, $col_class);
     }
+
+    protected function saveViewArgs($view_loader)
+    {
+        $view_loader->saveViewArgs($this->getId(), $this->getOrigArgs());
+    }
 }
