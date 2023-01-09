@@ -66,7 +66,7 @@ class View extends \WPSEED\View
     {
         if(isset($args['view_loader']))
         {
-            $this->view_loader = $this->$args['view_loader'];
+            $this->view_loader = $args['view_loader'];
         }
     }
 
