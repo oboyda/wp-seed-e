@@ -8,19 +8,19 @@ class View extends \WPSEED\View
 {
     // const CONTEXT_NAME = 'wpseede';
 
-    protected $args_ext;
-    protected $child_parts;
     protected $context_name;
     protected $view_loader;
+
+    protected $args_ext;
+    protected $child_parts;
 
     protected $data;
     protected $field_defaults;
 
     public function __construct($args, $args_default=[])
     {
-        $this->setContextName($args);
-
-        $this->setViewLoader($args);
+        // $this->setContextName($args);
+        // $this->setViewLoader($args);
         $this->args_ext = $this->getSavedViewArgsAjax($args);
 
         $this->child_parts = [];
@@ -46,29 +46,29 @@ class View extends \WPSEED\View
         $this->setHtmlClass();
     }
 
-    protected function setContextName($args)
-    {
-        if(isset($args['context_name']))
-        {
-            $this->context_name = $args['context_name'];
-        }
-        elseif(defined('CONTEXT_NAME'))
-        {
-            $this->context_name = static::CONTEXT_NAME;
-        }
-        else
-        {
-            $this->context_name = 'wpseede';
-        }
-    }
+    // protected function setContextName($args)
+    // {
+    //     if(isset($args['context_name']))
+    //     {
+    //         $this->context_name = $args['context_name'];
+    //     }
+    //     elseif(defined('CONTEXT_NAME'))
+    //     {
+    //         $this->context_name = static::CONTEXT_NAME;
+    //     }
+    //     else
+    //     {
+    //         $this->context_name = 'wpseede';
+    //     }
+    // }
 
-    protected function setViewLoader($args)
-    {
-        if(isset($args['view_loader']))
-        {
-            $this->view_loader = $args['view_loader'];
-        }
-    }
+    // protected function setViewLoader($args)
+    // {
+    //     if(isset($args['view_loader']))
+    //     {
+    //         $this->view_loader = $args['view_loader'];
+    //     }
+    // }
 
     protected function saveViewArgs()
     {
