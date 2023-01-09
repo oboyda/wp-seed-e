@@ -74,7 +74,7 @@ class View extends \WPSEED\View
     {
         if(isset($this->view_loader))
         {
-            $this->view_loader->saveViewArgs($this->getId(), $this->getOrigArgs());
+            $this->view_loader->saveViewArgs($this->getId(), $this->getArgsExt());
         }
     }
 
