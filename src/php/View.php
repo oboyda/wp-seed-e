@@ -19,9 +19,12 @@ class View extends \WPSEED\View
 
     public function __construct($args=[], $args_default=[])
     {
-        // $this->setContextName($args);
-        // $this->setViewLoader($args);
-        $this->args_ext = $this->getSavedViewArgsAjax($args);
+        if(!isset($this->context_name) && defined('CONTEXT_NAME'))
+        {
+            $this->context_name = static::CONTEXT_NAME;
+        }
+        // $this->args_ext = $this->getSavedViewArgsAjax($args);
+        $this->args_ext = $args;
 
         $this->child_parts = [];
 
@@ -46,35 +49,12 @@ class View extends \WPSEED\View
         $this->setHtmlClass();
     }
 
-    // protected function setContextName($args)
-    // {
-    //     if(isset($args['context_name']))
-    //     {
-    //         $this->context_name = $args['context_name'];
-    //     }
-    //     elseif(defined('CONTEXT_NAME'))
-    //     {
-    //         $this->context_name = static::CONTEXT_NAME;
-    //     }
-    //     else
-    //     {
-    //         $this->context_name = 'wpseede';
-    //     }
-    // }
-
-    // protected function setViewLoader($args)
-    // {
-    //     if(isset($args['view_loader']))
-    //     {
-    //         $this->view_loader = $args['view_loader'];
-    //     }
-    // }
-
-    protected function saveViewArgs()
+    protected function saveViewArgs($args=null)
     {
         if(isset($this->view_loader))
         {
-            $this->view_loader->saveViewArgs($this->getId(), $this->getArgsExt());
+            $_args = isset($args) ? $args : $this->getArgsExt();
+            $this->view_loader->saveViewArgs($this->getId(), $_args);
         }
     }
 

@@ -32,10 +32,8 @@ class View_Loader extends \WPSEED\Action
 
         add_action('wp_head', [$this, 'printAjaxUrl']);
 
-        add_action('init', [$this, 'initViewsArgs']);
-        add_action('admin_head', [$this, 'cleanUpViewsArgs']);
-        add_action('wp_head', [$this, 'cleanUpViewsArgs']);
-        add_action('wp_footer', [$this, 'updateViewsArgs'], 1000);
+        add_action('wp_footer', [$this, 'printViewsArgs'], 1000);
+        add_action('admin_footer', [$this, 'printViewsArgs'], 1000);
     }
 
     public function loadView()
@@ -122,27 +120,14 @@ class View_Loader extends \WPSEED\Action
         <?php
     }
 
-    public function initViewsArgs()
-    {
-        if(wp_doing_ajax())
-        {
-            $this->view_args = maybe_unserialize(get_option($this->context_name . '_views_args', []));
-        }
-    }
-
-    public function cleanUpViewsArgs()
-    {
-        update_option($this->context_name . '_views_args', []);
-    }
-
-    public function updateViewsArgs()
-    {
-        update_option($this->context_name . '_views_args', serialize($this->views_args));
-    }
-
     public function saveViewArgs($view_id, $args)
     {
         $this->views_args[$view_id] = $args;
+    }
+
+    public function printViewsArgs()
+    {
+        echo '<script type="text/javascript">' . $this->context_name . 'ViewsArgs=' . json_encode($this->views_args) . ';</script>';
     }
 
     public function getViewArgs($view_id)
