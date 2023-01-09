@@ -39,6 +39,11 @@ class View extends \WPSEED\View
         $this->setHtmlClass();
     }
 
+    public function getOrigArgs()
+    {
+        return $this->orig_args;
+    }
+
     public function setChildPart($name, $html)
     {
         $this->child_parts[$name] = $html;
