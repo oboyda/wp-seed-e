@@ -382,9 +382,10 @@ class Mods_Installer
                 }
 
                 $file_content = str_replace($context_name_a, $this->context_name, $file_content, $count1);
-                $file_content = str_replace($namespace_a, $this->namespace, $file_content, $count2);
+                $file_content = str_replace(ucfirst($context_name_a), ucfirst($this->context_name), $file_content, $count2);
+                $file_content = str_replace($namespace_a, $this->namespace, $file_content, $count3);
 
-                if($count1 || $count2)
+                if($count1 || $count2 || $count3)
                 {
                     $this->filesys->put_contents($file, $file_content);
                 }
