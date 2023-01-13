@@ -171,7 +171,7 @@ class Scripts
             $this->script_regs = array_merge([
                 'build_index_front' => '',
                 'build_index_admin' => '',
-                'jquery_utils' => $this->args['base_dir_url'] . '/../js/jquery-utils.js'
+                'jquery_utils' => $this->args['base_dir_url'] . '/../js/jquery-view.js'
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
