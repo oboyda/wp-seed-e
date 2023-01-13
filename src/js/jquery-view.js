@@ -212,41 +212,55 @@ jQuery.fn.extend({
         });
     },
 
-    viewReplace: function(html, triggerLoadedEvent=true, triggerChildren=true)
+    viewRemoveRegistry: function()
     {
         const _WpseedeViewRegistry = new WpseedeViewRegistry();
         _WpseedeViewRegistry.removeViewRegistry(this);
+    },
 
-        this.after(html);
-        this.remove();
+    viewReplace: function(html, triggerLoadedEvent=true, triggerChildren=true)
+    {
+        this.viewRemoveRegistry();
+
+        this.html(html);
+        this.replaceWith(this.children());
 
         if(triggerLoadedEvent)
         {
-            _view.viewTriggerLoaded(triggerChildren);
+            this.viewTriggerLoaded(triggerChildren);
         }
+    },
+
+    viewInsert: function(html, triggerLoadedEvent=true, triggerChildren=true)
+    {
+        this.children().viewRemoveRegistry();
+
+        this.html(html);
+
+        if(triggerLoadedEvent)
+        {
+            this.children().viewTriggerLoaded(triggerChildren);
+        }
+    },
+
+    viewRemove: function(view)
+    {
+        this.viewRemoveRegistry();
+
+        this.remove();
     },
 
     viewUpdateParts: function(partsContent, triggerLoaded=true)
     {
         const parentView = this;
 
-        const _WpseedeViewRegistry = new WpseedeViewRegistry();
-
         Object.keys(partsContent).forEach((k) => {
 
             const part = parentView.find(".part-" + k);
             if(part.length)
             {
-                _WpseedeViewRegistry.removeViewRegistry(part);
-
-                part.html(partsContent[k]);
-
-                if(triggerLoaded)
-                {
-                    part.viewTriggerLoaded(true);
-                }
+                part.viewInsert(partsContent[k]);
             }
-            parentView.find(".part-" + k).html(partsContent[k]);
         });
     },
 
@@ -258,8 +272,6 @@ jQuery.fn.extend({
     viewAjaxLoad: function(loadAction="wpseede_load_view", viewName, args={}, cbk)
     {
         const parentView = this;
-
-        const _WpseedeViewRegistry = new WpseedeViewRegistry();
 
         let qArgs = {
             action: loadAction,
@@ -273,10 +285,7 @@ jQuery.fn.extend({
 
             if(resp.status && typeof resp.values.view_html !== 'undefined')
             {
-                _WpseedeViewRegistry.removeViewRegistry(parentView.find(".view"));
-
-                parentView.html(resp.values.view_html);
-                parentView.viewTriggerLoaded(true);
+                parentView.viewInsert(resp.values.view_html);
 
                 if(typeof cbk === 'function')
                 {
