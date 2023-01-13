@@ -1,4 +1,4 @@
-class Wpseede_View_Registry 
+class wpseedeViewRegistry 
 {
     constructor()
     {
@@ -190,14 +190,14 @@ jQuery.fn.extend({
     
     viewTriggerLoaded: function(triggerChildren=false)
     {
-        const _Wpseede_View_Registry = new Wpseede_View_Registry();
+        const _wpseedeViewRegistry = new wpseedeViewRegistry();
 
         this.each(function(){
 
             const _view = jQuery(this);
             const viewName = _view.data("view");
 
-            const viewRegistry = _Wpseede_View_Registry.addViewRegistry(_view);
+            const viewRegistry = _wpseedeViewRegistry.addViewRegistry(_view);
 
             if(viewRegistry !== null)
             {
@@ -214,8 +214,8 @@ jQuery.fn.extend({
 
     viewReplace: function(html, triggerLoadedEvent=true, triggerChildren=true)
     {
-        const _Wpseede_View_Registry = new Wpseede_View_Registry();
-        _Wpseede_View_Registry.removeViewRegistry(this);
+        const _wpseedeViewRegistry = new wpseedeViewRegistry();
+        _wpseedeViewRegistry.removeViewRegistry(this);
 
         this.after(html);
         this.remove();
@@ -230,14 +230,14 @@ jQuery.fn.extend({
     {
         const parentView = this;
 
-        const _Wpseede_View_Registry = new Wpseede_View_Registry();
+        const _wpseedeViewRegistry = new wpseedeViewRegistry();
 
         Object.keys(partsContent).forEach((k) => {
 
             const part = parentView.find(".part-" + k);
             if(part.length)
             {
-                _Wpseede_View_Registry.removeViewRegistry(part);
+                _wpseedeViewRegistry.removeViewRegistry(part);
 
                 part.html(partsContent[k]);
 
@@ -259,7 +259,7 @@ jQuery.fn.extend({
     {
         const parentView = this;
 
-        const _Wpseede_View_Registry = new Wpseede_View_Registry();
+        const _wpseedeViewRegistry = new wpseedeViewRegistry();
 
         let qArgs = {
             action: loadAction,
@@ -273,7 +273,7 @@ jQuery.fn.extend({
 
             if(resp.status && typeof resp.values.view_html !== 'undefined')
             {
-                _Wpseede_View_Registry.removeViewRegistry(parentView.find(".view"));
+                _wpseedeViewRegistry.removeViewRegistry(parentView.find(".view"));
 
                 parentView.html(resp.values.view_html);
                 parentView.viewTriggerLoaded(true);
