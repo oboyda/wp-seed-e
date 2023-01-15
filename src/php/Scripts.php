@@ -171,13 +171,15 @@ class Scripts
             $this->script_regs = array_merge([
                 'build_index_front' => '',
                 'build_index_admin' => '',
+                'utils_base' => $this->args['base_dir_url'] . '/../js/utils-base.js',
                 'jquery_utils' => $this->args['base_dir_url'] . '/../js/jquery-view.js'
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
+                'utils_base' => ['jquery'],
                 'jquery_utils' => ['jquery'],
-                'build_index_front' => ['jquery_utils', 'jquery'],
-                'build_index_admin' => ['jquery_utils', 'jquery']
+                'build_index_front' => ['utils_base', 'jquery_utils', 'jquery'],
+                'build_index_admin' => ['utils_base', 'jquery_utils', 'jquery']
             ], $this->script_deps);
         }
 
