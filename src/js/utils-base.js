@@ -1,6 +1,16 @@
 
 class WpseedeUtilsBase 
 {
+    static isMobile()
+    {
+        return (window.innerWidth <= 992);
+    }
+
+    static isDesktop()
+    {
+        return !this.isMobile();
+    }
+
     static isset(val)
     {
         return (typeof val !== "undefined" && val !== null);
