@@ -462,9 +462,14 @@ class Base
     * -------------------------
     */
 
-    static function getPostSelectOptions($post_type='page', $args=[])
+    static function getPostSelectOptions($post_type='page', $args=[], $empty_label='')
     {
         $options = [];
+
+        if($empty_label)
+        {
+            $options[0] = $empty_label;
+        }
 
         $args = wp_parse_args($args, [
             'post_type' => $post_type,
