@@ -654,5 +654,57 @@ class Base
         else{
             file_put_contents($debug_path, $debug_html);
         }
-    }    
+    }
+
+    /* ------------------------------ */
+
+    static function addStartSlash($str)
+    {
+        if($str == '/')
+        {
+            return $str;
+        }
+        if(substr($str, 0, 1) !== '/')
+        {
+            $str = '/' . $str;
+        }
+        return $str;
+    }
+    static function addEndSlash($str)
+    {
+        if($str == '/')
+        {
+            return $str;
+        }
+        if(substr($str, strlen($str)-1, strlen($str)) !== '/')
+        {
+            $str = $str . '/';
+        }
+        return $str;
+    }
+    static function addStartEndSlashes($str)
+    {
+        return self::addEndSlash(self::addStartSlash($str));
+    }
+
+    static function removeStartSlash($str)
+    {
+        if(substr($str, 0, 1) == '/')
+        {
+            $str = substr($str, 1, strlen($str));
+        }
+        return $str;
+    }
+    static function removeEndSlash($str)
+    {
+        if(substr($str, strlen($str)-1, strlen($str)) == '/')
+        {
+            $str = substr($str, 0, strlen($str)-1);
+        }
+        return $str;
+    }
+    static function removeStartEndSlashes()
+    {
+        return self::removeEndSlash(self::removeStartSlash($str));
+    }
 }
