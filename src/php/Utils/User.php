@@ -11,7 +11,7 @@ class User
 
     static function getCurrentUser($type_class)
     {
-        return self::getUser(get_current_user_id(), $type_class);
+        return is_user_logged_in() ? self::getUser(get_current_user_id(), $type_class) : null;
     }
 
     static function getCurrentUserRole($type_class)
