@@ -327,6 +327,11 @@ class Base
         }
     }
 
+    static function getTermSysName($term_id)
+    {
+        return get_term_meta($term_id, 'sys_name', true);
+    }
+
     static function getTermBySysName($sys_name, $taxonomy, $fields='all')
     {
         $q_args = [
