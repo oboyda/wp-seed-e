@@ -67,15 +67,15 @@ class View extends \WPSEED\View
     {
         $name_parts = [];
 
-        if($this->context_name)
-        {
-            $name_parts['context_name'] = $this->context_name;
-        }
+        // if($this->context_name)
+        // {
+        //     $name_parts['context_name'] = $this->context_name;
+        // }
 
         if($this->mod_name)
         {
             $name_parts['mod_name'] = $this->mod_name;
-            unset($name_parts['context_name']);
+            // unset($name_parts['context_name']);
         }
 
         $name_parts['view_name'] = parent::getName();
