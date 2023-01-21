@@ -179,6 +179,11 @@ jQuery.fn.extend({
 
     viewAddLoadedListener: function(eventName, loadedCallback=null)
     {
+        if(eventName.indexOf("view_loaded") !== 0)
+        {
+            eventName = "view_loaded_" + eventName;
+        }
+
         this.on(eventName, function(e, view, viewRegistry){
 
             if(viewRegistry !== null && typeof loadedCallback === "function")

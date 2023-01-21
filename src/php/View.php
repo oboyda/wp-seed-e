@@ -9,6 +9,7 @@ class View extends \WPSEED\View
     // const CONTEXT_NAME = 'wpseede';
 
     protected $context_name;
+    protected $mod_name;
     protected $view_loader;
 
     protected $args_ext;
@@ -19,11 +20,15 @@ class View extends \WPSEED\View
 
     public function __construct($args=[], $args_default=[])
     {
-        if(!isset($this->context_name) && defined('CONTEXT_NAME'))
+        if(!isset($this->context_name))
         {
-            $this->context_name = static::CONTEXT_NAME;
+            $this->setContextName('');
         }
-        // $this->args_ext = $this->getSavedViewArgsAjax($args);
+        if(!isset($this->mod_name))
+        {
+            $this->setModName('');
+        }
+        
         $this->args_ext = $args;
 
         $this->child_parts = [];
@@ -46,6 +51,40 @@ class View extends \WPSEED\View
         $this->setDataFields();
 
         $this->setHtmlClass();
+    }
+
+    public function setContextName($context_name)
+    {
+        $this->context_name = $context_name;
+    }
+
+    public function setModName($mod_name)
+    {
+        $this->mod_name = $mod_name;
+    }
+
+    public function getName()
+    {
+        $name_parts = [];
+
+        if($this->context_name)
+        {
+            $name_parts['context_name'] = $this->context_name;
+        }
+
+        if($this->mod_name)
+        {
+            $name_parts['mod_name'] = $this->mod_name;
+            unset($name_parts['context_name']);
+        }
+
+        $name_parts['view_name'] = parent::getName();
+
+        $name = implode('--', $name_parts);
+
+        $name = strtolower(str_replace('_', '-', $name));
+
+        return $name;
     }
 
     protected function saveViewArgs($args=null)
