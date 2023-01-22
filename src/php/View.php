@@ -40,29 +40,6 @@ class View extends \WPSEED\View
         $this->setHtmlClass();
     }
 
-    // public function getName($include_context=true, $include_mod=true)
-    // {
-    //     $name_parts = [];
-
-    //     if($include_context && $this->context_name)
-    //     {
-    //         $name_parts['context_name'] = $this->context_name;
-    //     }
-
-    //     if($include_mod && $this->mod_name)
-    //     {
-    //         $name_parts['mod_name'] = $this->mod_name;
-    //     }
-
-    //     $name_parts['view_name'] = parent::getName();
-
-    //     $name = implode('--', $name_parts);
-
-    //     $name = strtolower(str_replace('_', '-', $name));
-
-    //     return $name;
-    // }
-
     protected function saveViewArgs($args=null)
     {
         if(isset($this->view_loader))
@@ -161,7 +138,7 @@ class View extends \WPSEED\View
     
     protected function _getField($name, $default=null)
     {
-        $_name = $this->context_name . '__' . $this->getName(true) . '__' . $name;
+        $_name = $this->getContextName() . '__' . $this->getName(true) . '__' . $name;
 
         $post_id = $this->getPostId();
 
@@ -191,8 +168,6 @@ class View extends \WPSEED\View
 
     protected function setHtmlClass()
     {
-        // $this->addHtmlClass($this->context_name);
-
         if($this->args['html_class'])
         {
             $this->addHtmlClass($this->args['html_class']);
