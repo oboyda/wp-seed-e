@@ -6,10 +6,6 @@ use WPSEEDE\Utils\Base as Utils_Base;
 
 class View extends \WPSEED\View 
 {
-    // const CONTEXT_NAME = 'wpseede';
-
-    protected $context_name;
-    protected $mod_name;
     protected $view_loader;
 
     protected $args_ext;
@@ -20,15 +16,6 @@ class View extends \WPSEED\View
 
     public function __construct($args=[], $args_default=[])
     {
-        if(!isset($this->context_name))
-        {
-            $this->setContextName('');
-        }
-        if(!isset($this->mod_name))
-        {
-            $this->setModName('');
-        }
-        
         $this->args_ext = $args;
 
         $this->child_parts = [];
@@ -53,39 +40,28 @@ class View extends \WPSEED\View
         $this->setHtmlClass();
     }
 
-    public function setContextName($context_name)
-    {
-        $this->context_name = $context_name;
-    }
+    // public function getName($include_context=true, $include_mod=true)
+    // {
+    //     $name_parts = [];
 
-    public function setModName($mod_name)
-    {
-        $this->mod_name = $mod_name;
-    }
+    //     if($include_context && $this->context_name)
+    //     {
+    //         $name_parts['context_name'] = $this->context_name;
+    //     }
 
-    public function getName()
-    {
-        $name_parts = [];
+    //     if($include_mod && $this->mod_name)
+    //     {
+    //         $name_parts['mod_name'] = $this->mod_name;
+    //     }
 
-        // if($this->context_name)
-        // {
-        //     $name_parts['context_name'] = $this->context_name;
-        // }
+    //     $name_parts['view_name'] = parent::getName();
 
-        if($this->mod_name)
-        {
-            $name_parts['mod_name'] = $this->mod_name;
-            // unset($name_parts['context_name']);
-        }
+    //     $name = implode('--', $name_parts);
 
-        $name_parts['view_name'] = parent::getName();
+    //     $name = strtolower(str_replace('_', '-', $name));
 
-        $name = implode('--', $name_parts);
-
-        $name = strtolower(str_replace('_', '-', $name));
-
-        return $name;
-    }
+    //     return $name;
+    // }
 
     protected function saveViewArgs($args=null)
     {
@@ -215,7 +191,7 @@ class View extends \WPSEED\View
 
     protected function setHtmlClass()
     {
-        $this->addHtmlClass($this->context_name);
+        // $this->addHtmlClass($this->context_name);
 
         if($this->args['html_class'])
         {
