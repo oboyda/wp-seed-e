@@ -71,7 +71,7 @@ class View extends \WPSEED\View
 
     /* ------------------------- */
 
-    public function getName($include_context=false, $include_mod=true)
+    public function getName($include_context=true, $include_mod=true)
     {
         $name_parts = [];
 
