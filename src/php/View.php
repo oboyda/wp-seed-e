@@ -225,7 +225,7 @@ class View extends \WPSEED\View
     protected function setHtmlClass()
     {
         $this->addHtmlClass($this->getContextName());
-        $this->addHtmlClass($this->getModName());
+        $this->addHtmlClass($this->getModName(true));
 
         if($this->args['html_class'])
         {
