@@ -17,6 +17,7 @@ class WpseedeViewRegistry
 
     getViewRegistry(viewName, viewId=null)
     {
+        viewName = this.sanitizeViewName(viewName);
         const viewRegistry = this.isset(this.registry[viewName]) ? this.registry[viewName] : null;
 
         if(!viewId)
@@ -34,7 +35,7 @@ class WpseedeViewRegistry
             return null;
         }
 
-        const viewName = view.data("view");
+        const viewName = this.sanitizeViewName(view.data("view"));
         const viewId = this.getViewId(view, true);
 
         if(!(this.isset(viewName) && this.isset(viewId)))
@@ -71,7 +72,7 @@ class WpseedeViewRegistry
             });
         }
 
-        const viewName = view.data("view");
+        const viewName = this.sanitizeViewName(view.data("view"));
         const viewId = this.getViewId(view, false);
 
         if(!(this.isset(viewName) && this.isset(viewId)))
@@ -94,6 +95,8 @@ class WpseedeViewRegistry
 
     getViewInterfaces(viewName, viewId=null)
     {
+        viewName = this.sanitizeViewName(viewName);
+
         const viewRegistry = this.getViewRegistry(viewName, viewId);
 
         if(!viewId)
@@ -117,29 +120,11 @@ class WpseedeViewRegistry
 
     getViewInterfaceSingle(viewName, viewId=null)
     {
+        viewName = this.sanitizeViewName(viewName);
+
         const viewInterfaces = this.getViewInterfaces(viewName, viewId);
         return Array.isArray(viewInterfaces) ? (this.isset(viewInterfaces[0]) ? viewInterfaces[0] : null) : viewInterfaces;
     }
-
-    // addViewInterface(viewName, viewId, iObj)
-    // {
-    //     let viewRegistry = this.getViewRegistry(viewName, viewId);
-
-    //     if(viewRegistry !== null)
-    //     {
-    //         viewRegistry.interface = iObj;
-    //     }
-    // }
-
-    // removeViewInterface(viewName, viewId)
-    // {
-    //     let viewRegistry = this.getViewRegistry(viewName, viewId);
-
-    //     if(viewRegistry !== null)
-    //     {
-    //         viewRegistry.interface = null;
-    //     }
-    // }
 
     getViewId(view, genId=false)
     {
@@ -154,6 +139,11 @@ class WpseedeViewRegistry
         }
 
         return viewId;
+    }
+
+    sanitizeViewName(viewName)
+    {
+        return (typeof viewName === "string") ? viewName.replace(".", "--") : null;
     }
 
     genId(length=16)
@@ -200,7 +190,7 @@ jQuery.fn.extend({
         this.each(function(){
 
             const _view = jQuery(this);
-            const viewName = _view.data("view");
+            const viewName = this.sanitizeViewName(_view.data("view"));
 
             const viewRegistry = _WpseedeViewRegistry.addViewRegistry(_view);
 
@@ -276,6 +266,9 @@ jQuery.fn.extend({
 
     viewAjaxLoad: function(loadAction="wpseede_load_view", viewName, args={}, cbk)
     {
+
+        viewName = this.sanitizeViewName(viewName);
+        
         const parentView = this;
 
         let qArgs = {
