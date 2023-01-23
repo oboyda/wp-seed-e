@@ -185,12 +185,13 @@ jQuery.fn.extend({
     
     viewTriggerLoaded: function(triggerChildren=false)
     {
+        const _this = this;
         const _WpseedeViewRegistry = new WpseedeViewRegistry();
 
         this.each(function(){
 
             const _view = jQuery(this);
-            const viewName = this.sanitizeViewName(_view.data("view"));
+            const viewName = _this.sanitizeViewName(_view.data("view"));
 
             const viewRegistry = _WpseedeViewRegistry.addViewRegistry(_view);
 
@@ -266,9 +267,8 @@ jQuery.fn.extend({
 
     viewAjaxLoad: function(loadAction="wpseede_load_view", viewName, args={}, cbk)
     {
-
         viewName = this.sanitizeViewName(viewName);
-        
+
         const parentView = this;
 
         let qArgs = {
