@@ -55,7 +55,8 @@ class View extends \WPSEED\View
 
     protected function getContextName()
     {
-        return defined('static::CONTEXT_NAME') ? static::CONTEXT_NAME : (isset($this->context_name) ? $this->context_name : '');
+        // return defined('static::CONTEXT_NAME') ? static::CONTEXT_NAME : (isset($this->context_name) ? $this->context_name : '');
+        return isset($this->context_name) ? $this->context_name : (defined('static::CONTEXT_NAME') ? static::CONTEXT_NAME : '');
     }
 
     protected function setModName($mod_name)
@@ -65,7 +66,9 @@ class View extends \WPSEED\View
 
     protected function getModName($as_slug=false)
     {
-        $mod_name = defined('static::MOD_NAME') ? static::MOD_NAME : (isset($this->mod_name) ? $this->mod_name : '');
+        // $mod_name = defined('static::MOD_NAME') ? static::MOD_NAME : (isset($this->mod_name) ? $this->mod_name : '');
+        $mod_name = isset($this->mod_name) ? isset($this->mod_name) : (defined('static::MOD_NAME') ? static::MOD_NAME : '');
+
         return $as_slug ? strtolower(str_replace('_', '-', $mod_name)) : $mod_name;
     }
 
