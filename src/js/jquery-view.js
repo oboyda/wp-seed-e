@@ -223,7 +223,6 @@ jQuery.fn.extend({
 
     viewReplace: function(html, triggerLoadedEvent=true, triggerChildren=true)
     {
-        this.find(".view").viewRemoveRegistry();
         this.viewRemoveRegistry();
 
         this.html(html);
@@ -237,7 +236,7 @@ jQuery.fn.extend({
 
     viewInsert: function(html, triggerLoadedEvent=true, triggerChildren=true)
     {
-        this.find(".view").viewRemoveRegistry();
+        this.children(".view").viewRemoveRegistry();
 
         this.html(html);
 
