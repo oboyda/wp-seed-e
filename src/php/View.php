@@ -194,7 +194,8 @@ class View extends \WPSEED\View
     
     protected function _getField($name, $default=null)
     {
-        $_name = $this->getContextName() . '__' . $this->getName(true) . '__' . $name;
+        // $_name = $this->getContextName() . '__' . $this->getName(true) . '__' . $name;
+        $_name = str_replace('-', '_', $this->getName(true, true, '__')) . '__' . $name;
 
         $post_id = $this->getPostId();
 
