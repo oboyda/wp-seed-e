@@ -71,7 +71,7 @@ class View extends \WPSEED\View
 
     /* ------------------------- */
 
-    public function getName($include_context=true, $include_mod=true)
+    public function getName($include_context=true, $include_mod=true, $sep='.')
     {
         $name_parts = [];
 
@@ -87,7 +87,7 @@ class View extends \WPSEED\View
 
         $name_parts['view_name'] = $this->getViewName();
 
-        $name = implode('.', $name_parts);
+        $name = implode($sep, $name_parts);
 
         // $name = strtolower(str_replace('_', '-', $name));
 
