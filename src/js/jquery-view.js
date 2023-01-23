@@ -57,19 +57,24 @@ class WpseedeViewRegistry
         return this.registry[viewName][viewId];
     }
 
-    removeViewRegistry(view)
+    removeViewRegistry(view, removeChildren=true)
     {
         if(!view.length)
         {
-            return false;
+            return;
         }
 
         if(view.length > 1)
         {
             const _this = this;
             view.each(() => {
-                _this.removeViewRegistry(jQuery(this).find(".view"));
+                if(removeChildren){
+                    _this.removeViewRegistry(jQuery(this).find(".view"), false);
+                }else{
+                    _this.removeViewRegistry(jQuery(this));
+                }
             });
+            return;
         }
 
         const viewName = this.sanitizeViewName(view.data("view"));
@@ -77,7 +82,7 @@ class WpseedeViewRegistry
 
         if(!(this.isset(viewName) && this.isset(viewId)))
         {
-            return false;
+            return;
         }
 
         if(this.isset(this.registry[viewName]) && this.isset(this.registry[viewName][viewId]))
@@ -88,8 +93,6 @@ class WpseedeViewRegistry
             {
                 delete this.registry[viewName];
             }
-
-            return true;
         }
     }
 
@@ -159,7 +162,7 @@ class WpseedeViewRegistry
 
     isset(val)
     {
-        return (typeof val !== undefined && val !== null);
+        return (typeof val !== "undefined" && val !== null);
     }
 }
 
@@ -192,7 +195,7 @@ jQuery.fn.extend({
             const _view = jQuery(this);
             const viewName = _view.data("view");
 
-            if(typeof viewName === undefined)
+            if(typeof viewName === "undefined")
             {
                 return;
             }
@@ -277,14 +280,14 @@ jQuery.fn.extend({
         let qArgs = {
             action: loadAction,
             view_name: viewName,
-            view_args: (typeof args.viewArgs !== undefined) ? args.viewArgs : {},
-            view_args_cast: (typeof args.viewArgsCast !== undefined) ? args.viewArgsCast : {},
-            view_args_s: (typeof args.viewArgsS !== undefined) ? args.viewArgsS : ''
+            view_args: (typeof args.viewArgs !== "undefined") ? args.viewArgs : {},
+            view_args_cast: (typeof args.viewArgsCast !== "undefined") ? args.viewArgsCast : {},
+            view_args_s: (typeof args.viewArgsS !== "undefined") ? args.viewArgsS : ''
         };
 
         jQuery.post(wpseedeVars.ajaxurl, qArgs, function(resp){
 
-            if(resp.status && typeof resp.values.view_html !== undefined)
+            if(resp.status && typeof resp.values.view_html !== "undefined")
             {
                 parentView.viewInsert(resp.values.view_html);
 
