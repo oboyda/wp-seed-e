@@ -228,13 +228,13 @@ jQuery.fn.extend({
 
     viewInsert: function(html, triggerLoadedEvent=true, triggerChildren=true)
     {
-        this.children().viewRemoveRegistry();
+        this.find(".view").viewRemoveRegistry();
 
         this.html(html);
 
         if(triggerLoadedEvent)
         {
-            this.children().viewTriggerLoaded(triggerChildren);
+            this.children(".view").viewTriggerLoaded(triggerChildren);
         }
     },
 
