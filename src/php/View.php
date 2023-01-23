@@ -14,6 +14,12 @@ class View extends \WPSEED\View
     protected $data;
     protected $field_defaults;
 
+    protected $context_name;
+    protected $mod_name;
+
+    // const CONTEXT_NAME = '';
+    // const MOD_NAME = '';
+
     public function __construct($args=[], $args_default=[])
     {
         $this->args_ext = $args;
@@ -39,6 +45,56 @@ class View extends \WPSEED\View
 
         $this->setHtmlClass();
     }
+
+    /* ------------------------- */
+
+    protected function setContextName($context_name)
+    {
+        $this->context_name = $context_name;
+    }
+
+    protected function getContextName()
+    {
+        return defined('static::CONTEXT_NAME') ? static::CONTEXT_NAME : (isset($this->context_name) ? $this->context_name : '');
+    }
+
+    protected function setModName($mod_name)
+    {
+        $this->mod_name = $mod_name;
+    }
+
+    protected function getModName($as_slug=false)
+    {
+        $mod_name = defined('static::MOD_NAME') ? static::MOD_NAME : (isset($this->mod_name) ? $this->mod_name : '');
+        return $as_slug ? strtolower(str_replace('_', '-', $mod_name)) : $mod_name;
+    }
+
+    /* ------------------------- */
+
+    public function getName($include_context=false, $include_mod=true)
+    {
+        $name_parts = [];
+
+        if($include_context && $this->getContextName())
+        {
+            $name_parts['context_name'] = $this->getContextName();
+        }
+
+        if($include_mod && $this->getModName())
+        {
+            $name_parts['mod_name'] = $this->getModName(true);
+        }
+
+        $name_parts['view_name'] = $this->getViewName();
+
+        $name = implode('.', $name_parts);
+
+        // $name = strtolower(str_replace('_', '-', $name));
+
+        return $name;
+    }
+
+    /* ------------------------- */
 
     protected function saveViewArgs($args=null)
     {
@@ -168,6 +224,9 @@ class View extends \WPSEED\View
 
     protected function setHtmlClass()
     {
+        $this->addHtmlClass($this->getContextName());
+        $this->addHtmlClass($this->getModName());
+
         if($this->args['html_class'])
         {
             $this->addHtmlClass($this->args['html_class']);
