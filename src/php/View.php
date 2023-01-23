@@ -67,7 +67,7 @@ class View extends \WPSEED\View
     protected function getModName($as_slug=false)
     {
         // $mod_name = defined('static::MOD_NAME') ? static::MOD_NAME : (isset($this->mod_name) ? $this->mod_name : '');
-        $mod_name = isset($this->mod_name) ? isset($this->mod_name) : (defined('static::MOD_NAME') ? static::MOD_NAME : '');
+        $mod_name = isset($this->mod_name) ? $this->mod_name : (defined('static::MOD_NAME') ? static::MOD_NAME : '');
 
         return $as_slug ? strtolower(str_replace('_', '-', $mod_name)) : $mod_name;
     }
