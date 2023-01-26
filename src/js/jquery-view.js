@@ -52,8 +52,7 @@ class WpseedeViewRegistry
         this.registry[viewName][viewId] = {
             name: viewName,
             id: viewId,
-            interface: null,
-            registry: this
+            interface: null
         };
         this.registry[viewName][viewId].addInterface = (viewInterface) => {
 
