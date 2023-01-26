@@ -95,11 +95,11 @@ class Type
 
         $props_config = $type_object->get_props_config();
 
-        foreach($props_config as $key => $prop_config)
+        foreach($fields as $key => $field)
         {
-            $field = isset($fields[$key]) ? $fields[$key] : null;
+            $prop_config = isset($props_config[$key]) ? $props_config[$key] : null;
 
-            if(!isset($field))
+            if(!isset($prop_config))
             {
                 continue;
             }
