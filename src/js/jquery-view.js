@@ -152,7 +152,7 @@ class WpseedeViewRegistry
 
     sanitizeViewName(viewName)
     {
-        return (typeof viewName === "string") ? viewName.replace(".", "--") : null;
+        return (typeof viewName === "string") ? viewName.replace(/\./g, "--") : null;
     }
 
     genId(length=16)
