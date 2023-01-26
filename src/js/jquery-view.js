@@ -35,7 +35,8 @@ class WpseedeViewRegistry
             return null;
         }
 
-        const viewName = this.sanitizeViewName(view.data("view"));
+        const _viewName = view.data("view");
+        const viewName = this.sanitizeViewName(_viewName);
         const viewId = this.getViewId(view, true);
 
         if(!(this.isset(viewName) && this.isset(viewId)))
@@ -49,9 +50,15 @@ class WpseedeViewRegistry
         }
 
         this.registry[viewName][viewId] = {
+            name: viewName,
             id: viewId,
-            // loadedCallback: loadedCallback,
-            interface: null
+            interface: null,
+            registry: this
+        };
+        this.registry[viewName][viewId].addInterface = (viewInterface) => {
+
+            this.registry[viewName][viewId].interface = viewInterface;
+            jQuery(document.body).triggerHandler("wpseede_interface_ready_" + _viewName, [viewInterface, _viewName, viewId]);
         };
 
         return this.registry[viewName][viewId];

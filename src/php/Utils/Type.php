@@ -6,24 +6,29 @@ use WPSEED\Req;
 
 class Type
 {
-    static function getType($post, $type_class=null)
+    static function isUserTypeClass($type_class)
     {
-        $_post = (is_int($post) && !empty($post)) ? get_post($post) : $post;
+        return (strpos($type_class, 'User') !== false);
+    }
+
+    static function getType($post_user, $type_class='\WP_Post')
+    {
+        $_post_user = (is_int($post_user) && !empty($post_user)) ? (self::isUserTypeClass($type_class) ? get_userdata($post_user) : get_post($post_user)) : $post_user;
 
         if(isset($type_class))
         {
-            return class_exists($type_class) ? new $type_class($_post) : null;
+            return class_exists($type_class) ? new $type_class($_post_user) : null;
         }
 
-        return $_post;
+        return $_post_user;
     }
 
-    static function getTypes($posts, $type_class=null)
+    static function getTypes($posts_users, $type_class='\WP_Post')
     {
         $types = [];
-        foreach($posts as $post)
+        foreach($posts_users as $post_user)
         {
-            $types[] = self::getType($post, $type_class);
+            $types[] = self::getType($post_user, $type_class);
         }
         return $types;
     }
@@ -79,7 +84,7 @@ class Type
         return $req_args;
     }
 
-    static function updateType($type_id, $type_class=null, $fields, $persist=true, $check_cap=true)
+    static function updateType($type_id, $type_class, $fields, $persist=true, $check_cap=true)
     {
         $type_object = is_int($type_id) ? self::getType($type_id, $type_class) : $type_id;
 
