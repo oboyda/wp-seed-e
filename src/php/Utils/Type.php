@@ -90,7 +90,7 @@ class Type
 
         if(!is_object($type_object))
         {
-            return false;
+            return null;
         }
 
         $props_config = $type_object->get_props_config();
