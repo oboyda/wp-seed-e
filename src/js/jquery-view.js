@@ -240,15 +240,15 @@ jQuery.fn.extend({
         }
     },
 
-    viewInsert: function(html, triggerLoadedEvent=true, triggerChildren=true)
+    viewInsert: function(html, triggerLoadedEvent=true)
     {
-        this.children(".view").viewRemoveRegistry();
+        this.find(".view").viewRemoveRegistry();
 
         this.html(html);
 
         if(triggerLoadedEvent)
         {
-            this.children(".view").viewTriggerLoaded(triggerChildren);
+            this.find(".view").viewTriggerLoaded();
         }
     },
 
@@ -294,7 +294,7 @@ jQuery.fn.extend({
 
             if(resp.status && typeof resp.values.view_html !== "undefined")
             {
-                parentView.viewInsert(resp.values.view_html);
+                parentView.viewInsert(resp.values.view_html, true, true);
 
                 if(typeof cbk === 'function')
                 {

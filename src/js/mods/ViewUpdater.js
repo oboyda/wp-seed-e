@@ -143,40 +143,47 @@ export class ViewUpdater
 
         const _config = (_name.keyPath !== "") ? { [_name.keyPath]: config } : config;
 
-        Object.keys(_config).forEach((c) => {
+        Object.keys(_config).forEach((k) => {
 
-            switch(c)
+            const _c = _config[k];
+
+            switch(k)
             {
                 case "text":
-                    configElem.text(_config[c]);
+                    configElem.text(_c);
                 break;
                 case "html":
-                    if(typeof _config[c] === "string"){
-                        configElem.html(_config[c]);
+                    if(typeof _c === "string"){
+                        configElem.html(_c);
                     }else{
-                        configElem.append(_config[c]);
+                        configElem.append(_c);
                     }
                 break;
                 case "class":
-                    configElem.attr("class", _config[c]);
+                    if(!(this.isset(_config.addClass) || this.isset(_config.removeClass)))
+                    {
+                        configElem.attr("class", _c);
+                    }
+                break;
                 case "addClass":
-                    configElem.addClass(_config[c]);
+                    configElem.addClass(_c);
+                break;
                 case "removeClass":
-                    configElem.removeClass(_config[c]);
+                    configElem.removeClass(_c);
                 break;
                 case "dataAtts":
-                    Object.keys(_config[c]).forEach((d) => {
-                        configElem.attr(`data-${d}`, _config[c][d]);
+                    Object.keys(_c).forEach((d) => {
+                        configElem.attr(`data-${d}`, _c[d]);
                     });
                 break;
                 case "atts":
-                    Object.keys(_config[c]).forEach((a) => {
-                        configElem.attr(a, _config[c][a]);
+                    Object.keys(_c).forEach((a) => {
+                        configElem.attr(a, _c[a]);
                     });
                 break;
                 case "events":
-                    Object.keys(_config[c]).forEach((e) => {
-                        const callback = _config[c][e];
+                    Object.keys(_c).forEach((e) => {
+                        const callback = _c[e];
                         if(typeof callback === "function")
                         {
                             configElem.off(e, callback);
@@ -185,7 +192,7 @@ export class ViewUpdater
                     });
                 break;
                 case "elemOn":
-                    if(_config[c])
+                    if(_c)
                     {
                         configElem.removeClass("d-none");
                     }

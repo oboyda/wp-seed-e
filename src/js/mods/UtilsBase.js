@@ -66,4 +66,11 @@ export class UtilsBase
 
         return _obj;
     }
+
+    static arrayUnique(arr)
+    {
+        return arr.filter(function(value, index, _arr){
+            return (_arr.indexOf(value) === index);
+        });
+    }
 }
