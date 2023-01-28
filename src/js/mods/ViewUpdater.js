@@ -105,10 +105,10 @@ export class ViewUpdater
         }
     }
 
-    resetConfigs()
+    resetConfigs(apply=false)
     {
         // this.setConfigs(Object.assign({}, this.configsDefault));
-        this.setConfigs(JSON.parse(JSON.stringify(this.configsDefault)));
+        this.setConfigs(JSON.parse(JSON.stringify(this.configsDefault)), apply);
     }
 
     getConfig(name)
