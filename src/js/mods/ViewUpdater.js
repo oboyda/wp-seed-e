@@ -157,6 +157,8 @@ export class ViewUpdater
                         configElem.append(_config[c]);
                     }
                 break;
+                case "class":
+                    configElem.attr("class", _config[c]);
                 case "addClass":
                     configElem.addClass(_config[c]);
                 case "removeClass":
@@ -194,6 +196,8 @@ export class ViewUpdater
             }
         });
     }
+
+    /* ------------------------- */
 
     isset(val)
     {
