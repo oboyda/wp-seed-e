@@ -90,7 +90,23 @@ export class ViewUpdater
 
             if(this.isset(_config))
             {
-                _config[_name.keyPath] = config;
+                if(
+                    _name.keyPath == "addClass" 
+                    && this.isset(_config[_name.keyPath]) 
+                    && _config[_name.keyPath].indexOf(config) === false
+                ){
+                    _config[_name.keyPath] += " " + config;
+
+                }else if(
+                    _name.keyPath == "removeClass" 
+                    && this.isset(_config[_name.keyPath]) 
+                    && _config[_name.keyPath].indexOf(config) !== false
+                ){
+                    _config[_name.keyPath] = _config[_name.keyPath].replace(config, "").trim();
+
+                }else{
+                    _config[_name.keyPath] = config;
+                }
             }
         }
         // else if(this.isset(this.configs[_name.basePath]))
@@ -111,13 +127,13 @@ export class ViewUpdater
         this.setConfigs(JSON.parse(JSON.stringify(this.configsDefault)), apply);
     }
 
-    getConfig(name)
+    getConfig(name, def=null)
     {
         const config = this.getObjectPath(name, this.configs);
         // const configDefault = this.getObjectPath(name, this.configsDefault);
         // return this.isset(config) ? config : (this.isset(configDefault) ? configDefault : null);
 
-        return this.isset(config) ? config : null;
+        return this.isset(config) ? config : (this.isset(def) ? def : null);
     }
 
     applyConfigs(names=null)
