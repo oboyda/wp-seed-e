@@ -91,18 +91,11 @@ export class ViewUpdater
             if(this.isset(_config))
             {
                 if(
-                    _name.keyPath == "addClass" 
+                    (_name.keyPath == "addClass" || _name.keyPath == "removeClass") 
                     && this.isset(_config[_name.keyPath]) 
-                    && _config[_name.keyPath].indexOf(config) === false
+                    && _config[_name.keyPath].indexOf(config) < 0
                 ){
                     _config[_name.keyPath] += " " + config;
-
-                }else if(
-                    _name.keyPath == "removeClass" 
-                    && this.isset(_config[_name.keyPath]) 
-                    && _config[_name.keyPath].indexOf(config) !== false
-                ){
-                    _config[_name.keyPath] = _config[_name.keyPath].replace(config, "").trim();
 
                 }else{
                     _config[_name.keyPath] = config;
