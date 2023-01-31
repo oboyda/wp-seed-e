@@ -157,10 +157,16 @@ export class ViewUpdater
                     configElem.attr("class", config);
                 break;
                 case "addClass":
-                    configElem.addClass(config);
+                    if(!this.isset(config.class))
+                    {
+                        configElem.addClass(config);
+                    }
                 break;
                 case "removeClass":
-                    configElem.removeClass(config);
+                    if(!this.isset(config.class))
+                    {
+                        configElem.removeClass(config);
+                    }
                 break;
                 case "dataAtts":
                     Object.keys(config).forEach((d) => {
