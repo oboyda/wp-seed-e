@@ -88,18 +88,19 @@ export class ViewUpdater
 
         if(_name.keyPath)
         {
-            const configs = this.getObjectPath(_name.basePath, this.configs);
+            // const configs = this.getObjectPath(_name.basePath, this.configs);
+            const configs = this.getConfig(_name.basePath);
 
             if(this.isset(configs))
             {
-                this._setConfig(_name.elemName, configs, _name.keyPath, config, apply);
+                this._setConfig(name, configs, _name.keyPath, config, apply);
             }
         }
         else if(typeof this.configs[_name.elemName] !== "undefined")
         {
             this.configs[_name.elemName] = config;
 
-            this._setConfig(_name.elemName, this.configs[_name.elemName], null, apply);
+            this._setConfig(name, this.configs[_name.elemName], null, null, apply);
         }
     }
 
@@ -123,9 +124,9 @@ export class ViewUpdater
         });
     }
 
-    applyConfig(elemName, config, key=null)
+    applyConfig(name, config, key=null)
     {
-        const configElem = this._getConfigElem(elemName);
+        const configElem = this._getConfigElem(name);
         if(!configElem)
         {
             return;
@@ -133,75 +134,88 @@ export class ViewUpdater
 
         if(key === null)
         {
-            Object.keys(config).forEach((_key) => {
+            Object.keys(config).forEach((k) => {
 
-                this.applyConfig(elemName, config[_key], _key);
+                this.applyConfig(name, config[k], k);
             });
+
             return;
         }
-        else{
+        
+        const _name = this.parseNamePathBase(name);
+        const _basePath = this.parseNamePathBase(_name.basePath);
+        if(_basePath.keyPath)
+        {
+            key = _basePath.keyPath;
+            config = this.getConfig(_name.basePath);
 
-            switch(key)
+            if(!this.isset(config))
             {
-                case "text":
-                    configElem.text(config);
-                break;
-                case "html":
-                    if(typeof config === "string"){
-                        configElem.html(config);
-                    }else{
-                        configElem.append(config);
-                    }
-                break;
-                case "class":
-                    configElem.attr("class", config);
-                break;
-                case "addClass":
-                    if(!this.isset(config.class))
-                    {
-                        configElem.addClass(config);
-                    }
-                break;
-                case "removeClass":
-                    if(!this.isset(config.class))
-                    {
-                        configElem.removeClass(config);
-                    }
-                break;
-                case "dataAtts":
-                    Object.keys(config).forEach((d) => {
-                        configElem.attr(`data-${d}`, config[d]);
-                    });
-                break;
-                case "atts":
-                    Object.keys(config).forEach((a) => {
-                        configElem.attr(a, config[a]);
-                    });
-                break;
-                case "events":
-                    Object.keys(config).forEach((e) => {
-                        const callback = config[e];
-                        if(typeof callback === "function")
-                        {
-                            configElem.off(e, callback);
-                            configElem.on(e, callback);
-                        }
-                    });
-                break;
+                return;
             }
+        }
+
+        switch(key)
+        {
+            case "text":
+                configElem.text(config);
+            break;
+            case "html":
+                if(typeof config === "string"){
+                    configElem.html(config);
+                }else{
+                    configElem.append(config);
+                }
+            break;
+            case "class":
+                configElem.attr("class", config);
+            break;
+            case "addClass":
+                if(!this.isset(config.class))
+                {
+                    configElem.addClass(config);
+                }
+            break;
+            case "removeClass":
+                if(!this.isset(config.class))
+                {
+                    configElem.removeClass(config);
+                }
+            break;
+            case "dataAtts":
+                Object.keys(config).forEach((d) => {
+                    configElem.attr(`data-${d}`, config[d]);
+                });
+            break;
+            case "atts":
+                Object.keys(config).forEach((a) => {
+                    configElem.attr(a, config[a]);
+                });
+            break;
+            case "events":
+                Object.keys(config).forEach((e) => {
+                    const callback = config[e];
+                    if(typeof callback === "function")
+                    {
+                        configElem.off(e, callback);
+                        configElem.on(e, callback);
+                    }
+                });
+            break;
         }
     }
 
     /* ------------------------- */
 
-    _setConfig(elemName, configs, key=null, value=null, apply=false)
+    _setConfig(name, configs, key=null, value=null, apply=false)
     {
         if(key === null)
         {
             Object.keys(configs).forEach((k) => {
                 
-                this._setConfig(elemName, configs, k, configs[k], apply);
+                this._setConfig(name, configs, k, configs[k], apply);
             });
+
             return;
         }
 
@@ -211,30 +225,30 @@ export class ViewUpdater
 
             if(configs.elemOn)
             {
-                this._setConfigRemoveClass(elemName, configs, "d-none", apply);
+                this._setConfigRemoveClass(name, configs, "d-none", apply);
             }else{
-                this._setConfigAddClass(elemName, configs, "d-none", apply);
+                this._setConfigAddClass(name, configs, "d-none", apply);
             }
         }
         else if(key == "addClass"){
 
-            this._setConfigAddClass(elemName, configs, value, apply);
+            this._setConfigAddClass(name, configs, value, apply);
         }
         else if(key == "removeClass"){
 
-            this._setConfigRemoveClass(elemName, configs, value, apply);
+            this._setConfigRemoveClass(name, configs, value, apply);
         }
         else {
             configs[key] = value;
 
             if(apply)
             {
-                this.applyConfig(elemName, configs[key], key);
+                this.applyConfig(name, configs[key], key);
             }
         }
     }
 
-    _setConfigAddClass(elemName, elemConfigs, className, apply=false)
+    _setConfigAddClass(name, elemConfigs, className, apply=false)
     {
         if(!this.isset(elemConfigs))
         {
@@ -260,11 +274,11 @@ export class ViewUpdater
 
             if(apply)
             {
-                this.applyConfig(elemName, elemConfigs.addClass, 'addClass');
+                this.applyConfig(name, elemConfigs.addClass, 'addClass');
             }
         }
     }
-    _setConfigRemoveClass(elemName, elemConfigs, className, apply=false)
+    _setConfigRemoveClass(name, elemConfigs, className, apply=false)
     {
         if(!this.isset(elemConfigs))
         {
@@ -290,14 +304,15 @@ export class ViewUpdater
 
             if(apply)
             {
-                this.applyConfig(elemName, elemConfigs.removeClass, 'removeClass');
+                this.applyConfig(name, elemConfigs.removeClass, 'removeClass');
             }
         }
     }
 
     _getConfigElem(name)
     {
-        return this.isset(this.elems[name]) ? this.elems[name] : null;
+        const _name = this.parseNamePathBase(name);
+        return this.isset(this.elems[_name.elemName]) ? this.elems[_name.elemName] : null;
     }
 
     /* ------------------------- */
