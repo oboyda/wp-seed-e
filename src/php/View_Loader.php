@@ -29,26 +29,45 @@ class View_Loader extends \WPSEED\Action
 
         add_action('wp_ajax_' . $this->context_name . '_load_view', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view', [$this, 'loadView']);
+        add_action('wp_ajax_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
+        add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
 
         add_action('wp_head', [$this, 'printAjaxUrl']);
 
-        add_action('wp_footer', [$this, 'printViewsArgs'], 1000);
-        add_action('admin_footer', [$this, 'printViewsArgs'], 1000);
+        // add_action('wp_footer', [$this, 'printViewsArgs'], 1000);
+        // add_action('admin_footer', [$this, 'printViewsArgs'], 1000);
     }
 
     public function loadView()
     {
         $view_name = $this->getReq('view_name');
+        $view_id = $this->getReq('view_id');
         $view_args = $this->getReq('view_args', 'text', []);
         $view_args_cast = $this->getReq('view_args_cast', 'text', []);
         $view_args_s = $this->getReq('view_args_s', 'text', '');
 
+        $view_args = wp_parse_args($view_args, [
+            'id' => $view_id
+        ]);
+
         $_view_args = !empty($view_args) ? Utils_Base::castVals($view_args, $view_args_cast) : maybe_unserialize(stripslashes($view_args_s));
 
-        $view_html = $this->getView($view_name, $_view_args);
+        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name, $view_id);
 
         $this->setValue('view_name', $view_name);
-        $this->setValue('view_html', $view_html);
+
+        if(strpos($this->getReq('action'), $this->context_name . '_load_view_parts') !== false)
+        {
+            $view_obj = $this->getViewObject($view_name, $_view_args);
+            if(isset($view_obj) && method_exists($view_obj, 'getChildParts'))
+            {
+                $this->setValue('view_html', $view_obj->getChildParts());
+            }else{
+                $this->setValue('view_html', []);
+            }
+        }else{
+            $this->setValue('view_html', $this->getView($view_name, $_view_args));            
+        }
 
         $this->respond();
     }
@@ -120,18 +139,18 @@ class View_Loader extends \WPSEED\Action
         <?php
     }
 
-    public function saveViewArgs($view_id, $args)
-    {
-        $this->views_args[$view_id] = $args;
-    }
+    // public function saveViewArgs($view_id, $args)
+    // {
+    //     $this->views_args[$view_id] = $args;
+    // }
 
-    public function printViewsArgs()
-    {
-        echo '<script type="text/javascript">const ' . $this->context_name . 'ViewsArgs = ' . json_encode($this->views_args) . ';</script>';
-    }
+    // public function printViewsArgs()
+    // {
+    //     echo '<script type="text/javascript">const ' . $this->context_name . 'ViewsArgs = ' . json_encode($this->views_args) . ';</script>';
+    // }
 
-    public function getViewArgs($view_id)
-    {
-        return isset($this->views_args[$view_id]) ? $this->views_args[$view_id] : [];
-    }
+    // public function getViewArgs($view_id)
+    // {
+    //     return isset($this->views_args[$view_id]) ? $this->views_args[$view_id] : [];
+    // }
 }

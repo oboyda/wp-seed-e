@@ -288,7 +288,8 @@ jQuery.fn.extend({
             view_name: viewName,
             view_args: (typeof args.viewArgs !== "undefined") ? args.viewArgs : {},
             view_args_cast: (typeof args.viewArgsCast !== "undefined") ? args.viewArgsCast : {},
-            view_args_s: (typeof args.viewArgsS !== "undefined") ? args.viewArgsS : ''
+            view_args_s: (typeof args.viewArgsS !== "undefined") ? args.viewArgsS : '',
+            view_id: this.attr("id")
         };
 
         jQuery.post(wpseedeVars.ajaxurl, qArgs, function(resp){
@@ -296,6 +297,33 @@ jQuery.fn.extend({
             if(resp.status && typeof resp.values.view_html !== "undefined")
             {
                 parentView.viewInsert(resp.values.view_html, true, true);
+
+                if(typeof cbk === 'function')
+                {
+                    cbk(resp);
+                }
+            }
+        });
+    },
+
+    viewAjaxLoadParts: function(loadAction="wpseede_load_view_parts", viewName, args={}, cbk)
+    {
+        const _this = this;
+
+        let qArgs = {
+            action: loadAction,
+            view_name: viewName,
+            view_args: (typeof args.viewArgs !== "undefined") ? args.viewArgs : {},
+            view_args_cast: (typeof args.viewArgsCast !== "undefined") ? args.viewArgsCast : {},
+            view_args_s: (typeof args.viewArgsS !== "undefined") ? args.viewArgsS : '',
+            view_id: this.attr("id")
+        };
+
+        jQuery.post(wpseedeVars.ajaxurl, qArgs, function(resp){
+
+            if(resp.status && typeof resp.values.view_html !== "undefined")
+            {
+                _this.viewUpdateParts(resp.values.view_html, true);
 
                 if(typeof cbk === 'function')
                 {

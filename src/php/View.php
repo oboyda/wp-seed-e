@@ -99,49 +99,49 @@ class View extends \WPSEED\View
 
     /* ------------------------- */
 
-    protected function saveViewArgs($args=null)
-    {
-        if(isset($this->view_loader))
-        {
-            $_args = isset($args) ? $args : $this->getArgsExt();
+    // protected function saveViewArgs($args=null)
+    // {
+    //     if(isset($this->view_loader))
+    //     {
+    //         $_args = isset($args) ? $args : $this->getArgsExt();
 
-            $_args = $this->filterArgsPublic($_args);
+    //         $_args = $this->filterArgsPublic($_args);
 
-            $this->view_loader->saveViewArgs($this->getId(), $_args);
-        }
-    }
+    //         $this->view_loader->saveViewArgs($this->getId(), $_args);
+    //     }
+    // }
 
-    protected function getSavedViewArgsAjax($args)
-    {
-        if(!wp_doing_ajax())
-        {
-            return $args;
-        }
+    // protected function getSavedViewArgsAjax($args)
+    // {
+    //     if(!wp_doing_ajax())
+    //     {
+    //         return $args;
+    //     }
 
-        $view_id = isset($args['id']) ? $args['id'] : null;
+    //     $view_id = isset($args['id']) ? $args['id'] : null;
 
-        if(isset($view_id) && isset($this->view_loader))
-        {
-            $args = $this->view_loader->getViewArgs($view_id);
-        }
+    //     if(isset($view_id) && isset($this->view_loader))
+    //     {
+    //         $args = $this->view_loader->getViewArgs($view_id);
+    //     }
 
-        return $args;
-    }
+    //     return $args;
+    // }
 
     public function getArgsExt()
     {
         return $this->args_ext;
     }
 
-    public function getArgsExtPublic()
-    {
-        return $this->filterArgsPublic($this->args_ext);
-    }
+    // public function getArgsExtPublic()
+    // {
+    //     return $this->filterArgsPublic($this->args_ext);
+    // }
 
-    protected function filterArgsPublic($args)
-    {
-        return Utils_Base::filterArrayExclude($args, ['block_data']);
-    }
+    // protected function filterArgsPublic($args)
+    // {
+    //     return Utils_Base::filterArrayExclude($args, ['block_data']);
+    // }
 
     public function setChildPart($name, $html)
     {
