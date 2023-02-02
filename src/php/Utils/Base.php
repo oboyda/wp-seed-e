@@ -502,6 +502,8 @@ class Base
         $options = [];
 
         $args = wp_parse_args($args, [
+
+            'taxonomy' => $taxonomy,
             'meta_key' => '',
             'meta_value' => '',
             'meta_parent_term_id' => 0,
@@ -509,19 +511,15 @@ class Base
             'order' => 'ASC',
             'hide_empty' => false
         ]);
+
         if($args['meta_parent_term_id'])
         {
             $args['meta_key'] = 'parent_term_id';
             $args['meta_value'] = $args['meta_parent_term_id'];
         }
-        $q_args = [
-            'taxonomy' => $taxonomy,
-            'hide_empty' => $args['hide_empty'],
-            'meta_key' => $args['meta_key'],
-            'meta_value' => $args['meta_value']
-        ];
+        unset($args['meta_parent_term_id']);
 
-        $terms = get_terms($q_args);
+        $terms = get_terms($args);
 
         if(!is_wp_error($terms))
         {
