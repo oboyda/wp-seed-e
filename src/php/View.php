@@ -11,7 +11,7 @@ class View extends \WPSEED\View
     protected $args_ext;
     protected $child_parts;
 
-    protected $data;
+    // protected $data;
     protected $field_defaults;
 
     protected $context_name;
@@ -38,10 +38,10 @@ class View extends \WPSEED\View
             'padding_bottom' => $this->getField('padding_bottom', ''),
             'margin_bottom' => $this->getField('margin_bottom', ''),
             'container_class' => $this->getField('container_class', 'container-lg'),
-            'data' => []
+            // 'data' => []
         ]));
 
-        $this->setDataFields();
+        // $this->setDataFields();
 
         $this->setHtmlClass();
     }
@@ -160,60 +160,79 @@ class View extends \WPSEED\View
         return $this->child_parts;
     }
 
-    protected function setDataFields()
-    {
-        $this->data = (!empty($this->args['block_id']) && $this->args['data']) ? Utils_Base::getPostBlockData($this->args['block_id'], Utils_Base::getGlobalPostId()) : $this->args['data'];
+    // protected function setDataFields()
+    // {
+    //     $this->data = (!empty($this->args['block_id']) && $this->args['data']) ? Utils_Base::getPostBlockData($this->args['block_id'], Utils_Base::getGlobalPostId()) : $this->args['data'];
         
-        unset($this->args['data']);
+    //     unset($this->args['data']);
 
-        if(!empty($this->field_defaults))
-        {
-            foreach($this->field_defaults as $name => $default)
-            {
-                if(empty($this->args[$name]))
-                {
-                    $this->args[$name] = $this->_getField($name, $default);
-                }
-            }
-        }
-    }
+    //     if(!empty($this->field_defaults))
+    //     {
+    //         foreach($this->field_defaults as $name => $default)
+    //         {
+    //             if(empty($this->args[$name]))
+    //             {
+    //                 $this->args[$name] = $this->_getField($name, $default);
+    //             }
+    //         }
+    //     }
+    // }
+
+    // protected function getField($name, $default=null)
+    // {
+    //     // The constructor is already called, get the field
+    //     if(isset($this->args))
+    //     {
+    //         return $this->_getField($name, $default);
+    //     }
+
+    //     // Save field for later use in setDataFields
+    //     if(!isset($this->field_defaults))
+    //     {
+    //         $this->field_defaults = [];
+    //     }
+
+    //     $this->field_defaults[$name] = $default;
+    // }
+    
+    // protected function _getField($name, $default=null)
+    // {
+    //     // $_name = $this->getContextName() . '__' . $this->getName(true) . '__' . $name;
+    //     $_name = str_replace('-', '_', $this->getName(true, true, '__')) . '__' . $name;
+
+    //     $post_id = $this->getPostId();
+
+    //     $field = null;
+
+    //     if(isset($this->data[$_name]))
+    //     {
+    //         $field = $this->data[$_name];
+    //     }
+    //     elseif(function_exists('get_field'))
+    //     {
+    //         $field = get_field($_name, $post_id);
+    //     }
+    //     else{
+    //         $field = get_post_meta($_name, $post_id, true);
+    //     }
+        
+    //     return (empty($field) && isset($default)) ? $default : $field;
+    // }
 
     protected function getField($name, $default=null)
     {
-        // The constructor is already called, get the field
-        if(isset($this->args))
-        {
-            return $this->_getField($name, $default);
-        }
-
-        // Save field for later use in setDataFields
-        if(!isset($this->field_defaults))
-        {
-            $this->field_defaults = [];
-        }
-
-        $this->field_defaults[$name] = $default;
-    }
-    
-    protected function _getField($name, $default=null)
-    {
-        // $_name = $this->getContextName() . '__' . $this->getName(true) . '__' . $name;
-        $_name = str_replace('-', '_', $this->getName(true, true, '__')) . '__' . $name;
-
-        $post_id = $this->getPostId();
-
         $field = null;
 
-        if(isset($this->data[$_name]))
+        if(isset($this->args[$name]))
         {
-            $field = $this->data[$_name];
+            $field = $this->args[$_name];
         }
         elseif(function_exists('get_field'))
         {
-            $field = get_field($_name, $post_id);
+            $field = get_field($name, $this->getPostId());
         }
         else{
-            $field = get_post_meta($_name, $post_id, true);
+            $field = get_post_meta($name, $this->getPostId(), true);
         }
         
         return (empty($field) && isset($default)) ? $default : $field;
