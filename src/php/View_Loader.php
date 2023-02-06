@@ -27,6 +27,8 @@ class View_Loader extends \WPSEED\Action
 
         $this->views_args = [];
 
+        add_filter($this->context_name . '_load_view_args', [$this, 'filterLoadViewArgsAcf'], 10, 4);
+
         add_action('wp_ajax_' . $this->context_name . '_load_view', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view', [$this, 'loadView']);
         add_action('wp_ajax_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
@@ -115,16 +117,34 @@ class View_Loader extends \WPSEED\Action
     {
         $acf_prefix = 'acf/';
 
-        $view = (strpos($block['name'], $acf_prefix) === 0) ? substr($block['name'], strlen($acf_prefix)) : $block['name'];
-        $view_args = isset($block['view_args']) ? $block['view_args'] : [];
-    
-        // $view_args['block_id'] = isset($block['id']) ? $block['id'] : '';
-        $view_args['block_id'] = Utils_Base::getBlockId($wp_block);
-        $view_args['data'] = isset($block['data']) ? $block['data'] : '';
-    
-        $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
-    
-        $this->printView($view, $view_args);
+        $view_name = (strpos($block['name'], $acf_prefix) === 0) ? substr($block['name'], strlen($acf_prefix)) : $block['name'];
+
+        $view_args = isset($block['data']) ? $block['data'] : [];
+
+        // $view_args['id'] = 'acf-' . Utils_Base::getBlockId($wp_block);
+        $view_args['block_id'] = 'acf-' . Utils_Base::getBlockId($wp_block);
+        // $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
+
+        $view_args = apply_filters($this->context_name . '_load_view_args', $view_args, $view_name, $view_args['block_id'], false);
+
+        $this->printView($view_name, $view_args);
+    }
+
+    public function filterLoadViewArgsAcf($view_args=[], $view_name, $block_id, $load_block_args=true)
+    {
+        //Strip context name and view name from field names
+        if(strpos($block_id, 'acf-') === 0)
+        {
+            if($load_block_args)
+            {
+                $_block_id = substr($block_id, strlen('acf-'), strlen($block_id));
+                $view_args = array_merge($view_args, Utils_Base::getPostBlockData($_block_id, null));
+            }
+
+            $view_args = Utils_Base::stripBlockDataFieldsPrefixes($view_args, $this->context_name);
+        }
+
+        return $view_args;
     }
 
     public function printAjaxUrl()

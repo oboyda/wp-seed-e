@@ -289,7 +289,8 @@ jQuery.fn.extend({
             view_args: (typeof args.viewArgs !== "undefined") ? args.viewArgs : {},
             view_args_cast: (typeof args.viewArgsCast !== "undefined") ? args.viewArgsCast : {},
             view_args_s: (typeof args.viewArgsS !== "undefined") ? args.viewArgsS : '',
-            view_id: this.attr("id")
+            view_id: this.attr("id"),
+            view_block_id: this.data("block_id")
         };
 
         jQuery.post(wpseedeVars.ajaxurl, qArgs, function(resp){
