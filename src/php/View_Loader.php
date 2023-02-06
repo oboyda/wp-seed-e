@@ -44,17 +44,19 @@ class View_Loader extends \WPSEED\Action
     {
         $view_name = $this->getReq('view_name');
         $view_id = $this->getReq('view_id');
+        $block_id = $this->getReq('block_id');
         $view_args = $this->getReq('view_args', 'text', []);
         $view_args_cast = $this->getReq('view_args_cast', 'text', []);
         $view_args_s = $this->getReq('view_args_s', 'text', '');
 
         $view_args = wp_parse_args($view_args, [
-            'id' => $view_id
+            'id' => $view_id,
+            'block_id' => $block_id
         ]);
 
         $_view_args = !empty($view_args) ? Utils_Base::castVals($view_args, $view_args_cast) : maybe_unserialize(stripslashes($view_args_s));
 
-        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name, $view_id);
+        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name);
 
         $this->setValue('view_name', $view_name);
 
@@ -125,20 +127,25 @@ class View_Loader extends \WPSEED\Action
         $view_args['block_id'] = 'acf-' . Utils_Base::getBlockId($wp_block);
         // $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
 
-        $view_args = apply_filters($this->context_name . '_load_view_args', $view_args, $view_name, $view_args['block_id'], false);
+        $view_args = apply_filters($this->context_name . '_load_view_args', $view_args, $view_name, false);
 
         $this->printView($view_name, $view_args);
     }
 
-    public function filterLoadViewArgsAcf($view_args=[], $view_name, $block_id, $load_block_args=true)
+    public function filterLoadViewArgsAcf($view_args=[], $view_name, $load_block_args=true)
     {
+        $block_id = !empty($view_args['block_id']) ? $view_args['block_id'] : (isset($view_args['id']) ? $view_args['id'] : '');
+
         //Strip context name and view name from field names
         if(strpos($block_id, 'acf-') === 0)
         {
             if($load_block_args)
             {
                 $_block_id = substr($block_id, strlen('acf-'), strlen($block_id));
-                $view_args = array_merge($view_args, Utils_Base::getPostBlockData($_block_id, null));
+                if($_block_id)
+                {
+                    $view_args = array_merge($view_args, Utils_Base::getPostBlockData($_block_id, null));
+                }
             }
 
             $view_args = Utils_Base::stripBlockDataFieldsPrefixes($view_args, $this->context_name);
