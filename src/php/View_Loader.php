@@ -27,7 +27,7 @@ class View_Loader extends \WPSEED\Action
 
         $this->views_args = [];
 
-        add_filter($this->context_name . '_load_view_args', [$this, 'filterLoadViewArgsAcf'], 10, 4);
+        add_filter($this->context_name . '_load_view_args', [$this, 'filterLoadViewArgsAcf'], 10, 3);
 
         add_action('wp_ajax_' . $this->context_name . '_load_view', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view', [$this, 'loadView']);
@@ -56,7 +56,7 @@ class View_Loader extends \WPSEED\Action
 
         $_view_args = !empty($view_args) ? Utils_Base::castVals($view_args, $view_args_cast) : maybe_unserialize(stripslashes($view_args_s));
 
-        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name);
+        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name, true);
 
         $this->setValue('view_name', $view_name);
 
