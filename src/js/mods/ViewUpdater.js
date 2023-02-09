@@ -197,7 +197,8 @@ export class ViewUpdater
                     const callback = config[e];
                     if(typeof callback === "function")
                     {
-                        configElem.off(e, callback);
+                        // configElem.off(e, callback);
+                        configElem.off(e);
                         configElem.on(e, callback);
                     }
                 });
