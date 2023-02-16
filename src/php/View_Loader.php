@@ -148,8 +148,30 @@ class View_Loader extends \WPSEED\Action
                 }
             }
 
-            $view_args = Utils_Base::stripBlockDataFieldsPrefixes($view_args, $this->context_name);
+            $view_args = $this->stripArgsPrefixesAcf($view_args);
         }
+
+        return $view_args;
+    }
+    
+    protected function stripArgsPrefixesAcf($view_args)
+    {
+        // Convert ACF field ids to meta names
+        foreach(array_keys($view_args) as $key)
+        {
+            //strpos($key, 'field_') === 0
+            if(function_exists('acf_is_field_key') && acf_is_field_key($key))
+            {
+                $field_obj = get_field_object($key);
+                if(isset($field_obj['name']) && isset($field_obj['value']))
+                {
+                    $view_args[$field_obj['name']] = $field_obj['value'];
+                    unset($view_args[$key]);
+                }
+            }
+        }
+        
+        $view_args = Utils_Base::stripBlockDataFieldsPrefixes($view_args, $this->context_name);
 
         return $view_args;
     }
