@@ -149,12 +149,6 @@ class View_Loader extends \WPSEED\Action
             }
             
             $view_args = $this->stripArgsPrefixesAcf($view_args);
-            
-            if($view_name == 'about-us-summary')
-            {
-                print_r($view_args);
-                exit;
-            }
         }
 
         return $view_args;
