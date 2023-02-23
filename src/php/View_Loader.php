@@ -132,7 +132,7 @@ class View_Loader extends \WPSEED\Action
         $this->printView($view_name, $view_args);
     }
 
-    public function filterLoadViewArgsAcf($view_args=[], $view_name, $load_block_args=true)
+    public function filterLoadViewArgsAcf($view_args, $view_name, $load_block_args=true)
     {
         $block_id = !empty($view_args['block_id']) ? $view_args['block_id'] : (isset($view_args['id']) ? $view_args['id'] : '');
 
@@ -147,8 +147,14 @@ class View_Loader extends \WPSEED\Action
                     $view_args = array_merge($view_args, Utils_Base::getPostBlockData($_block_id, null));
                 }
             }
-
+            
             $view_args = $this->stripArgsPrefixesAcf($view_args);
+            
+            if($view_name == 'about-us-summary')
+            {
+                print_r($view_args);
+                exit;
+            }
         }
 
         return $view_args;
@@ -157,12 +163,12 @@ class View_Loader extends \WPSEED\Action
     protected function stripArgsPrefixesAcf($view_args)
     {
         // Convert ACF field ids to meta names
-        foreach(array_keys($view_args) as $key)
+        foreach($view_args as $key => $value)
         {
-            //strpos($key, 'field_') === 0
-            if(function_exists('acf_is_field_key') && acf_is_field_key($key))
+            //if(is_string($value) && strpos($key, 'field_') === 0)
+            if(is_string($value) && function_exists('acf_is_field_key') && acf_is_field_key($value))
             {
-                $field_obj = get_field_object($key);
+                $field_obj = get_field_object($value);
                 if(isset($field_obj['name']) && isset($field_obj['value']))
                 {
                     $view_args[$field_obj['name']] = $field_obj['value'];

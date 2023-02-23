@@ -632,14 +632,18 @@ class Base
         {
             foreach($data as $key => $field)
             {
+                $_key = $key;
+                
                 if($context_name && strpos($key, $context_name) === 0)
                 {
-                    $_key = explode('__', $key);
-                    $l = count($_key)-1;
-
-                    $_data[$_key[$l]] = $field;
-                }else{
-                    $_data[$key] = $field;
+                    $key_parts = explode('__', $key);
+                    $l = count($key_parts)-1;
+                    $_key = $key_parts[$l];
+                }
+                
+                if(!isset($_data[$_key]))
+                {
+                    $_data[$_key] = $field;
                 }
             }
         }

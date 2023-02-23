@@ -176,7 +176,7 @@ class Scripts
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
-                'utils_base' => ['jquery'],
+                // 'utils_base' => ['jquery'],
                 'jquery_view' => ['jquery'],
                 'build_index_front' => [
                     // 'utils_base', 
