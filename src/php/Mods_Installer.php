@@ -419,7 +419,7 @@ class Mods_Installer
         return false;
     }
 
-    protected function addLog($type='installed', $mod_name, $version, $version_new=null)
+    protected function addLog($type, $mod_name, $version, $version_new=null)
     {
         $log_line = $mod_name . ' ' . $version;
 
