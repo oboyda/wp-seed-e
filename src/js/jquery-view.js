@@ -49,6 +49,11 @@ class WpseedeViewRegistry
             this.registry[viewName] = {};
         }
 
+        if(typeof this.registry[viewName][viewId] !== "undefined")
+        {
+            return this.registry[viewName][viewId];
+        }
+
         this.registry[viewName][viewId] = {
             name: viewName,
             id: viewId,
@@ -246,6 +251,16 @@ jQuery.fn.extend({
         this.find(".view").viewRemoveRegistry();
 
         this.html(html);
+
+        if(triggerLoadedEvent)
+        {
+            this.find(".view").viewTriggerLoaded();
+        }
+    },
+
+    viewAppend: function(html, triggerLoadedEvent=true)
+    {
+        this.append(html);
 
         if(triggerLoadedEvent)
         {
