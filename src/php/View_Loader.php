@@ -144,7 +144,11 @@ class View_Loader extends \WPSEED\Action
                 $_block_id = substr($block_id, strlen('acf-'), strlen($block_id));
                 if($_block_id)
                 {
-                    $view_args = array_merge($view_args, Utils_Base::getPostBlockData($_block_id, null));
+                    $block_data = Utils_Base::getPostBlockData($_block_id, null);
+                    if(is_array($block_data))
+                    {
+                        $view_args = array_merge($view_args, $block_data);
+                    }
                 }
             }
             

@@ -604,13 +604,9 @@ class Base
 
         $data = null;
 
-        $debug = [];
-
         foreach($post_blocks as $post_block)
         {
             $_block_id = self::getBlockId($post_block);
-
-            $debug[] = $_block_id;
 
             if(
                 $_block_id === $block_id && 
