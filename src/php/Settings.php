@@ -35,11 +35,9 @@ class Settings
 
     public function getThemeOption($name, $default=null, $set_lang=true)
     {
-        $lang = Base::getCurrentLanguage();
-
         if($set_lang)
         {
-            $name .= '_' . $lang;
+            $name .= '_' . Base::getCurrentLanguage();
         }
         
         $option = get_theme_mod($name);
