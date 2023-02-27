@@ -35,7 +35,7 @@ class Date
     {
         if(is_int($timestamp))
         {
-            $timestamp = gmdate(DATETIME_FORMAT_SYS, $timestamp);
+            $timestamp = gmdate(self::DATETIME_FORMAT_SYS, $timestamp);
         }
 
         $date = is_string($timestamp) ? new \DateTime($timestamp) : $timestamp;
