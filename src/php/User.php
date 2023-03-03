@@ -6,7 +6,7 @@ class User extends \WPSEED\User
 {
     public function __construct($user=null, $props_config=[])
     {
-        if(is_string($user) && strpos($user, '@'))
+        if(is_string($user))
         {
             $_user = strpos($user, '@') ? get_user_by('email', $user) : get_user_by('login', $user);
             if(is_a($_user, 'WP_User'))
