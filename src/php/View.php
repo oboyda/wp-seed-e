@@ -363,7 +363,15 @@ class View extends \WPSEED\View
             'alt' => ''
         ]);
 
-        $html  = '<div class="img-resp img-' . $args['fit'] . ' ' . $args['rel_class'] . '">';
+        $cont_class = ['img-resp'];
+        if($args['fit']){
+            $cont_class[] = 'img-' . $args['fit'];
+        }
+        if($args['rel_class']){
+            $cont_class[] = $args['rel_class'];
+        }
+
+        $html  = '<div class="' . implode(' ', $cont_class) . '">';
             $html .= is_int($image) ? self::getAttachmentImage($image, $args['size']) : '<img alt="' . $args['alt'] . '" src="' . $image . '" />';
         $html .= '</div>';
 
