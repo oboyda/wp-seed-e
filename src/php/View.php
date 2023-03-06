@@ -357,7 +357,8 @@ class View extends \WPSEED\View
     {
         $args = wp_parse_args($args, [
             'size' => 'full', 
-            'rel_class' => 'rect-150-100', 
+            // 'rel_class' => 'rect-150-100', 
+            'rel_class' => '', 
             'fit' => 'cover', 
             'alt' => ''
         ]);
