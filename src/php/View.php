@@ -363,10 +363,10 @@ class View extends \WPSEED\View
             'alt' => ''
         ]);
 
-        $cont_class = [];
+        $cont_class = ['img-resp'];
         
         if($args['rel_class']){
-            $cont_class[] = 'img-resp';
+            $cont_class = ['img-rel'];
             $cont_class[] = $args['rel_class'];
         }
         if($args['fit']){
