@@ -366,7 +366,7 @@ class View extends \WPSEED\View
         $cont_class = ['img-resp'];
         
         if($args['rel_class']){
-            $cont_class = ['img-rel'];
+            $cont_class[] = 'img-rel';
             $cont_class[] = $args['rel_class'];
         }
         if($args['fit']){
