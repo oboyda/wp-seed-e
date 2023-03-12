@@ -18,6 +18,8 @@ export class ViewUpdater
 
     setConfigElems(configElems)
     {
+        this.configElems = configElems;
+
         if(!this.isset(this.elems))
         {
             this.elems = {
@@ -25,7 +27,7 @@ export class ViewUpdater
             };
         }
 
-        Object.keys(configElems).forEach((name) => {
+        Object.keys(this.configElems).forEach((name) => {
             const selector = configElems[name];
             this.elems[name] = this.view.find(selector);
         });
@@ -194,11 +196,13 @@ export class ViewUpdater
             break;
             case "events":
                 Object.keys(config).forEach((e) => {
+                    
                     const callback = config[e];
+
+                    configElem.off(e);
+
                     if(typeof callback === "function")
                     {
-                        // configElem.off(e, callback);
-                        configElem.off(e);
                         configElem.on(e, callback);
                     }
                 });
