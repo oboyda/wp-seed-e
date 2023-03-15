@@ -158,15 +158,16 @@ class View_Loader extends \WPSEED\Action
         return $view_args;
     }
     
-    protected function stripArgsPrefixesAcf($view_args)
+    protected function stripArgsPrefixesAcf($view_args, $debug=false)
     {
         // Convert ACF field ids to meta names
         foreach($view_args as $key => $value)
         {
-            //if(is_string($value) && strpos($key, 'field_') === 0)
-            if(is_string($value) && function_exists('acf_is_field_key') && acf_is_field_key($value))
+            $acf_id = function_exists('acf_is_field_key') ? (acf_is_field_key($key) ? $key : ( (is_string($value) && acf_is_field_key($value)) ? $value : '') ) : '';
+            if($acf_id)
             {
-                $field_obj = get_field_object($value);
+                $field_obj = get_field_object($acf_id);
+
                 if(isset($field_obj['name']) && isset($field_obj['value']))
                 {
                     $view_args[$field_obj['name']] = $field_obj['value'];
