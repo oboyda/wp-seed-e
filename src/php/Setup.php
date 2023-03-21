@@ -25,12 +25,12 @@ class Setup
 
     public function __construct($args)
     {
-        $this->parseArgs($args);
+        $this->setArgs($args);
 
         add_action('plugins_loaded', [$this, 'initLoad'], 100);
     }
 
-    protected function parseArgs($args=[])
+    public function setArgs($args=[])
     {
         if(empty($args) && isset($this->args))
         {
@@ -110,7 +110,7 @@ class Setup
 
             if($this->args['settings_config'])
             {
-                $this->_initSettings();
+                $this->initSettings();
             }
 
             if($this->args['init_scripts'])
@@ -177,12 +177,7 @@ class Setup
         load_plugin_textdomain($this->textdom, false, plugin_basename($this->base_dir) . '/languages');
     }
 
-    public function initSettings($args=[])
-    {
-        $this->parseArgs($args);
-        add_action('plugins_loaded', [$this, '_initSettings']);
-    }
-    public function _initSettings()
+    public function initSettings()
     {
         if($this->args['settings_config'])
         {
@@ -215,7 +210,7 @@ class Setup
 
     public function initTheme($args=[])
     {
-        $this->parseArgs($args);
+        $this->setArgs($args);
         add_action('after_setup_theme', [$this, '_initTheme']);
     }
     public function _initTheme()
