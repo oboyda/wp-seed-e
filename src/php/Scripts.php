@@ -130,7 +130,7 @@ class Scripts
 
     protected function getNameHandle($name, $reg_names=[])
     {
-        return (!in_array($name, $reg_names) || strpos($name, $this->prefix) === 0) ? $name : $this->prefix . $name;
+        return (!in_array($name, $reg_names) || strpos($name, $this->prefix) === 0 || strpos($name, '_') === 0) ? $name : $this->prefix . $name;
     }
     protected function getNameHandles($names, $reg_names)
     {
@@ -172,19 +172,19 @@ class Scripts
                 'build_index_front' => '',
                 'build_index_admin' => '',
                 // 'utils_base' => $this->args['base_dir_url'] . '/../js/utils-base.js',
-                'jquery_view' => $this->args['base_dir_url'] . '/../js/jquery-view.js'
+                '_jquery_view' => $this->args['base_dir_url'] . '/../js/jquery-view.js'
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
                 // 'utils_base' => ['jquery'],
-                'jquery_view' => ['jquery'],
+                '_jquery_view' => ['jquery'],
                 'build_index_front' => [
                     // 'utils_base', 
-                    'jquery_view', 'jquery'
+                    '_jquery_view', 'jquery'
                 ],
                 'build_index_admin' => [
                     // 'utils_base', 
-                    'jquery_view', 'jquery'
+                    '_jquery_view', 'jquery'
                 ]
             ], $this->script_deps);
         }

@@ -34,7 +34,7 @@ class View_Loader extends \WPSEED\Action
         add_action('wp_ajax_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
 
-        add_action('wp_head', [$this, 'printAjaxUrl']);
+        // add_action('wp_head', [$this, 'printAjaxUrl']);
 
         // add_action('wp_footer', [$this, 'printViewsArgs'], 1000);
         // add_action('admin_footer', [$this, 'printViewsArgs'], 1000);

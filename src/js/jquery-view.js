@@ -1,180 +1,184 @@
-class WpseedeViewRegistry 
+
+if(typeof WpseedeViewRegistry === "undefined")
 {
-    constructor()
+    class WpseedeViewRegistry 
     {
-        this._setRegistry();
-    }
-
-    _setRegistry()
-    {
-        if(!this.isset(window.viewRegistry))
+        constructor()
         {
-            window.viewRegistry = {};
+            this._setRegistry();
         }
 
-        this.registry = window.viewRegistry;
-    }
-
-    getViewRegistry(viewName, viewId=null)
-    {
-        viewName = this.sanitizeViewName(viewName);
-        const viewRegistry = this.isset(this.registry[viewName]) ? this.registry[viewName] : null;
-
-        if(!viewId)
+        _setRegistry()
         {
-            return viewRegistry;
+            if(!this.isset(window.viewRegistry))
+            {
+                window.viewRegistry = {};
+            }
+
+            this.registry = window.viewRegistry;
         }
 
-        return this.isset(viewRegistry[viewId]) ? viewRegistry[viewId] : null;
-    }
-
-    addViewRegistry(view)
-    {
-        if(!view.length)
+        getViewRegistry(viewName, viewId=null)
         {
-            return null;
+            viewName = this.sanitizeViewName(viewName);
+            const viewRegistry = this.isset(this.registry[viewName]) ? this.registry[viewName] : null;
+
+            if(!viewId)
+            {
+                return viewRegistry;
+            }
+
+            return this.isset(viewRegistry[viewId]) ? viewRegistry[viewId] : null;
         }
 
-        const _viewName = view.data("view");
-        const viewName = this.sanitizeViewName(_viewName);
-        const viewId = this.getViewId(view, true);
-
-        if(!(this.isset(viewName) && this.isset(viewId)))
+        addViewRegistry(view)
         {
-            return null;
-        }
+            if(!view.length)
+            {
+                return null;
+            }
 
-        if(!this.isset(this.registry[viewName]))
-        {
-            this.registry[viewName] = {};
-        }
+            const _viewName = view.data("view");
+            const viewName = this.sanitizeViewName(_viewName);
+            const viewId = this.getViewId(view, true);
 
-        if(typeof this.registry[viewName][viewId] !== "undefined")
-        {
+            if(!(this.isset(viewName) && this.isset(viewId)))
+            {
+                return null;
+            }
+
+            if(!this.isset(this.registry[viewName]))
+            {
+                this.registry[viewName] = {};
+            }
+
+            if(typeof this.registry[viewName][viewId] !== "undefined")
+            {
+                return this.registry[viewName][viewId];
+            }
+
+            this.registry[viewName][viewId] = {
+                name: viewName,
+                id: viewId,
+                interface: null,
+                registry: this
+            };
+            this.registry[viewName][viewId].addInterface = (viewInterface) => {
+
+                this.registry[viewName][viewId].interface = viewInterface;
+                jQuery(document.body).triggerHandler("wpseede_interface_ready_" + _viewName, [viewInterface, _viewName, viewId]);
+            };
+
             return this.registry[viewName][viewId];
         }
 
-        this.registry[viewName][viewId] = {
-            name: viewName,
-            id: viewId,
-            interface: null,
-            registry: this
-        };
-        this.registry[viewName][viewId].addInterface = (viewInterface) => {
-
-            this.registry[viewName][viewId].interface = viewInterface;
-            jQuery(document.body).triggerHandler("wpseede_interface_ready_" + _viewName, [viewInterface, _viewName, viewId]);
-        };
-
-        return this.registry[viewName][viewId];
-    }
-
-    removeViewRegistry(view, removeChildren=true)
-    {
-        if(!view.length)
+        removeViewRegistry(view, removeChildren=true)
         {
-            return;
-        }
-
-        if(view.length > 1)
-        {
-            const _this = this;
-            view.each(() => {
-                if(removeChildren){
-                    _this.removeViewRegistry(jQuery(this).find(".view"), false);
-                }else{
-                    _this.removeViewRegistry(jQuery(this));
-                }
-            });
-            return;
-        }
-
-        const viewName = this.sanitizeViewName(view.data("view"));
-        const viewId = this.getViewId(view, false);
-
-        if(!(this.isset(viewName) && this.isset(viewId)))
-        {
-            return;
-        }
-
-        if(this.isset(this.registry[viewName]) && this.isset(this.registry[viewName][viewId]))
-        {
-            delete this.registry[viewName][viewId];
-
-            if(!Object.keys(this.registry[viewName]).length)
+            if(!view.length)
             {
-                delete this.registry[viewName];
+                return;
             }
-        }
-    }
 
-    getViewInterfaces(viewName, viewId=null)
-    {
-        viewName = this.sanitizeViewName(viewName);
-
-        const viewRegistry = this.getViewRegistry(viewName, viewId);
-
-        if(!viewId)
-        {
-            let viewInterfaces = [];
-
-            if(viewRegistry !== null)
+            if(view.length > 1)
             {
-                Object.keys(viewRegistry).forEach((viewId) => {
-                    if(viewRegistry[viewId].interface !== null)
-                    {
-                        viewInterfaces.push(viewRegistry[viewId].interface);
+                const _this = this;
+                view.each(() => {
+                    if(removeChildren){
+                        _this.removeViewRegistry(jQuery(this).find(".view"), false);
+                    }else{
+                        _this.removeViewRegistry(jQuery(this));
                     }
                 });
+                return;
             }
-            return viewInterfaces;
+
+            const viewName = this.sanitizeViewName(view.data("view"));
+            const viewId = this.getViewId(view, false);
+
+            if(!(this.isset(viewName) && this.isset(viewId)))
+            {
+                return;
+            }
+
+            if(this.isset(this.registry[viewName]) && this.isset(this.registry[viewName][viewId]))
+            {
+                delete this.registry[viewName][viewId];
+
+                if(!Object.keys(this.registry[viewName]).length)
+                {
+                    delete this.registry[viewName];
+                }
+            }
         }
 
-        return (viewRegistry.interface !== null) ? viewRegistry.interface : null;
-    }
-
-    getViewInterfaceSingle(viewName, viewId=null)
-    {
-        viewName = this.sanitizeViewName(viewName);
-
-        const viewInterfaces = this.getViewInterfaces(viewName, viewId);
-        return Array.isArray(viewInterfaces) ? (this.isset(viewInterfaces[0]) ? viewInterfaces[0] : null) : viewInterfaces;
-    }
-
-    getViewId(view, genId=false)
-    {
-        const viewId = view.attr("id");
-
-        if((!this.isset(viewId) || viewId === "") && genId)
+        getViewInterfaces(viewName, viewId=null)
         {
-            const _viewId = this.genId();
-            view.attr("id", _viewId);
+            viewName = this.sanitizeViewName(viewName);
 
-            return _viewId;
+            const viewRegistry = this.getViewRegistry(viewName, viewId);
+
+            if(!viewId)
+            {
+                let viewInterfaces = [];
+
+                if(viewRegistry !== null)
+                {
+                    Object.keys(viewRegistry).forEach((viewId) => {
+                        if(viewRegistry[viewId].interface !== null)
+                        {
+                            viewInterfaces.push(viewRegistry[viewId].interface);
+                        }
+                    });
+                }
+                return viewInterfaces;
+            }
+
+            return (viewRegistry.interface !== null) ? viewRegistry.interface : null;
         }
 
-        return viewId;
-    }
-
-    sanitizeViewName(viewName)
-    {
-        return (typeof viewName === "string") ? viewName.replace(/\./g, "--") : null;
-    }
-
-    genId(length=16)
-    {
-        let id = "";
-        const chars = "abcdefghijklmnopkrstuvwxyz0123456789";
-        for(let i = 0; i < length; i++)
+        getViewInterfaceSingle(viewName, viewId=null)
         {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return "view-"+id+"-js";
-    }
+            viewName = this.sanitizeViewName(viewName);
 
-    isset(val)
-    {
-        return (typeof val !== "undefined" && val !== null);
+            const viewInterfaces = this.getViewInterfaces(viewName, viewId);
+            return Array.isArray(viewInterfaces) ? (this.isset(viewInterfaces[0]) ? viewInterfaces[0] : null) : viewInterfaces;
+        }
+
+        getViewId(view, genId=false)
+        {
+            const viewId = view.attr("id");
+
+            if((!this.isset(viewId) || viewId === "") && genId)
+            {
+                const _viewId = this.genId();
+                view.attr("id", _viewId);
+
+                return _viewId;
+            }
+
+            return viewId;
+        }
+
+        sanitizeViewName(viewName)
+        {
+            return (typeof viewName === "string") ? viewName.replace(/\./g, "--") : null;
+        }
+
+        genId(length=16)
+        {
+            let id = "";
+            const chars = "abcdefghijklmnopkrstuvwxyz0123456789";
+            for(let i = 0; i < length; i++)
+            {
+                id += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return "view-"+id+"-js";
+        }
+
+        isset(val)
+        {
+            return (typeof val !== "undefined" && val !== null);
+        }
     }
 }
 
