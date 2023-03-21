@@ -27,7 +27,7 @@ class View_Loader extends \WPSEED\Action
 
         $this->views_args = [];
 
-        add_filter($this->context_name . '_load_view_args', [$this, 'filterLoadViewArgsAcf'], 10, 3);
+        add_filter($this->context_name . '_load_view_args', [$this, 'filterLoadViewArgsAcf'], 10, 2);
 
         add_action('wp_ajax_' . $this->context_name . '_load_view', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view', [$this, 'loadView']);
@@ -56,7 +56,7 @@ class View_Loader extends \WPSEED\Action
 
         $_view_args = !empty($view_args) ? Utils_Base::castVals($view_args, $view_args_cast) : maybe_unserialize(stripslashes($view_args_s));
 
-        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name, true);
+        $view_args = apply_filters($this->context_name . '_load_view_args', $_view_args, $view_name);
 
         $this->setValue('view_name', $view_name);
 
@@ -107,6 +107,8 @@ class View_Loader extends \WPSEED\Action
     {
         $_view_name = $this->parseViewName($view_name);
 
+        $view_args = apply_filters($this->context_name . '_get_view_args', $view_args, $view_name);
+
         return wpseed_get_view($_view_name['view_name'], $view_args, $echo, $_view_name['view_dir'], $_view_name['view_namespace']);
     }
 
@@ -127,7 +129,7 @@ class View_Loader extends \WPSEED\Action
         $view_args['block_id'] = 'acf-' . Utils_Base::getBlockId($wp_block);
         // $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
 
-        $view_args = apply_filters($this->context_name . '_load_view_args', $view_args, $view_name, false);
+        $view_args = $this->filterLoadViewArgsAcf($view_args, $view_name, false);
 
         $this->printView($view_name, $view_args);
     }
