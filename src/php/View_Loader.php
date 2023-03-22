@@ -34,7 +34,7 @@ class View_Loader extends \WPSEED\Action
         add_action('wp_ajax_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
         add_action('wp_ajax_nopriv_' . $this->context_name . '_load_view_parts', [$this, 'loadView']);
 
-        // add_action('wp_head', [$this, 'printAjaxUrl']);
+        add_action('wp_head', [$this, 'printJsVars']);
 
         // add_action('wp_footer', [$this, 'printViewsArgs'], 1000);
         // add_action('admin_footer', [$this, 'printViewsArgs'], 1000);
@@ -183,14 +183,16 @@ class View_Loader extends \WPSEED\Action
         return $view_args;
     }
 
-    public function printAjaxUrl()
+    public function printJsVars()
     {
         $js_vars = apply_filters('wpseede_js_vars', [
             'ajaxurl' => admin_url('admin-ajax.php')
         ]);
         ?>
         <script type="text/javascript">
-            const wpseedeVars = <?php echo json_encode($js_vars); ?>
+            if(typeof wpseedeVars === "undefined"){
+                var wpseedeVars = <?php echo json_encode($js_vars); ?>;
+            }
         </script>
         <?php
     }
