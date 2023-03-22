@@ -11,6 +11,6 @@ class Format
 
     static function formatPhoneSys($phone)
     {
-        return str_replace([' ', '-'], '', $phone);
+        return str_replace([' ', '-', '.'], '', $phone);
     }
 }
