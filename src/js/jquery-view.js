@@ -229,6 +229,11 @@ jQuery.fn.extend({
 
     viewRemoveRegistry: function()
     {
+        const view = this;
+        const viewName = view.data("view");
+
+        jQuery(document.body).triggerHandler("view_before_unload_" + viewName, [view, viewName]);
+
         const _WpseedeViewRegistry = new WpseedeViewRegistry();
         _WpseedeViewRegistry.removeViewRegistry(this);
     },

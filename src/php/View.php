@@ -245,7 +245,7 @@ class View extends \WPSEED\View
         return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
     }
 
-    protected function setHtmlClass()
+    private function setHtmlClass()
     {
         $this->addHtmlClass($this->getContextName());
         $this->addHtmlClass($this->getModName(true));
