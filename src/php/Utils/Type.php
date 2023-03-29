@@ -97,6 +97,11 @@ class Type
 
         foreach($fields as $key => $field)
         {
+            if(!isset($field))
+            {
+                continue;
+            }
+
             $prop_config = isset($props_config[$key]) ? $props_config[$key] : null;
 
             if(!isset($prop_config))
