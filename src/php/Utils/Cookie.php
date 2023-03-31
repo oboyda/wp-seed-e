@@ -22,6 +22,10 @@ class Cookie
         {
             $val = serialize($val);
         }
+
+        // Set cookie before it is sent
+        $_COOKIE[$this->args['prefix'] . $key] = $val;
+
         return setcookie($this->args['prefix'] . $key, $val, $this->args['time'], $this->args['path']);
     }
 
