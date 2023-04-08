@@ -432,7 +432,7 @@ class Base
 
     /* ------------------------------ */
 
-    static function genId($length=10)
+    static function genId($length=10, $pref='id_')
     {
         $chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
@@ -441,10 +441,10 @@ class Base
             $length = strlen($chars);
         }
 
-        return 'id_' . substr(str_shuffle($chars), 0, $length);
+        return $pref . substr(str_shuffle($chars), 0, $length);
     }
 
-    static function genHash()
+    static function genHash($length=20)
     {
         $hash = '';
         $nums = '0123456789';
@@ -452,7 +452,7 @@ class Base
 
         $hash = $nums . $chars;
         $hash = str_shuffle($hash);
-        $hash = substr($hash, 0, 20);
+        $hash = substr($hash, 0, $length);
 
         return $hash;
     }
