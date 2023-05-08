@@ -10,6 +10,7 @@ class View_Loader extends \WPSEED\Action
     var $context_name;
     var $namespace;
     var $base_dir;
+    var $view_dir;
     var $views_args;
 
     public function __construct($args)
@@ -19,11 +20,13 @@ class View_Loader extends \WPSEED\Action
         $this->args = wp_parse_args($args, [
             'context_name' => 'wpseede',
             'namespace' => 'WPSEEDE',
-            'base_dir' => __DIR__
+            'base_dir' => __DIR__,
+            'view_dir' => __DIR__ . '/src/php/View/html',
         ]);
         $this->context_name = $this->args['context_name'];
         $this->namespace = $this->args['namespace'];
         $this->base_dir = $this->args['base_dir'];
+        $this->view_dir = $this->args['view_dir'];
 
         $this->views_args = [];
 
@@ -80,7 +83,7 @@ class View_Loader extends \WPSEED\Action
     {
         $_view_name = [
             'view_name' => $view_name,
-            'view_dir' => $this->base_dir . '/src/php/View/html',
+            'view_dir' => $this->view_dir,
             'view_namespace' => '\\' . $this->namespace . '\View'
         ];
 

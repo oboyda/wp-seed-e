@@ -45,9 +45,11 @@ class Setup
                 'context_name' => 'wpseede',
                 'namespace' => 'WPSEEDE',
                 'textdom' => 'wpseede',
+                'version' => '1.0.0',
+
                 'base_dir' => __DIR__,
                 'base_dir_url' => plugins_url('', __FILE__),
-                'version' => '1.0.0',
+                'view_dir' => __DIR__ . '/src/php/View/html',
 
                 'plugin_deps' => [
                     // 'woocommerce/woocommerce.php'
@@ -270,7 +272,8 @@ class Setup
         $this->view_loader = new View_Loader([
             'context_name' => $this->context_name,
             'namespace' => $this->namespace,
-            'base_dir' => $this->base_dir
+            'base_dir' => $this->base_dir,
+            'view_dir' => $this->args['view_dir']
         ]);
     }
 
