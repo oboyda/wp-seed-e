@@ -190,7 +190,7 @@ jQuery.fn.extend({
         }
         eventName = eventName.replaceAll(".", "__");
 
-        jQuery(this).on(eventName, function(e, view, viewRegistry){
+        this.on(eventName, function(e, view, viewRegistry){
 
             if(viewRegistry !== null && typeof loadedCallback === "function")
             {
