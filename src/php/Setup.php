@@ -27,7 +27,8 @@ class Setup
     {
         $this->setArgs($args);
 
-        add_action('plugins_loaded', [$this, 'initLoad'], 100);
+        // add_action('plugins_loaded', [$this, 'initLoad'], 100);
+        add_action('after_setup_theme', [$this, 'initLoad']);
     }
 
     public function setArgs($args=[])
@@ -213,7 +214,8 @@ class Setup
     public function initTheme($args=[])
     {
         $this->setArgs($args);
-        add_action('after_setup_theme', [$this, '_initTheme']);
+        // add_action('after_setup_theme', [$this, '_initTheme']);
+        $this->_initTheme();
     }
     public function _initTheme()
     {
