@@ -63,7 +63,7 @@ class WpseedeViewRegistry
         this.registry[viewName][viewId].addInterface = (viewInterface) => {
 
             this.registry[viewName][viewId].interface = viewInterface;
-            jQuery(document.body).triggerHandler("wpseede_interface_ready_" + _viewName, [viewInterface, _viewName, viewId]);
+            jQuery(document.body).triggerHandler("wpseede_interface_ready_" + _viewName.replaceAll(".", "__"), [viewInterface, _viewName, viewId]);
         };
 
         return this.registry[viewName][viewId];
@@ -188,8 +188,9 @@ jQuery.fn.extend({
         {
             eventName = "view_loaded_" + eventName;
         }
+        eventName = eventName.replaceAll(".", "__");
 
-        this.on(eventName, function(e, view, viewRegistry){
+        jQuery(this).on(eventName, function(e, view, viewRegistry){
 
             if(viewRegistry !== null && typeof loadedCallback === "function")
             {
@@ -216,7 +217,7 @@ jQuery.fn.extend({
 
             if(viewRegistry !== null)
             {
-                jQuery(document.body).triggerHandler("view_loaded_" + viewName, [_view, viewRegistry]);
+                jQuery(document.body).triggerHandler("view_loaded_" + viewName.replaceAll(".", "__"), [_view, viewRegistry]);
                 jQuery(document.body).triggerHandler("view_loaded", [_view, viewName, viewRegistry]);
 
                 if(triggerChildren)

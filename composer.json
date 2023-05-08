@@ -1,7 +1,7 @@
 {
     "name": "oboyda/wp-seed-e",
     "description": "Base components for a faster Wordpress development",
-    "version": "1.2.71",
+    "version": "1.2.72",
     "autoload": {
         "psr-4": {
             "WPSEEDE\\": "src/php"
