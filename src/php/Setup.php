@@ -204,6 +204,8 @@ class Setup
     {
         $this->scripts = new Scripts(wp_parse_args($args, [
             'context_name' => $this->context_name,
+            'base_dir' => $this->base_dir,
+            'base_dir_url' => $this->base_dir_url,
             'build_dir' => $this->base_dir . '/build',
             'build_dir_url' => $this->base_dir_url . '/build',
             'enqueue_build_index_front' => true,
@@ -286,7 +288,7 @@ class Setup
             $this->mods_installer = new Mods_Installer([
                 'context_name' => $this->context_name,
                 'namespace' => $this->namespace,
-                    'base_dir' => $this->base_dir,
+                'base_dir' => $this->base_dir,
                 'load_modules' => $this->args['load_modules']
             ]);
         // }
