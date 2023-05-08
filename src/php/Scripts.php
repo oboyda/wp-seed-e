@@ -172,7 +172,7 @@ class Scripts
                 'build_index_front' => '',
                 'build_index_admin' => '',
                 // 'utils_base' => $this->args['base_dir_url'] . '/../js/utils-base.js',
-                '_jquery_view' => $this->args['base_dir_url'] . '/../js/jquery-view.js'
+                '_jquery_view' => $this->args['base_dir_url'] . '/vendor/oboyda/wp-seed-e/src/js/jquery-view.js'
             ], $this->script_regs); 
 
             $this->script_deps = array_merge_recursive([
