@@ -577,16 +577,6 @@ class Base
         return isset($_POST['post_id']) ? (int)$_POST['post_id'] : (isset($post) ? $post->ID : 0);
     }
 
-    // static function getBlockId($block)
-    // {
-    //     $block_attributes = [];
-
-    //     $parsed_block = (is_a($block, 'WP_Block') && isset($block->parsed_block)) ? $block->parsed_block : $block;
-
-    //     $block_attrs = isset($parsed_block['attrs']) ? $parsed_block['attrs'] : [];
-
-    //     return (function_exists('acf_get_block_id') && $block_attrs) ? acf_get_block_id($block_attrs) : '';
-    // }
     static function getBlockId($block)
     {
         $parsed_block = (is_a($block, 'WP_Block') && isset($block->parsed_block)) ? $block->parsed_block : $block;
@@ -743,5 +733,42 @@ class Base
     static function removeStartEndSlashes()
     {
         return self::removeEndSlash(self::removeStartSlash($str));
+    }
+
+    /* ------------------------------ */
+
+    static function trimContent($string, $length=100, $more_str='...', $more_url='')
+    {
+        if(empty($string) || $length >= strlen($string)){
+            return $string;
+        }
+
+        $string_trimmed = '';
+
+        $string_parts = explode(' ', $string);
+        foreach($string_parts as $string_part){
+
+            $_string_trimmed = $string_trimmed . $string_part . ' ';
+
+            if(strlen($_string_trimmed) > $length){
+                break;
+            }else{
+                $string_trimmed = $_string_trimmed;
+            }
+        }
+
+        $string_trimmed = trim($string_trimmed);
+
+        if($more_str){
+            if($more_url){
+                $string_trimmed .= '<a href="'.$more_url.'">';
+            }
+            $string_trimmed .= $more_str;
+            if($more_url){
+                $string_trimmed .= '</a>';
+            }
+        }
+
+        return $string_trimmed;
     }
 }
