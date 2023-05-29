@@ -771,4 +771,25 @@ class Base
 
         return $string_trimmed;
     }
+
+    /* ------------------------------ */
+
+    static function getIconHtml($classes=[], $link='', $link_target='_self')
+    {
+        if(is_string($classes))
+        {
+            $classes = explode(' ', $classes);
+        }
+
+        $classes[] = 'app-icon';
+
+        $classes_str = implode(' ', array_unique($classes));
+
+        if(!empty($link))
+        {
+            return '<a href="' . $link . '" target="' . $link_target . '" class="' . $classes_str . '"></a>';
+        }
+
+        return '<i class="' . $classes_str . '"></i>';
+    }
 }
