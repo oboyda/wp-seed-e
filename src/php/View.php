@@ -260,13 +260,13 @@ class View extends \WPSEED\View
             $this->addHtmlClass('section');
         }
 
-        if($this->args['padding_bottom'] !== '')
+        if($this->args['padding_bottom'])
         {
             $pb = ($this->args['padding_bottom'] === 'none') ? '0' : $this->args['padding_bottom'];
             $this->addHtmlClass('pb-' . $pb);
         }
         
-        if($this->args['margin_bottom'] !== '')
+        if($this->args['margin_bottom'])
         {
             $mb = ($this->args['margin_bottom'] === 'none') ? '0' : $this->args['margin_bottom'];
             $this->addHtmlClass('mb-' . $mb);
