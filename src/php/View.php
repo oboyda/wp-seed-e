@@ -262,14 +262,16 @@ class View extends \WPSEED\View
 
         if($this->args['padding_bottom'])
         {
-            $pb = ($this->args['padding_bottom'] === 'none') ? '0' : $this->args['padding_bottom'];
-            $this->addHtmlClass('pb-' . $pb);
+            // $pb = ($this->args['padding_bottom'] === 'none') ? '0' : $this->args['padding_bottom'];
+            // $this->addHtmlClass('pb-' . $pb);
+            $this->addHtmlClass($this->args['padding_bottom']);
         }
         
         if($this->args['margin_bottom'])
         {
-            $mb = ($this->args['margin_bottom'] === 'none') ? '0' : $this->args['margin_bottom'];
-            $this->addHtmlClass('mb-' . $mb);
+            // $mb = ($this->args['margin_bottom'] === 'none') ? '0' : $this->args['margin_bottom'];
+            // $this->addHtmlClass('mb-' . $mb);
+            $this->addHtmlClass($this->args['margin_bottom']);
         }
 
         if($this->args['hide_mobile'])
