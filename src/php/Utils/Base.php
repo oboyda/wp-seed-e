@@ -783,7 +783,12 @@ class Base
 
         $classes[] = 'app-icon';
 
-        $classes_str = implode(' ', array_unique($classes));
+        $classes = explode(' ', str_replace('  ', ' ', implode(' ', array_unique($classes))) );
+        if(!in_array('bi', $classes) && !in_array('icon-bg', $classes)){
+            $classes[] = 'icon-bg';
+        }
+
+        $classes_str = implode(' ', $classes);
 
         if(!empty($link))
         {
