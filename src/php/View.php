@@ -391,14 +391,14 @@ class View extends \WPSEED\View
         $args = wp_parse_args($args, [
             'size' => 'full', 
             'rel_class' => 'rect-150-100', 
-            'fit_class' => 'cover', 
+            'fit' => 'cover', 
             'atts' => []
         ]);
         $args['atts'] = wp_parse_args($args['atts'], [
             'class' => '',
             'style' => ''
         ]);
-        $args['atts']['class'] .= ' bg-img bg-img-' . $args['fit_class'] . ' ' . $args['rel_class'];
+        $args['atts']['class'] .= ' bg-img bg-img-' . $args['fit'] . ' ' . $args['rel_class'];
 
         if($image_src)
         {
