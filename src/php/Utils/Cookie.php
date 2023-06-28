@@ -43,7 +43,7 @@ class Cookie
 
     public function delCookie($key)
     {
-        return setcookie($this->args['prefix'] . $key, $val, $this->args['del_time'], $this->args['path']);
+        return setcookie($this->args['prefix'] . $key, '', $this->args['del_time'], $this->args['path']);
     }
 
     public function setCookieGroupItem($group, $key, $val)
