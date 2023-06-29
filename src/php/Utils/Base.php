@@ -797,4 +797,43 @@ class Base
 
         return '<i class="' . $classes_str . '"></i>';
     }
+
+    // -------------------------
+
+    /*
+    @param string|array $path
+    @param object|array $val
+
+    @return mixed
+    -------------------------
+    */
+    static function getPath($path, $val)
+    {
+        $_path = is_array($path) ? $path : explode('.', $path);
+        $_val = $val;
+        foreach($_path as $p){
+            if(is_array($_val) && isset($_val[$p])){
+                $_val = $_val[$p];
+            }
+            elseif(is_object($_val) && isset($_val->$p)){
+                $_val = $_val->$p;
+            }else{
+                $_val = null;
+            }
+        }
+        return $_val;
+    }
+
+    /*
+    @param string|array $path
+    @param object|array $val
+
+    @return bool
+    -------------------------
+    */
+    static function issetPath($path, $val)
+    {
+        $_val = self::getPath($path, $val);
+        return isset($_val);
+    }
 }
