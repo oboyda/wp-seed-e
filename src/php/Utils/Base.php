@@ -807,7 +807,7 @@ class Base
     @return mixed
     -------------------------
     */
-    static function getPath($path, $val)
+    static function getObjectPath($path, $val)
     {
         $_path = is_array($path) ? $path : explode('.', $path);
         $_val = $val;
@@ -831,9 +831,9 @@ class Base
     @return bool
     -------------------------
     */
-    static function issetPath($path, $val)
+    static function hasObjectPath($path, $val)
     {
-        $_val = self::getPath($path, $val);
+        $_val = self::getObjectPath($path, $val);
         return isset($_val);
     }
 }
