@@ -131,4 +131,113 @@ class Type
     {
         return self::updateType(0, $type_class, $fields, $persist, $check_cap);
     }
+
+    static function validateTypeProps($type_class__props_config, $fields=[], $include_props=[])
+    {
+        $result = [
+            'fields' => [],
+            'error_fields' => [],
+            'errors' => []
+        ];
+
+        $props_config = is_array($type_class__props_config) ? $type_class__props_config : (is_string($type_class__props_config) ? self::getTypePropsConfig() : []);
+
+        if(!empty($props_config))
+        {
+            foreach($props_config as $key => $prop_config)
+            {
+                if(!empty($include_props) && !in_array($key, $include_props)){
+                    continue;
+                }
+
+                $type = isset($prop_config['type']) ? $prop_config['type'] : 'text';
+                $validate = in_array($type, ['file', 'attachment']) ? 'file' : ( isset($prop_config['validate']) ? $prop_config['validate'] : (isset($prop_config['cast']) ? $prop_config['cast'] : 'text') );
+                $required = isset($prop_config['required']) ? $prop_config['required'] : false;
+
+                $value = isset($fields[$key]) ? $fields[$key] : null;
+
+                $skip_add_field = false;
+
+                /* 
+                Add to errors if required and empty
+                -------------------------
+                */
+                if($required && empty($value))
+                {
+                    $result['error_fields'][] = $key;
+                }
+
+                switch($validate)
+                {
+                    case 'email':
+
+                        if(empty($value))
+                        {
+                            break;
+                        }
+
+                        if(!filter_var($value, FILTER_VALIDATE_EMAIL))
+                        {
+                            $result['error_fields'][] = $key;
+                        }
+                        break;
+
+                    case 'file':
+
+                        if(empty($value))
+                        {
+                            // Do not create index in $result['fields'] 
+                            // as an empty array to prevent deleting attachments
+                            $skip_add_field = true;
+
+                            break;
+                        }
+
+                        foreach($value as $i => $file)
+                        {
+                            /* 
+                            Check server errors
+                            -------------------------
+                            */
+                            if(!empty($file['error']))
+                            {
+                                $result['error_fields'][] = $key;
+                                $result['errors'][] = apply_filters('wpseed_file_error_upload_failed', sprintf(__('%s failed to upload', 'wpseed'), $file['name']), $file, $key, $prop_config);
+                            }
+
+                            /* 
+                            Validate type
+                            -------------------------
+                            */
+                            if(isset($prop_config['file_types']) && !in_array($file['type'], $prop_config['file_types']))
+                            {
+                                $result['error_fields'][] = $key;
+                                $result['errors'][] = apply_filters('wpseed_file_error_file_type', sprintf(__('File type %1$s is not allowed for %2$s.', 'wpseed'), $file['type'], $file['name']), $file, $key, $prop_config);
+                            }
+
+                            /* 
+                            Validate size
+                            -------------------------
+                            */
+                            if(isset($prop_config['file_max_size']) && $file['size'] > $prop_config['file_max_size'])
+                            {
+                                $result['error_fields'][] = $key;
+                                $result['errors'][] = apply_filters('wpseed_file_error_file_size', sprintf(__('File %1$s exceeds the maximum allowed file size of %2$d.', 'wpseed'), $file['name'], $prop_config['file_max_size']), $file, $key, $prop_config);
+                            }
+                        }
+
+                        break;
+                }
+
+                if(!$skip_add_field)
+                {
+                    $result['fields'][$key] = $value;
+                }
+            }
+        }
+
+        $result['error_fields'] = array_unique($result['error_fields']);
+
+        return $result;
+    }
 }
