@@ -429,4 +429,43 @@ class View extends \WPSEED\View
     {
         return Utils_Base::getIconHtml($classes, $link, $link_target);
     }
+
+    public function parseBtnArgs($args, $pref='btn_')
+    {
+        if(isset($args[$pref])){
+            $args[$pref] = wp_parse_args($args[$pref], [
+                'label' => '',
+                'page' => 0,
+                'url' => '',
+                'target' => '_self',
+                'target_blank' => false
+            ]);
+
+            $args[$pref.'_label'] = $args[$pref]['label'];
+            $args[$pref.'_page'] = $args[$pref]['page'];
+            $args[$pref.'_url'] = $args[$pref]['url'];
+            $args[$pref.'_target'] = $args[$pref]['target'];
+            $args[$pref.'_target_blank'] = $args[$pref]['target_blank'];
+
+            unset($args[$pref]);
+            $pref = $pref . '_';
+        }
+
+        $args = wp_parse_args($args, [
+            $pref.'label' => '',
+            $pref.'page' => 0,
+            $pref.'url' => '',
+            $pref.'target' => '_self',
+            $pref.'target_blank' => false
+        ]);
+
+        if(!empty($args[$pref.'page'])){
+            $args[$pref.'url'] = get_permalink((int)$args[$pref.'page']);
+        }
+        if(!empty($args[$pref.'target_blank'])){
+            $args[$pref.'target'] = '_blank';
+        }
+
+        return $args;
+    }
 }
