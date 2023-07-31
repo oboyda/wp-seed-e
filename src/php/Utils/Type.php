@@ -132,7 +132,7 @@ class Type
         return self::updateType(0, $type_class, $fields, $persist, $check_cap);
     }
 
-    static function validateTypeProps($type_class__props_config, $fields=[], $include_props=[])
+    static function validateTypeProps($type_class__props_config, $fields=[], $include_props=[], $skip_required=false)
     {
         $result = [
             'fields' => [],
@@ -152,7 +152,7 @@ class Type
 
                 $type = isset($prop_config['type']) ? $prop_config['type'] : 'text';
                 $validate = in_array($type, ['file', 'attachment']) ? 'file' : ( isset($prop_config['validate']) ? $prop_config['validate'] : (isset($prop_config['cast']) ? $prop_config['cast'] : 'text') );
-                $required = isset($prop_config['required']) ? $prop_config['required'] : false;
+                $required = (!$skip_required && isset($prop_config['required'])) ? $prop_config['required'] : false;
 
                 $value = isset($fields[$key]) ? $fields[$key] : null;
 
