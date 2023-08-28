@@ -10,9 +10,12 @@ class Setup
     var $context_name;
     var $namespace;
     var $textdom;
+    var $version;
+    var $is_theme;
+
     var $base_dir;
     var $base_dir_url;
-    var $version;
+    var $view_dir;
 
     var $settings_admin;
     var $settings;
@@ -47,9 +50,10 @@ class Setup
                 'namespace' => 'WPSEEDE',
                 'textdom' => 'wpseede',
                 'version' => '1.0.0',
+                'is_theme' => false,
 
                 'base_dir' => __DIR__,
-                'base_dir_url' => plugins_url('', __FILE__),
+                'base_dir_url' => '',
                 'view_dir' => __DIR__ . '/src/php/View/html',
 
                 'plugin_deps' => [
@@ -83,6 +87,10 @@ class Setup
                 'theme_logo_width' => 300,
                 'theme_logo_height' => 100
             ]);
+
+            if(empty($this->args['base_dir_url'])){
+                $this->args['base_dir_url'] = $this->args['is_theme'] ? get_stylesheet_directory_uri() : plugins_url('', __FILE__);
+            }
         }
         elseif($args)
         {
@@ -93,9 +101,12 @@ class Setup
         $this->context_name = $this->args['context_name'];
         $this->namespace = $this->args['namespace'];
         $this->textdom = $this->args['textdom'];
+        $this->version = $this->args['version'];
+        $this->is_theme = $this->args['is_theme'];
+
         $this->base_dir = $this->args['base_dir'];
         $this->base_dir_url = $this->args['base_dir_url'];
-        $this->version = $this->args['version'];
+        $this->view_dir = $this->args['view_dir'];
     }
 
     public function initLoad()
@@ -177,7 +188,11 @@ class Setup
 
     public function setTextDomain()
     {
-        load_plugin_textdomain($this->textdom, false, plugin_basename($this->base_dir) . '/languages');
+        if($this->is_theme){
+            load_theme_textdomain($this->textdom, $this->base_dir . '/languages');
+        }else{
+            load_plugin_textdomain($this->textdom, false, plugin_basename($this->base_dir) . '/languages');
+        }
     }
 
     public function initSettings()
@@ -277,7 +292,7 @@ class Setup
             'context_name' => $this->context_name,
             'namespace' => $this->namespace,
             'base_dir' => $this->base_dir,
-            'view_dir' => $this->args['view_dir']
+            'view_dir' => $this->view_dir
         ]);
     }
 
