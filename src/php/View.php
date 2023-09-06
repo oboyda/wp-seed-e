@@ -8,10 +8,8 @@ class View extends \WPSEED\View
 {
     protected $view_loader;
 
-    protected $args_ext;
     protected $child_parts;
 
-    // protected $data;
     protected $field_defaults;
 
     protected $context_name;
@@ -22,8 +20,6 @@ class View extends \WPSEED\View
 
     public function __construct($args=[], $args_default=[])
     {
-        $this->args_ext = $args;
-
         $this->child_parts = [];
 
         parent::__construct($args, wp_parse_args($args_default, [
@@ -35,13 +31,8 @@ class View extends \WPSEED\View
             'hide_mobile' => $this->getField('hide_mobile', false),
             'hide_desktop' => $this->getField('hide_desktop', false),
             'top_level' => $this->getField('top_level', false),
-            'padding_bottom' => $this->getField('padding_bottom', ''),
-            'margin_bottom' => $this->getField('margin_bottom', ''),
-            'container_class' => $this->getField('container_class', 'container-lg'),
-            // 'data' => []
+            'container_class' => $this->getField('container_class', 'container-lg')
         ]));
-
-        // $this->setDataFields();
 
         $this->setHtmlClass();
     }
@@ -92,56 +83,10 @@ class View extends \WPSEED\View
 
         $name = implode($sep, $name_parts);
 
-        // $name = strtolower(str_replace('_', '-', $name));
-
         return $name;
     }
 
     /* ------------------------- */
-
-    // protected function saveViewArgs($args=null)
-    // {
-    //     if(isset($this->view_loader))
-    //     {
-    //         $_args = isset($args) ? $args : $this->getArgsExt();
-
-    //         $_args = $this->filterArgsPublic($_args);
-
-    //         $this->view_loader->saveViewArgs($this->getId(), $_args);
-    //     }
-    // }
-
-    // protected function getSavedViewArgsAjax($args)
-    // {
-    //     if(!wp_doing_ajax())
-    //     {
-    //         return $args;
-    //     }
-
-    //     $view_id = isset($args['id']) ? $args['id'] : null;
-
-    //     if(isset($view_id) && isset($this->view_loader))
-    //     {
-    //         $args = $this->view_loader->getViewArgs($view_id);
-    //     }
-
-    //     return $args;
-    // }
-
-    public function getArgsExt()
-    {
-        return $this->args_ext;
-    }
-
-    // public function getArgsExtPublic()
-    // {
-    //     return $this->filterArgsPublic($this->args_ext);
-    // }
-
-    // protected function filterArgsPublic($args)
-    // {
-    //     return Utils_Base::filterArrayExclude($args, ['block_data']);
-    // }
 
     public function setChildPart($name, $html)
     {
@@ -159,65 +104,6 @@ class View extends \WPSEED\View
     {
         return $this->child_parts;
     }
-
-    // protected function setDataFields()
-    // {
-    //     $this->data = (!empty($this->args['block_id']) && $this->args['data']) ? Utils_Base::getPostBlockData($this->args['block_id'], Utils_Base::getGlobalPostId()) : $this->args['data'];
-        
-    //     unset($this->args['data']);
-
-    //     if(!empty($this->field_defaults))
-    //     {
-    //         foreach($this->field_defaults as $name => $default)
-    //         {
-    //             if(empty($this->args[$name]))
-    //             {
-    //                 $this->args[$name] = $this->_getField($name, $default);
-    //             }
-    //         }
-    //     }
-    // }
-
-    // protected function getField($name, $default=null)
-    // {
-    //     // The constructor is already called, get the field
-    //     if(isset($this->args))
-    //     {
-    //         return $this->_getField($name, $default);
-    //     }
-
-    //     // Save field for later use in setDataFields
-    //     if(!isset($this->field_defaults))
-    //     {
-    //         $this->field_defaults = [];
-    //     }
-
-    //     $this->field_defaults[$name] = $default;
-    // }
-    
-    // protected function _getField($name, $default=null)
-    // {
-    //     // $_name = $this->getContextName() . '__' . $this->getName(true) . '__' . $name;
-    //     $_name = str_replace('-', '_', $this->getName(true, true, '__')) . '__' . $name;
-
-    //     $post_id = $this->getPostId();
-
-    //     $field = null;
-
-    //     if(isset($this->data[$_name]))
-    //     {
-    //         $field = $this->data[$_name];
-    //     }
-    //     elseif(function_exists('get_field'))
-    //     {
-    //         $field = get_field($_name, $post_id);
-    //     }
-    //     else{
-    //         $field = get_post_meta($_name, $post_id, true);
-    //     }
-        
-    //     return (empty($field) && isset($default)) ? $default : $field;
-    // }
 
     protected function getField($name, $default=null)
     {
@@ -258,20 +144,6 @@ class View extends \WPSEED\View
         if($this->args['top_level'])
         {
             $this->addHtmlClass('section');
-        }
-
-        if($this->args['padding_bottom'])
-        {
-            // $pb = ($this->args['padding_bottom'] === 'none') ? '0' : $this->args['padding_bottom'];
-            // $this->addHtmlClass('pb-' . $pb);
-            $this->addHtmlClass($this->args['padding_bottom']);
-        }
-        
-        if($this->args['margin_bottom'])
-        {
-            // $mb = ($this->args['margin_bottom'] === 'none') ? '0' : $this->args['margin_bottom'];
-            // $this->addHtmlClass('mb-' . $mb);
-            $this->addHtmlClass($this->args['margin_bottom']);
         }
 
         if($this->args['hide_mobile'])
@@ -437,6 +309,7 @@ class View extends \WPSEED\View
                 'label' => '',
                 'page' => 0,
                 'url' => '',
+                'js_event' => '',
                 'target' => '_self',
                 'target_blank' => false
             ]);
@@ -444,6 +317,7 @@ class View extends \WPSEED\View
             $args[$pref.'_label'] = $args[$pref]['label'];
             $args[$pref.'_page'] = $args[$pref]['page'];
             $args[$pref.'_url'] = $args[$pref]['url'];
+            $args[$pref.'_js_event'] = $args[$pref]['js_event'];
             $args[$pref.'_target'] = $args[$pref]['target'];
             $args[$pref.'_target_blank'] = $args[$pref]['target_blank'];
 
@@ -455,6 +329,7 @@ class View extends \WPSEED\View
             $pref.'label' => '',
             $pref.'page' => 0,
             $pref.'url' => '',
+            $pref.'js_event' => '',
             $pref.'target' => '_self',
             $pref.'target_blank' => false
         ]);
