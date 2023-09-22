@@ -774,7 +774,7 @@ class Base
 
     /* ------------------------------ */
 
-    static function getIconHtml($class)
+    static function getIconHtml($classes)
     {
         if(is_string($classes))
         {
