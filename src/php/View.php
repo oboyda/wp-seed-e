@@ -333,10 +333,10 @@ class View extends \WPSEED\View
             $pref.'target' => '_self',
             $pref.'target_blank' => false
         ]);
+
         if(!$args[$pref.'url'] && $args[$pref.'js_event']){
             $args[$pref.'url'] = '#';
         }
-
         if($args[$pref.'page']){
             $args[$pref.'url'] = get_permalink((int)$args[$pref.'page']);
         }
