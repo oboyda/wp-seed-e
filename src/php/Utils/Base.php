@@ -776,14 +776,9 @@ class Base
 
     static function getIconHtml($classes)
     {
-        if(is_string($classes))
-        {
-            $classes = explode(' ', $classes);
-        }
+        $classes = is_string($classes) ? explode(' ', $classes) : $classes;
+        $classes = array_merge((array)$classes, ['app-icon']);
 
-        $classes[] = 'app-icon';
-
-        $classes = explode(' ', str_replace('  ', ' ', implode(' ', array_unique($classes))) );
         if(!in_array('bi', $classes) && !in_array('icon-bg', $classes)){
             $classes[] = 'icon-bg';
         }
