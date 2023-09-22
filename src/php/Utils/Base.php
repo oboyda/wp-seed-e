@@ -788,9 +788,7 @@ class Base
             $classes[] = 'icon-bg';
         }
 
-        $classes_str = implode(' ', $classes);
-
-        return '<i class="' . $classes_str . '"></i>';
+        return '<i class="' . implode(' ', $classes) . '"></i>';
     }
 
     // -------------------------
