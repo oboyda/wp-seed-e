@@ -297,9 +297,9 @@ class View extends \WPSEED\View
         return $this->distributeCols($items_html, $cols_num, $col_class);
     }
 
-    public function getIconHtml($classes=[], $link='', $link_target='_self')
+    public function getIconHtml($classes=[])
     {
-        return Utils_Base::getIconHtml($classes, $link, $link_target);
+        return Utils_Base::getIconHtml($classes);
     }
 
     public function parseBtnArgs($args, $pref='btn_')

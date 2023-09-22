@@ -774,7 +774,7 @@ class Base
 
     /* ------------------------------ */
 
-    static function getIconHtml($classes=[], $link='', $link_target='_self')
+    static function getIconHtml($classes=[])
     {
         if(is_string($classes))
         {
@@ -789,11 +789,6 @@ class Base
         }
 
         $classes_str = implode(' ', $classes);
-
-        if(!empty($link))
-        {
-            return '<a href="' . $link . '" target="' . $link_target . '" class="' . $classes_str . '"></a>';
-        }
 
         return '<i class="' . $classes_str . '"></i>';
     }
