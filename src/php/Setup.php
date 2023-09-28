@@ -308,4 +308,27 @@ class Setup
             ]);
         // }
     }
+
+    /*
+    @param str $key
+    @param mixed $var
+    @return null
+    -------------------------
+    */
+    public function setContextVar($key, $var=null)
+    {
+        $this->context_vars[$key] = $var;
+    }
+
+    /*
+    @param str $key
+    @param mixed $default
+    @return mixed
+    -------------------------
+    */
+    public function getContextVar($key, $default=null)
+    {
+        $var = isset($this->context_vars[$key]) ? $this->context_vars[$key] : null;
+        return (isset($default) && empty($var)) ? $default : $var;
+    }
 }
