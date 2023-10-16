@@ -130,7 +130,7 @@ class View_Loader extends \WPSEED\Action
 
         // $view_args['id'] = 'acf-' . Utils_Base::getBlockId($wp_block);
         $view_args['block_id'] = 'acf-' . Utils_Base::getBlockId($wp_block);
-        // $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
+        $view_args['html_class'] = isset($block['className']) ? $block['className'] : '';
 
         $view_args = $this->filterLoadViewArgsAcf($view_args, $view_name, false);
 
