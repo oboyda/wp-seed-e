@@ -6,7 +6,8 @@ class User
 {
     static function getUser($user, $type_class)
     {
-        return (is_int($user) || is_a($user, 'WP_User')) ? (class_exists($type_class) ? new $type_class($user) : null) : $user;
+        // return (is_int($user) || is_a($user, 'WP_User')) ? (class_exists($type_class) ? new $type_class($user) : null) : $user;
+        return is_a($user, $type_class) ? $user : (class_exists($type_class) ? new $type_class($user) : null);
     }
 
     static function getCurrentUser($type_class)
