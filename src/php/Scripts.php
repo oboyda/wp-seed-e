@@ -6,7 +6,7 @@ class Scripts
 {
     protected $args;
 
-    var $name;
+    var $context_name;
     var $prefix;
 
     var $script_regs;

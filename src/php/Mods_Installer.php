@@ -17,6 +17,7 @@ class Mods_Installer
 
     protected $mods_dir;
     protected $mods_dir_a;
+    protected $mods_dir_e;
     protected $mods_path_a;
     protected $mods_path_index_js;
 
