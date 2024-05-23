@@ -16,6 +16,7 @@ class Setup
     var $base_dir;
     var $base_dir_url;
     var $view_dir;
+    var $view_namespace;
 
     var $settings_admin;
     var $settings;
@@ -55,6 +56,7 @@ class Setup
                 'base_dir' => __DIR__,
                 'base_dir_url' => '',
                 'view_dir' => __DIR__ . '/src/php/View/html',
+                'view_namespace' => 'WPSEEDE\View',
 
                 'plugin_deps' => [
                     // 'woocommerce/woocommerce.php'
@@ -107,6 +109,7 @@ class Setup
         $this->base_dir = $this->args['base_dir'];
         $this->base_dir_url = $this->args['base_dir_url'];
         $this->view_dir = $this->args['view_dir'];
+        $this->view_namespace = $this->args['view_namespace'];
     }
 
     public function initLoad()
@@ -292,7 +295,8 @@ class Setup
             'context_name' => $this->context_name,
             'namespace' => $this->namespace,
             'base_dir' => $this->base_dir,
-            'view_dir' => $this->view_dir
+            'view_dir' => $this->view_dir,
+            'view_namespace' => $this->view_namespace
         ]);
     }
 

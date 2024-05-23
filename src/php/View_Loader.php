@@ -11,6 +11,7 @@ class View_Loader extends \WPSEED\Action
     var $namespace;
     var $base_dir;
     var $view_dir;
+    var $view_namespace;
     var $views_args;
 
     public function __construct($args)
@@ -27,6 +28,7 @@ class View_Loader extends \WPSEED\Action
         $this->namespace = $this->args['namespace'];
         $this->base_dir = $this->args['base_dir'];
         $this->view_dir = $this->args['view_dir'];
+        $this->view_namespace = $this->args['view_namespace'] ?? $this->namespace . '\View';
 
         $this->views_args = [];
 
@@ -84,7 +86,7 @@ class View_Loader extends \WPSEED\Action
         $_view_name = [
             'view_name' => $view_name,
             'view_dir' => $this->view_dir,
-            'view_namespace' => '\\' . $this->namespace . '\View'
+            'view_namespace' => '\\' . $this->view_namespace
         ];
 
         if(strpos($view_name, '/') !== false)
