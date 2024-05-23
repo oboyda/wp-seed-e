@@ -283,7 +283,8 @@ class Scripts
                         wp_register_style(
                             $name_handle,
                             $this->args['build_dir_url'] . '/front.css',
-                            array_merge($asset['dependencies'], $deps),
+                            // array_merge($asset['dependencies'], $deps),
+                            $deps,
                             $asset['version']
                         );
                     }
@@ -299,7 +300,8 @@ class Scripts
                         wp_register_style(
                             $name_handle,
                             $this->args['build_dir_url'] . '/admin.css',
-                            array_merge($asset['dependencies'], $deps),
+                            // array_merge($asset['dependencies'], $deps),
+                            $deps,
                             $asset['version']
                         );
                     }
