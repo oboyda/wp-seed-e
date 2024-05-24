@@ -304,7 +304,7 @@ class View extends \WPSEED\View
 
     static function parseBtnArgs($args, $pref='btn_')
     {
-        if(isset($args[$pref])){
+        if($pref && isset($args[$pref])){
             $args[$pref] = wp_parse_args($args[$pref], [
                 'label' => '',
                 'page' => 0,
