@@ -302,37 +302,26 @@ class View extends \WPSEED\View
         return Utils_Base::getIconHtml($classes);
     }
 
-    static function parseBtnArgs($args, $pref='btn_')
+    static function parseBtnArgs($args, $pref='')
     {
-        if($pref && isset($args[$pref])){
-            $args[$pref] = wp_parse_args($args[$pref], [
-                'label' => '',
-                'page' => 0,
-                'url' => '',
-                'js_event' => '',
-                'target' => '_self',
-                'target_blank' => false
-            ]);
-
-            $args[$pref.'_label'] = $args[$pref]['label'];
-            $args[$pref.'_page'] = $args[$pref]['page'];
-            $args[$pref.'_url'] = $args[$pref]['url'];
-            $args[$pref.'_js_event'] = $args[$pref]['js_event'];
-            $args[$pref.'_target'] = $args[$pref]['target'];
-            $args[$pref.'_target_blank'] = $args[$pref]['target_blank'];
-
-            unset($args[$pref]);
-            $pref = $pref . '_';
-        }
-
-        $args = wp_parse_args($args, [
+        $args_default = [
             $pref.'label' => '',
             $pref.'page' => 0,
             $pref.'url' => '',
             $pref.'js_event' => '',
             $pref.'target' => '_self',
-            $pref.'target_blank' => false
-        ]);
+            $pref.'target_blank' => false,
+            $pref.'icon_html' => ''
+        ];
+
+        if($pref && isset($args[$pref])){
+            foreach($args[$pref] as $k => $v){
+                $args[$pref.'_'.$k] = $v;
+            }
+            unset($args[$pref]);
+        }
+
+        $args = wp_parse_args($args, $args_default);
 
         if(!$args[$pref.'url'] && $args[$pref.'js_event']){
             $args[$pref.'url'] = '#';
