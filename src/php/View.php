@@ -156,12 +156,12 @@ class View extends \WPSEED\View
         }
     }
 
-    protected function getPostId()
+    static function getPostId()
     {
         return Utils_Base::getGlobalPostId();
     }
 
-    protected function getAdminPostId()
+    static function getAdminPostId()
     {
         return (is_admin() && isset($_GET['post'])) ? (int)$_GET['post'] : ((is_admin() && isset($_POST['post_id'])) ? (int)$_POST['post_id'] : 0);
     }
@@ -297,12 +297,12 @@ class View extends \WPSEED\View
         return $this->distributeCols($items_html, $cols_num, $col_class);
     }
 
-    public function getIconHtml($classes)
+    static function getIconHtml($classes)
     {
         return Utils_Base::getIconHtml($classes);
     }
 
-    public function parseBtnArgs($args, $pref='btn_')
+    static function parseBtnArgs($args, $pref='btn_')
     {
         if(isset($args[$pref])){
             $args[$pref] = wp_parse_args($args[$pref], [
