@@ -730,7 +730,7 @@ class Base
         }
         return $str;
     }
-    static function removeStartEndSlashes()
+    static function removeStartEndSlashes($str)
     {
         return self::removeEndSlash(self::removeStartSlash($str));
     }
