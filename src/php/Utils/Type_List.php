@@ -27,6 +27,7 @@ class Type_List
         return [
             'post_type' => 'post',
             'post_status' => 'publish',
+            'post_parent' => 0,
             'paged' => 1,
             'posts_per_page' => self::PER_PAGE,
             'meta_query' => [],
