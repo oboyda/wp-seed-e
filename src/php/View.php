@@ -22,17 +22,18 @@ class View extends \WPSEED\View
     {
         $this->child_parts = [];
 
-        parent::__construct($args, wp_parse_args($args_default, [
+        parent::__construct($args, array_merge([
 
-            'id' => $this->getField('id', ''),
+            'id' => '',
             'block_id' => '',
-            'html_class' => $this->getField('html_class', ''),
-            'hide' => $this->getField('hide', false),
-            'hide_mobile' => $this->getField('hide_mobile', false),
-            'hide_desktop' => $this->getField('hide_desktop', false),
-            'top_level' => $this->getField('top_level', false),
-            'container_class' => $this->getField('container_class', 'container-lg')
-        ]));
+            'html_class' => '',
+            'hide' => false,
+            'hide_mobile' => false,
+            'hide_desktop' => false,
+            'top_level' => false,
+            'container_class' => false
+
+        ], $args_default));
 
         $this->setHtmlClass();
     }
@@ -103,32 +104,6 @@ class View extends \WPSEED\View
     public function getChildParts()
     {
         return $this->child_parts;
-    }
-
-    protected function getField($name, $default=null)
-    {
-        $field = null;
-
-        if(isset($this->args[$name]))
-        {
-            $field = $this->args[$_name];
-        }
-        elseif(function_exists('get_field'))
-        {
-            $field = get_field($name, $this->getPostId());
-        }
-        else{
-            $field = get_post_meta($name, $this->getPostId(), true);
-        }
-        
-        return (empty($field) && isset($default)) ? $default : $field;
-    }
-
-    public function getGroupField($group, $name, $default=null, $args=null)
-    {
-        $field = $this->getField($name, null, $args);
-        
-        return (is_array($field) && isset($field[$name])) ? $field[$name] : $default;
     }
 
     private function setHtmlClass()
@@ -229,13 +204,13 @@ class View extends \WPSEED\View
 
     static function getImageHtml($image, $args=[])
     {
-        $args = wp_parse_args($args, [
+        $args = array_merge([
             'size' => 'full', 
             // 'rel_class' => 'rect-150-100', 
             'rel_class' => '', 
             'fit' => 'cover', 
             'alt' => ''
-        ]);
+        ], $args);
 
         $cont_class = ['img-resp'];
         
@@ -260,16 +235,16 @@ class View extends \WPSEED\View
 
         $image_src = is_int($image) ? self::getAttachmentImageSrc($image) : $image;
 
-        $args = wp_parse_args($args, [
+        $args = array_merge([
             'size' => 'full', 
             'rel_class' => 'rect-150-100', 
             'fit' => 'cover', 
             'atts' => []
-        ]);
-        $args['atts'] = wp_parse_args($args['atts'], [
+        ], $args);
+        $args['atts'] = array_merge([
             'class' => '',
             'style' => ''
-        ]);
+        ], $args['atts']);
         $args['atts']['class'] .= ' bg-img bg-img-' . $args['fit'] . ' ' . $args['rel_class'];
 
         if($image_src)
@@ -321,7 +296,7 @@ class View extends \WPSEED\View
             unset($args[$pref]);
         }
 
-        $args = wp_parse_args($args, $args_default);
+        $args = array_merge($args_default, $args);
 
         if(!$args[$pref.'url'] && $args[$pref.'js_event']){
             $args[$pref.'url'] = '#';
